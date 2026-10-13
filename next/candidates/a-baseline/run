@@ -27,6 +27,7 @@ while [ $# -gt 0 ]; do
   esac
 done
 cd "$repo"
+if [ -n "${GATE_CACHE_DIR:-}" ] && [[ ! " ${args[*]} " =~ " --no-cache " ]]; then args+=(--cache "$GATE_CACHE_DIR"); fi
 if [ "$format" = text ]; then
   exec "$BIN" --base "$base" "${args[@]}"
 fi

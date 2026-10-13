@@ -308,6 +308,15 @@ def main():
                 it['label'] = None
     dropped = balance(by_split['heldout'], random.Random('%d-bal' % a.seed), a.min_pos_rate)
     capped = cap(by_split['heldout'], random.Random('%d-cap' % a.seed), a.heldout_size, a.heldout_pos_rate)
+    # LLM-written injections into tested repositories (the fix-loop items) are always scored.
+    for split in ('dev', 'heldout'):
+        p = os.path.join(a.raw, 'fixloop', 'fixloop_%s.jsonl' % split)
+        if os.path.exists(p):
+            for line in open(p):
+                c = clean_case(json.loads(line), seen)
+                if c:
+                    c['split'] = split
+                    by_split[split].append(c)
     os.makedirs(a.out, exist_ok=True)
     manifest = {'seed': a.seed, 'balanced_out_heldout_negatives': dropped, 'capped_heldout_items': capped, 'splits': {}}
     repos_by_split = collections.defaultdict(set)

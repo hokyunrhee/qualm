@@ -1,3 +1,4 @@
 {"when": "2026-10-13T23:12Z", "what": "smoke test: qualm 0.1.1 on mutineer cbc0404", "jev_requests": 6, "jev_input_tokens": 13243, "cost_usd": 0.000556}
 {"when": "2026-10-13T23:58Z", "what": "smoke test: baseline adapter on gerrit-go-review-599095-ps4", "jev_requests": 1, "jev_input_tokens": 2370, "cost_usd": 0.0000995}
 {"when": "2026-10-13T23:40Z", "what": "run a-baseline on dev.jsonl.gz (trial) -> ../../../tmp/claude-0/-home-user-qualm/2ede26c6-6287-5d82-9ba2-8868fcdef917/scratchpad/trial/baseline.jsonl", "cases": 120, "cost_usd": 0.039426}
+{"when": "2026-10-14T00:01Z", "what": "attack suite trial: a-baseline (usage not captured; upper-bound estimate from 27 runs incl. one 60 KB diff)", "cost_usd": 0.012, "estimated": true}

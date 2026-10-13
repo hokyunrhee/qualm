@@ -1,0 +1,11 @@
+{
+  "source": "Anthropic first-party list prices from the claude-api skill's model table (cached 2026-10-06), read 2026-10-13; Jev from qualm's internal/jev/client.go and OpenRouter usage.cost",
+  "usd_per_million_tokens": {
+    "claude-haiku-5-5": {"input": 0.10, "output": 0.50, "note": "prompts up to 100K tokens; $0.50/$2.50 beyond"},
+    "claude-sonnet-5-5": {"input": 2.00, "output": 10.00, "cache_read": 0.20},
+    "claude-opus-5-5": {"input": 4.00, "output": 20.00, "cache_read": 0.20},
+    "typesafe/jev-1.13": {"input": 0.042, "output": 0.0}
+  },
+  "token_estimate": "LLM tokens are estimated as UTF-8 bytes / 3.5 for code and prompts (no tokenizer is available offline); marked as estimates wherever used",
+  "latency_estimate": "LLM latency is estimated as 1.0 s to first token plus output tokens / 150 tokens per second for Haiku 5.5 and / 80 for Sonnet 5.5; marked as estimates"
+}
