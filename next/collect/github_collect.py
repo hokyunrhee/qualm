@@ -24,7 +24,11 @@ ENV = dict(os.environ, GIT_TERMINAL_PROMPT='0', GIT_ASKPASS='/bin/false')
 
 
 def git(repo, *args, timeout=300, binary=False):
-    r = subprocess.run(['git', '-C', repo, '-c', 'core.quotepath=off', *args], capture_output=True, timeout=timeout, env=ENV)
+    try:
+        r = subprocess.run(['git', '-C', repo, '-c', 'core.quotepath=off', '-c', 'gc.auto=0', '-c', 'maintenance.auto=false', *args],
+                           capture_output=True, timeout=timeout, env=ENV)
+    except subprocess.TimeoutExpired:
+        return None
     if r.returncode != 0:
         return None
     return r.stdout if binary else r.stdout.decode('utf-8', 'replace')
@@ -187,16 +191,26 @@ def main():
             for repo, v in sorted(byrepo.items())]
     if a.limit_repos:
         jobs = jobs[:a.limit_repos]
-    print('%d repositories with signal' % len(jobs), flush=True)
-    done = 0
-    with open(a.out, 'w') as fh, ProcessPoolExecutor(a.workers) as ex:
-        for cases in ex.map(do_repo, jobs):
-            done += 1
+    done_path = a.out + '.done'
+    done_repos = set(open(done_path).read().split()) if os.path.exists(done_path) else set()
+    jobs = [j for j in jobs if j[0] not in done_repos]
+    print('%d repositories with signal still to fetch (%d done)' % (len(jobs), len(done_repos)), flush=True)
+    import multiprocessing
+    n = 0
+    with open(a.out, 'a') as fh, open(done_path, 'a') as dh, multiprocessing.Pool(a.workers, maxtasksperchild=20) as pool:
+        for repo, cases in pool.imap_unordered(do_repo_named, jobs):
+            n += 1
             for c in cases:
                 fh.write(json.dumps(c) + '\n')
             fh.flush()
-            if done % 25 == 0:
-                print('  %d/%d repositories' % (done, len(jobs)), flush=True)
+            dh.write(repo + '\n')
+            dh.flush()
+            if n % 25 == 0:
+                print('  %d/%d repositories' % (n, len(jobs)), flush=True)
+
+
+def do_repo_named(job):
+    return job[0], do_repo(job)
 
 
 if __name__ == '__main__':
