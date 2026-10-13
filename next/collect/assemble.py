@@ -248,6 +248,7 @@ def cap(cases, rng, n_target, pos_rate):
     keep = set()
     order = []
     for k in sorted(strata):
+        strata[k].sort(key=lambda it: it['item_id'])
         rng.shuffle(strata[k])
     # round-robin over strata in proportion to their size
     while len(keep) < want_pos:
@@ -263,9 +264,9 @@ def cap(cases, rng, n_target, pos_rate):
     must = {by_id[it['paired_with']]['item_id'] for it in pos if it['item_id'] in keep and it.get('paired_with') in by_id}
     must |= {it['item_id'] for it in neg if it['label_source'] in ('hard_negative',)}
     want_neg = n_target - len(keep)
-    rest = [it for it in neg if it['item_id'] not in must]
+    rest = sorted((it for it in neg if it['item_id'] not in must), key=lambda it: it['item_id'])
     rng.shuffle(rest)
-    neg_keep = list(must)[:want_neg] + [it['item_id'] for it in rest][:max(0, want_neg - len(must))]
+    neg_keep = sorted(must)[:want_neg] + [it['item_id'] for it in rest][:max(0, want_neg - len(must))]
     keep |= set(neg_keep)
     dropped = 0
     for it in items:

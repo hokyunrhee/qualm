@@ -15,6 +15,10 @@ no report) is counted and its items are left out of the accuracy metrics; the co
 import argparse, collections, gzip, json, random, sys
 
 
+NATURAL_POS = {'reviewer_comment', 'followup_cleanup'}
+NATURAL_NEG = {'approved_uncommented', 'approved_clean', 'post_fix', 'survived_90d'}
+
+
 def load_labels(path, subset=None):
     opener = gzip.open if path.endswith('.gz') else open
     items = []
@@ -26,7 +30,11 @@ def load_labels(path, subset=None):
                     continue
                 if subset is not None and it['item_id'] not in subset and c['case_id'] not in subset:
                     continue
+                origin = c.get('origin_case') or c['case_id']
+                origin = origin.rsplit('-ps', 1)[0] if origin.startswith('gerrit-') else origin
+                natural = it['label_source'] in NATURAL_POS if it['label'] == 1 else it['label_source'] in NATURAL_NEG
                 items.append({'item_id': it['item_id'], 'case_id': c['case_id'], 'path': it['path'], 'label': it['label'],
+                              'repo': c.get('repo_key') or c.get('repo'), 'origin_change': origin, 'natural': natural,
                               'language': it['language'], 'source': it['label_source'], 'smell': it.get('smell') or '-',
                               'location': it.get('location'), 'agent_written': bool(c.get('agent_written')),
                               'origin': c['source'].split(':')[0]})
@@ -116,6 +124,19 @@ def ece(ys, ss, bins=10):
     return tot
 
 
+def ece_mass(ys, ss, bins=10):
+    """ECE with equal-count bins, which suits scores piled up near 0 and 1."""
+    order = sorted(range(len(ss)), key=lambda i: ss[i])
+    tot = 0.0
+    for b in range(bins):
+        idx = order[b * len(order) // bins:(b + 1) * len(order) // bins]
+        if idx:
+            conf = sum(ss[i] for i in idx) / len(idx)
+            acc = sum(ys[i] for i in idx) / len(idx)
+            tot += len(idx) / len(ss) * abs(conf - acc)
+    return tot
+
+
 def prf(ys, fs):
     tp = sum(1 for y, f in zip(ys, fs) if y and f)
     fp = sum(1 for y, f in zip(ys, fs) if not y and f)
@@ -124,6 +145,13 @@ def prf(ys, fs):
     r = tp / (tp + fn) if tp + fn else float('nan')
     f1 = 2 * p * r / (p + r) if tp else 0.0
     return p, r, f1
+
+
+def iou(a, b, slack=2):
+    lo, hi = max(a[0], b[0] - slack), min(a[1], b[1] + slack)
+    inter = max(0, hi - lo + 1)
+    union = (a[1] - a[0] + 1) + (b[1] - b[0] + 1 + 2 * slack) - inter
+    return inter / union if union > 0 else 0.0
 
 
 def overlaps(a, b, slack=2):
@@ -138,11 +166,17 @@ def compute(rows):
     p, rcl, f1 = prf(ys, fs)
     loc_rows = [r for r in rows if r['label'] == 1 and r['failed'] and r.get('location')]
     hits = [any(overlaps(fd.get('lines'), r['location']) for fd in r['findings'] if fd.get('lines')) for r in loc_rows]
+    tight = [any(overlaps(fd.get('lines'), r['location']) and fd['lines'][1] - fd['lines'][0] < 15 for fd in r['findings'] if fd.get('lines'))
+             for r in loc_rows]
+    ious = [max([iou(fd['lines'], r['location']) for fd in r['findings'] if fd.get('lines')] or [0.0]) for r in loc_rows]
     widths = [fd['lines'][1] - fd['lines'][0] + 1 for r in loc_rows for fd in r['findings'] if fd.get('lines')]
     return {'n': len(rows), 'positives': sum(ys), 'pr_auc': average_precision(ys, ss), 'roc_auc': roc_auc(ys, ss),
             'brier': brier(ys, ss) if rows else float('nan'), 'ece': ece(ys, ss) if rows else float('nan'),
+            'ece_mass': ece_mass(ys, ss) if rows else float('nan'),
             'precision': p, 'recall': rcl, 'f1': f1, 'fail_rate': sum(fs) / len(fs) if fs else float('nan'),
             'loc_n': len(loc_rows), 'loc_hit': sum(hits) / len(hits) if hits else float('nan'),
+            'loc_hit_tight': sum(tight) / len(tight) if tight else float('nan'),
+            'loc_iou20': sum(1 for v in ious if v >= 0.2) / len(ious) if ious else float('nan'),
             'loc_median_width': sorted(widths)[len(widths) // 2] if widths else None}
 
 
@@ -166,7 +200,9 @@ def join(items, run, threshold=None):
     for it in items:
         v = file_view(run.get(it['case_id']), it['path'], threshold)
         if v is None:
+            # A file the candidate could not judge fails closed: it counts as a fail at score 1.
             cnj += 1
+            rows.append(dict(it, score=1.0, failed=True, findings=[], could_not_judge=True))
             continue
         rows.append(dict(it, score=v[0], failed=v[1], findings=v[2]))
     return rows, cnj
@@ -179,8 +215,10 @@ def breakdown(rows, key):
     return {k: compute(v) for k, v in sorted(groups.items()) if len(v) >= 5}
 
 
-def paired_bootstrap(items, run_a, run_b, thr_a, thr_b, boot=2000, seed=7):
-    """Cases judged by both; resample cases; intervals for (a - b) of PR-AUC, precision, recall, F1, Brier."""
+def paired_bootstrap(items, run_a, run_b, thr_a, thr_b, boot=2000, seed=7, cluster='repo'):
+    """Paired intervals for (a - b) of PR-AUC, precision, recall, F1, Brier, resampling whole clusters:
+    repositories by default (the split unit, and it keeps injected/original and positive/post-fix pairs
+    together), or origin changes."""
     ra, _ = join(items, run_a, thr_a)
     rb, _ = join(items, run_b, thr_b)
     ka = {r['item_id']: r for r in ra}
@@ -188,7 +226,7 @@ def paired_bootstrap(items, run_a, run_b, thr_a, thr_b, boot=2000, seed=7):
     common = [i for i in ka if i in kb]
     by_case = collections.defaultdict(list)
     for i in common:
-        by_case[ka[i]['case_id']].append(i)
+        by_case[ka[i][cluster]].append(i)
     cases = sorted(by_case)
     rng = random.Random(seed)
     names = ['pr_auc', 'precision', 'recall', 'f1', 'brier', 'roc_auc']
@@ -203,12 +241,50 @@ def paired_bootstrap(items, run_a, run_b, thr_a, thr_b, boot=2000, seed=7):
             d = ma[n] - mb[n]
             if d == d:  # not nan
                 diffs[n].append(d)
-    out = {'n_items': len(common), 'n_cases': len(cases)}
+    out = {'n_items': len(common), 'n_clusters': len(cases), 'cluster': cluster}
     for n in names:
         ds = sorted(diffs[n])
         if ds:
             out[n] = {'a': point_a[n], 'b': point_b[n], 'diff': point_a[n] - point_b[n],
                       'ci95': [ds[int(0.025 * len(ds))], ds[min(len(ds) - 1, int(0.975 * len(ds)))]]}
+    return out
+
+
+def matched_pairs(split_file, run, threshold=None):
+    """P(score(positive) > score(its clean partner)): injected vs original, reviewer positive vs post_fix."""
+    opener = gzip.open if split_file.endswith('.gz') else open
+    cases = {}
+    with opener(split_file, 'rt') as fh:
+        for line in fh:
+            c = json.loads(line)
+            cases[c['case_id']] = c
+    by_item = {it['item_id']: (c, it) for c in cases.values() for it in c['items']}
+    out = {}
+    inj = []
+    for c, it in by_item.values():
+        if it.get('paired_with') and it.get('label') == 1 and it['paired_with'] in by_item:
+            oc, oit = by_item[it['paired_with']]
+            inj.append(((c, it), (oc, oit)))
+    post = []
+    finals = collections.defaultdict(list)
+    for c, it in by_item.values():
+        if it.get('label_source') == 'post_fix':
+            finals[(c['case_id'].rsplit('-ps', 1)[0], it['path'])].append((c, it))
+    for c, it in by_item.values():
+        if it.get('label_source') == 'reviewer_comment' and it.get('label') == 1:
+            key = (c['case_id'].rsplit('-ps', 1)[0], it['path'])
+            for pair in finals.get(key, []):
+                post.append(((c, it), pair))
+    for name, pairs in (('injected_vs_original', inj), ('positive_vs_post_fix', post)):
+        wins, n = 0.0, 0
+        for (pc, pit), (nc, nit) in pairs:
+            vp = file_view(run.get(pc['case_id']), pit['path'], threshold)
+            vn = file_view(run.get(nc['case_id']), nit['path'], threshold)
+            if vp is None or vn is None:
+                continue
+            n += 1
+            wins += 1.0 if vp[0] > vn[0] else 0.5 if vp[0] == vn[0] else 0.0
+        out[name] = {'pairs': n, 'p_positive_higher': wins / n if n else None}
     return out
 
 
@@ -239,16 +315,32 @@ def main():
         m['threshold_override'] = thr.get(name)
         m['pr_level'] = pr_level(rows)
         result['candidates'][name] = m
+    natural_items = [it for it in items if it['natural']]
+    for name, run in runs.items():
+        rows, _ = join(natural_items, run, thr.get(name))
+        result['candidates'][name]['natural'] = compute(rows)
+        result['candidates'][name]['pairs'] = matched_pairs(a.split_file, run, thr.get(name))
     if a.baseline:
         result['vs_baseline'] = {}
+        result['vs_baseline_natural'] = {}
+        result['vs_baseline_by_origin'] = {}
         for name in runs:
             if name != a.baseline:
                 result['vs_baseline'][name] = paired_bootstrap(items, runs[name], runs[a.baseline], thr.get(name), thr.get(a.baseline), a.boot)
+                result['vs_baseline_natural'][name] = paired_bootstrap(natural_items, runs[name], runs[a.baseline], thr.get(name), thr.get(a.baseline), a.boot)
+                result['vs_baseline_by_origin'][name] = paired_bootstrap(items, runs[name], runs[a.baseline], thr.get(name), thr.get(a.baseline), a.boot, cluster='origin_change')
     print('%-22s %5s %4s %7s %7s %6s %6s %6s %6s %6s %6s %5s' % ('candidate', 'n', 'pos', 'PR-AUC', 'ROC', 'Brier', 'ECE', 'P', 'R', 'F1', 'loc', 'cnj'))
     for name, m in result['candidates'].items():
         print('%-22s %5d %4d %7.3f %7.3f %6.3f %6.3f %6.3f %6.3f %6.3f %6.3f %5d' % (
             name, m['n'], m['positives'], m['pr_auc'], m['roc_auc'], m['brier'], m['ece'], m['precision'], m['recall'], m['f1'],
             m['loc_hit'], m['could_not_judge_items']))
+    for name, m in result['candidates'].items():
+        nat = m['natural']
+        print('  %-20s natural: n %d pos %d PR-AUC %.3f P %.3f R %.3f | pairs %s' % (name, nat['n'], nat['positives'], nat['pr_auc'], nat['precision'], nat['recall'],
+              {k: (v['pairs'], None if v['p_positive_higher'] is None else round(v['p_positive_higher'], 3)) for k, v in m['pairs'].items()}))
+    for name, d in (result.get('vs_baseline_natural') or {}).items():
+        print('  natural %s - %s: ' % (name, a.baseline) + ', '.join('%s %+.3f [%+.3f, %+.3f]' % (k, v['diff'], v['ci95'][0], v['ci95'][1])
+                                                           for k, v in d.items() if isinstance(v, dict)))
     for name, d in (result.get('vs_baseline') or {}).items():
         print('  %s - %s: ' % (name, a.baseline) + ', '.join('%s %+.3f [%+.3f, %+.3f]' % (k, v['diff'], v['ci95'][0], v['ci95'][1])
                                                            for k, v in d.items() if isinstance(v, dict)))
