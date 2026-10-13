@@ -1,0 +1,41 @@
+#!/usr/bin/env bash
+# Candidate A: qualm 0.1.1, unmodified, behind the shared interface (next/interface.md).
+# The binary is built once from the commit that released 0.1.1. Its JSON report is translated to
+# the shared shape; --format text passes qualm's own text report through untouched.
+set -euo pipefail
+HERE="$(cd "$(dirname "$0")" && pwd)"
+ROOT="$(git -C "$HERE" rev-parse --show-toplevel)"
+BIN="${QUALM_BASELINE_BIN:-${XDG_CACHE_HOME:-$HOME/.cache}/qualm-next/qualm-0.1.1}"
+if [ ! -x "$BIN" ]; then
+  tmp="$(mktemp -d)"
+  git -C "$ROOT" archive 5915e3d | tar -x -C "$tmp"
+  mkdir -p "$(dirname "$BIN")"
+  (cd "$tmp" && go build -o "$BIN" ./cmd/qualm) >&2
+  rm -rf "$tmp"
+fi
+repo="" base="" format=json args=()
+while [ $# -gt 0 ]; do
+  case "$1" in
+    --repo) repo="$2"; shift 2 ;;
+    --base) base="$2"; shift 2 ;;
+    --format) format="$2"; shift 2 ;;
+    --no-cache) args+=(--no-cache); shift ;;
+    --budget) args+=(--budget "$2"); shift 2 ;;
+    --include-tests) args+=(--include-tests); shift ;;
+    --llm-dir) shift 2 ;;
+    *) echo "unknown argument $1" >&2; exit 2 ;;
+  esac
+done
+cd "$repo"
+if [ "$format" = text ]; then
+  exec "$BIN" --base "$base" "${args[@]}"
+fi
+start=$(date +%s.%N)
+set +e
+"$BIN" --base "$base" --format json "${args[@]}" > "${TMPDIR:-/tmp}/qualm-baseline.$$.json"
+code=$?
+set -e
+if [ $code -eq 2 ]; then rm -f "${TMPDIR:-/tmp}/qualm-baseline.$$.json"; exit 2; fi
+python3 -I "$HERE/adapt.py" "${TMPDIR:-/tmp}/qualm-baseline.$$.json" "$start"
+rm -f "${TMPDIR:-/tmp}/qualm-baseline.$$.json"
+exit $code
