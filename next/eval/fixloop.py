@@ -153,6 +153,9 @@ def check(cand, fix_id):
     out['gate_exit'] = last['exit']
     # tests
     code, so, se = sh(subst(it['test'], ws), cwd=ws, timeout=900)
+    if code != 0:  # one rerun, the same for every candidate: some suites (expr's timing tests) are flaky
+        code, so, se = sh(subst(it['test'], ws), cwd=ws, timeout=900)
+        out['tests_rerun'] = True
     out['tests_pass'] = code == 0
     out['tests_tail'] = (so + se)[-400:]
     # what changed since the pull request
