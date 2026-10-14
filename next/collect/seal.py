@@ -31,10 +31,9 @@ def main():
     ap.add_argument('--label', default='v1')
     a = ap.parse_args()
     members = {}
-    for name in ('heldout.jsonl.gz', 'heldout_reserve.jsonl.gz'):
-        p = os.path.join(a.assembled, name)
-        if os.path.exists(p):
-            members[name] = open(p, 'rb').read()
+    members['heldout.jsonl.gz'] = open(os.path.join(a.assembled, 'heldout.jsonl.gz'), 'rb').read()
+    reserve = os.path.join(a.assembled, 'heldout_reserve.jsonl.gz')
+    reserve_sha = hashlib.sha256(open(reserve, 'rb').read()).hexdigest() if os.path.exists(reserve) else None
     fx = json.load(open(a.fixloop_items))
     held = [it for it in fx['items'] if it['split'] == 'heldout']
     members['fixloop_heldout_items.json'] = json.dumps({'items': held}, sort_keys=True, indent=1).encode()
@@ -57,7 +56,9 @@ def main():
     record = {'label': a.label, 'sealed_at': time.strftime('%Y-%m-%dT%H:%M:%SZ', time.gmtime()),
               'tar_sha256': hashlib.sha256(data).hexdigest(),
               'members': {n: hashlib.sha256(b).hexdigest() for n, b in sorted(members.items())},
-              'fixloop_heldout_items': len(held)}
+              'fixloop_heldout_items': len(held),
+              'reserve_sha256_not_sealed': reserve_sha,
+              'note': 'heldout_reserve.jsonl.gz holds the held-out cases the pre-registered size cap left unscored; it is hashed here but not committed'}
     json.dump(record, open(os.path.join(a.out, 'heldout.%s.sha256.json' % a.label), 'w'), indent=1)
     print(json.dumps({k: record[k] for k in ('label', 'tar_sha256', 'fixloop_heldout_items')}))
 

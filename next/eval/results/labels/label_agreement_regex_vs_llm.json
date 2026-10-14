@@ -1,0 +1,17 @@
+{
+ "population": "GitHub review comments on judged files in dev repositories, by people, not AI-styled",
+ "regex_positive": {
+  "n": 208,
+  "llm_simplify": 124
+ },
+ "regex_negative_sample": {
+  "n": 150,
+  "llm_simplify": 18,
+  "population": 2795
+ },
+ "kappa_sample": 0.449,
+ "agreement_sample": 0.715,
+ "kappa_population_weighted": 0.305,
+ "agreement_population_weighted": 0.86,
+ "note": "regex positives here are the acted-on comments that became labels; negatives are a random sample of non-matching comments, one per repository"
+}
