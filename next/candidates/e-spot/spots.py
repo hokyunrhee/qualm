@@ -152,7 +152,8 @@ def _brace_units(text, language, scanned):
     found = []
     for u in unitmod.find_units(text, language, scanned):
         b = _body(masked, u.start - 1)
-        if b is not None and u.end - 1 < b[0]:
+        if b is not None and u.end - 1 <= b[0] < b[1]:
+            # the core closed the unit before (or on the line where) its body opens
             u = unitmod.Unit(u.name, u.start, b[1] + 1, u.kind)
         found.append(u)
     covered = set()

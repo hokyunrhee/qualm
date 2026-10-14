@@ -157,10 +157,14 @@ class Scorer:
 
         def one(job):
             key, st = job
-            try:
-                return key, self.client.ask(st, questions.QUESTIONS, use_cache=self.use_cache)
-            except jev.JevError as e:
-                return key, e
+            for attempt in range(2):
+                try:
+                    return key, self.client.ask(st, questions.QUESTIONS, use_cache=self.use_cache)
+                except jev.JevError as e:
+                    # OpenRouter sometimes answers 499 (the request was dropped upstream); the core
+                    # client does not retry it, so it is tried once more here
+                    if attempt or 'HTTP 499' not in str(e):
+                        return key, e
         with ThreadPoolExecutor(JOBS) as ex:
             for key, res in ex.map(one, jobs):
                 out[key] = res

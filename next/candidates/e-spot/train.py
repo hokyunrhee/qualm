@@ -408,10 +408,9 @@ def cmd_fit(a):
         os.makedirs(os.path.dirname(os.path.abspath(a.report)), exist_ok=True)
         json.dump(rep, open(a.report, 'w'), indent=1)
     if a.oof:
+        # {item_id: out-of-fold probability}, the shape next/eval/oof_run.py reads
         with open(a.oof, 'w') as fh:
-            for r, s in zip(rows, p):
-                fh.write(json.dumps({'item_id': r['item_id'], 'label': r['label'], 'label_source': r['label_source'], 'language': r['language'],
-                                     'score': round(float(s), 5)}) + '\n')
+            json.dump({r['item_id']: round(float(s), 5) for r, s in zip(rows, p)}, fh, sort_keys=True)
     print(json.dumps({k: rep[k] for k in ('oof', 'C', 'threshold', 'operating_point_oof', 'location')}, indent=1))
     print('natural', rep['by']['natural'], '\nreviewer_vs_approved', rep['by']['reviewer_vs_approved'])
     print('top weights', rep['weights'][:14])

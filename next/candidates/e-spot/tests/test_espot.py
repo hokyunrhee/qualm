@@ -27,9 +27,10 @@ DUMMY_KEY = 'test-key-not-real'
 class FakeJev:
     """A local decisions endpoint. `answer(state)` gives the noul for every question."""
 
-    def __init__(self, answer=None, status=200):
+    def __init__(self, answer=None, status=200, statuses=()):
         self.answer = answer or (lambda st: 0.1)
         self.status = status
+        self.statuses = list(statuses)  # served first, one per request, before `status`
         self.requests = []
         fake = self
 
@@ -37,8 +38,9 @@ class FakeJev:
             def do_POST(self):
                 body = json.loads(self.rfile.read(int(self.headers['Content-Length'])))
                 fake.requests.append({'body': body, 'auth': self.headers.get('Authorization')})
-                if fake.status != 200:
-                    self.send_response(fake.status)
+                status = fake.statuses.pop(0) if fake.statuses else fake.status
+                if status != 200:
+                    self.send_response(status)
                     self.end_headers()
                     return
                 v = fake.answer(body['state'])
@@ -446,6 +448,16 @@ class TestGate(Base):
         self.assertEqual(rep['files'][0]['status'], 'error')
         self.assertIn('4 attempts', rep['files'][0]['reason'])
         self.assertEqual(len(fake.requests), 4 * 2)  # two spots, four attempts each
+
+    def test_http_499_is_tried_once_more(self):
+        fake = FakeJev(lambda st: 0.05, statuses=[499])
+        try:
+            repo = self.repo({'calc.go': BASE_GO}, {'calc.go': HEAD_GO})
+            code, rep, err, _ = self.run_gate(repo, fake.url)
+        finally:
+            fake.close()
+        self.assertEqual(code, 0, err)
+        self.assertEqual(len(fake.requests), 3)  # two spots, one of them asked twice
 
     def test_cache_answers_a_second_run(self):
         fake = FakeJev(lambda st: 0.05)
