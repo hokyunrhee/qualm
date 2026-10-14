@@ -138,7 +138,7 @@ def main():
     summary['jev_cost_usd_final_runs'] = round(spent, 6)
     json.dump(summary, open(out_path, 'w'), indent=1)
     import time
-    with open(os.path.join(ROOT, 'next', 'eval', 'results', 'spend.jsonl'), 'a') as led:
+    with open(os.environ.get('STUDY_LEDGER', os.path.join(ROOT, 'next', 'eval', 'results', 'spend.jsonl')), 'a') as led:
         # cache_poison's first run and self_keep's keep command are not in a report; count them at twice the final runs to be safe.
         led.write(json.dumps({'when': time.strftime('%Y-%m-%dT%H:%MZ', time.gmtime()), 'what': 'attack suite: %s' % summary['candidate'],
                               'cost_usd': round(spent * 1.15 + 0.002, 6), 'estimated': True}) + '\n')
