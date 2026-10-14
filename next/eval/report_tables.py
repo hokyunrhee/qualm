@@ -236,5 +236,25 @@ def main():
     print(table(['candidate', 'handled', 'controls right', 'not handled'], rows))
 
 
+    print('\n**Table 2m. Ablation of d-cascade\'s inputs.** Dev: repository-grouped out-of-fold, pooled and natural PR-AUC (`ablation_dcascade_dev.json`). '
+          'Held-out (post hoc, not pre-registered, nothing tuned): the `raw` model applied to qualm 0.1.1\'s recorded answers (`posthoc/heldout_rawmodel.json`).\n')
+    ab = load('ablation_dcascade_dev.json')
+    ph = load('posthoc/heldout_rawmodel.json')
+    rows = [['qualm 0.1.1 push_back alone', '%.3f' % ab['baseline_push_back_alone_dev_pr_auc'], f3(DEV['candidates']['a-baseline']['natural']['pr_auc']),
+             f3(ph['candidates']['a-baseline']['pr_auc']), '']]
+    for name, v in ab['feature_sets'].items():
+        ho, hd = '', ''
+        if name == 'raw':
+            ho = f3(ph['candidates']['a-rawmodel']['pr_auc']) + ci(ph['candidates']['a-rawmodel'].get('pr_auc_ci95'))
+            hd = diff_cell(ph['vs_baseline']['a-rawmodel'], 'pr_auc')
+        if name == ab['chosen']:
+            name += ' (d-cascade, frozen)'
+            ho = f3(HO['candidates']['d-cascade']['pr_auc']) + ci(HO['candidates']['d-cascade'].get('pr_auc_ci95'))
+            hd = diff_cell(HO['vs_baseline']['d-cascade'], 'pr_auc')
+        rows.append([name, '%.3f' % v['all']['pr_auc'], '%.3f' % v['natural']['pr_auc'], ho, hd])
+    print(table(['inputs (logistic model)', 'PR-AUC dev', 'natural PR-AUC dev', 'PR-AUC held-out', 'vs a-baseline held-out'], rows))
+    print('\nraw: qualm\'s ten questions on the diff; masked: the comment-stripped view (eight of qualm\'s questions and four verbs); det: detector counts; shape: script and comment share; pieces: per-function answers.')
+
+
 if __name__ == '__main__':
     main()
