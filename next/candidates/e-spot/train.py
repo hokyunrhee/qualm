@@ -264,7 +264,8 @@ def metrics(y, p):
     out = {'n': int(len(y)), 'positives': int(y.sum())}
     if 0 < y.sum() < len(y):
         out.update(pr_auc=round(float(average_precision_score(y, p)), 4), roc_auc=round(float(roc_auc_score(y, p)), 4))
-    out['brier'] = round(float(brier_score_loss(y, p)), 4)
+    if p.min() >= 0 and p.max() <= 1:
+        out['brier'] = round(float(brier_score_loss(y, p)), 4)
     return out
 
 
