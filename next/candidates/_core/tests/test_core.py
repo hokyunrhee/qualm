@@ -345,6 +345,32 @@ class CliTests(unittest.TestCase):
         finally:
             r.close()
 
+    def test_a_crashing_scorer_cannot_judge(self):
+        def boom(args, policy):
+            raise ValueError('bad settings')
+        r = Repo({'ledger.go': BASE_GO})
+        try:
+            r.commit({'ledger.go': BAD_GO})
+            self.assertEqual(cli.run('t', '0', boom, ['--repo', r.dir, '--base', 'base'], out=io.StringIO(), err=io.StringIO()), 2)
+        finally:
+            r.close()
+
+    def test_a_bad_llm_answer_is_not_asked_again(self):
+        from gatecore import llmdir
+        d = tempfile.mkdtemp()
+        try:
+            llm = llmdir.LLM(d)
+            self.assertIsNone(llm.ask('m', 's', 'p', {}))
+            key = llmdir.key_of('m', 's', 'p', {})
+            self.assertTrue(os.path.exists(os.path.join(d, 'requests', key + '.json')))
+            os.makedirs(os.path.join(d, 'responses'))
+            with open(os.path.join(d, 'responses', key + '.json'), 'w') as fh:
+                fh.write('[1, 2]')
+            with self.assertRaises(llmdir.BadAnswer):
+                llm.ask('m', 's', 'p', {})
+        finally:
+            shutil.rmtree(d)
+
     def test_undecodable_code_file_fails_closed(self):
         r = Repo({'ledger.go': BASE_GO})
         try:
