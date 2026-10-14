@@ -88,16 +88,18 @@ def adjudicate(a):
     tier_b = pool(held, lambda it: it.get('unscored') == 'tier_b_pending_adjudication')[:28]
     picks += [('heldout', 'comment', c, it) for c, it in tier_b]
     tier_a = pool(held, lambda it: it.get('label') == 1 and it.get('tier') == 'A')
-    picks += [('heldout', 'comment', c, it) for c, it in tier_a[:8]]
-    blind_pos = [x for x in tier_a[8:] if x[1]['added'] <= 150][:4]
+    n_a = 30 - len(tier_b)
+    picks += [('heldout', 'comment', c, it) for c, it in tier_a[:n_a]]
+    blind_pos = [x for x in tier_a[n_a:] if x[1]['added'] <= 150][:6]
     picks += [('heldout', 'blind', c, it) for c, it in blind_pos]
-    negs = pool(held, lambda it: it.get('label') == 0 and it['label_source'] in ('approved_uncommented', 'approved_clean', 'survived_90d', 'post_fix') and it['added'] <= 150)
-    picks += [('heldout', 'blind', c, it) for c, it in negs[:5]]
+    negs = pool(held, lambda it: it.get('label') == 0 and it['label_source'] in ('approved_uncommented', 'approved_clean', 'survived_90d', 'post_fix', 'approved_agent') and it['added'] <= 150)
+    picks += [('heldout', 'blind', c, it) for c, it in negs[:9]]
     need_dev = 60 - len(picks)
     disagree = set()
     if a.classified and os.path.exists(a.classified):
-        disagree = {r['item_id'] for r in json.load(open(a.classified)) if r.get('verdict') == 'other'}
-    dev_comment = pool(dev, lambda it: it['item_id'] in disagree)[:max(0, need_dev - 7)]
+        data = json.load(open(a.classified))
+        disagree = {r['item_id'] for r in (data['results'] if isinstance(data, dict) else data) if r.get('verdict') == 'other'}
+    dev_comment = pool(dev, lambda it: it['item_id'] in disagree)[:8]
     picks += [('dev', 'comment', c, it) for c, it in dev_comment]
     dev_blind = pool(dev, lambda it: it.get('label') is not None and it['label_source'] in ('reviewer_comment', 'approved_uncommented', 'post_fix', 'approved_clean') and it['added'] <= 150)
     picks += [('dev', 'blind', c, it) for c, it in dev_blind[:60 - len(picks)]]

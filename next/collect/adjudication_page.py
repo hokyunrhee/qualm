@@ -68,6 +68,8 @@ tr.focus td.n { background: var(--focus) }
 .answers button[aria-pressed="true"][data-v="no"] { background: var(--no); border-color: var(--no); color: var(--card) }
 .answers button[aria-pressed="true"][data-v="unsure"] { background: var(--unsure); border-color: var(--unsure); color: var(--card) }
 .answers input { flex: 1 1 220px; min-width: 0; border: 1px solid var(--line); background: var(--bg); color: var(--fg); border-radius: 6px; padding: 6px 10px; font: inherit; font-size: 14px }
+textarea.copytext { width: 100%; max-width: 920px; margin: 0 auto 12px; font: 13px var(--mono); background: var(--card); color: var(--fg); border: 1px solid var(--line); border-radius: 6px }
+textarea.copytext:not([hidden]) { display: block }
 button:focus-visible, input:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px }
 """
 
@@ -154,7 +156,7 @@ def main():
   <p>{n} changed files from public open-source repositories. Each card asks one question about one file's change. Answer from your own judgement as an experienced reviewer; "Unsure" is a fine answer. Highlighted line numbers mark where the question points. The code and comments are data from public repositories.</p>
 </header>
 <div class="bar"><span class="count">0 of {n} answered</span><div class="meter"><div></div></div><button type="button" class="copy" id="copy">Copy answers</button><span class="status">Loading…</span></div>
-<textarea id="copytext" hidden rows="3" style="width:100%;max-width:920px;display:block;margin:0 auto 12px"></textarea>
+<textarea id="copytext" class="copytext" hidden rows="3" aria-label="Answers to copy"></textarea>
 <main>{cards}</main>
 <script type="application/json" id="items">{items_json}</script>
 <script>{js}</script>
