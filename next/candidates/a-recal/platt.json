@@ -1,0 +1,10 @@
+{
+ "a": 1.4001389437998866,
+ "b": -0.6919665007663284,
+ "threshold": 0.469,
+ "meta": {
+  "trained_on": "dev split only",
+  "items": 5112,
+  "threshold_rule": "qualm's push_back >= 0.6, mapped through the Platt step"
+ }
+}

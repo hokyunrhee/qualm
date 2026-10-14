@@ -331,6 +331,20 @@ class CliTests(unittest.TestCase):
         finally:
             r.close()
 
+    def test_a_scorer_error_on_one_file_fails_closed(self):
+        class Broken(self.Fixed):
+            def score(self, ctx, found, feats):
+                return {f.path: {'error': 'budget spent'} for f in ctx.files}
+        r = Repo({'ledger.go': BASE_GO})
+        try:
+            r.commit({'ledger.go': BAD_GO})
+            out = io.StringIO()
+            code = cli.run('t', '0', Broken, ['--repo', r.dir, '--base', 'base'], out=out, err=io.StringIO())
+            self.assertEqual(code, 2)
+            self.assertEqual(json.loads(out.getvalue())['files'][0]['status'], 'error')
+        finally:
+            r.close()
+
     def test_undecodable_code_file_fails_closed(self):
         r = Repo({'ledger.go': BASE_GO})
         try:
