@@ -1,7 +1,7 @@
 """The blind judge of the fix loop: stage each reworked item's two diffs under opaque names, then
 fold the judges' answers back into each item's check.json.
 
-    python3 -I fixloop_judge.py stage CANDIDATE [CANDIDATE ...] > args.json
+    python3 -I fixloop_judge.py stage CANDIDATE [CANDIDATE ...] > args.json   (BENCH_WORK picks the bench directory)
     python3 -I fixloop_judge.py write RUN_ID [RUN_ID ...]
 
 Only items the coding agent worked on (the gate failed at iteration 0) are judged. Which diff is
@@ -29,14 +29,14 @@ def stage(cands):
             if not os.path.exists(chk) or not json.load(open(chk))['initially_failed']:
                 continue
             key = '%s/%s' % (cand, fid)
-            h = hashlib.sha256(key.encode()).hexdigest()[:20]
+            h = hashlib.sha256((fixloop.WORK + '/' + key).encode()).hexdigest()[:20]
             final_is_x = int(h, 16) % 2 == 0
             x_src, y_src = ('diff_final.patch', 'diff_injected.patch') if final_is_x else ('diff_injected.patch', 'diff_final.patch')
             xf, yf = os.path.join(STAGE, h + '_x.patch'), os.path.join(STAGE, h + '_y.patch')
             shutil.copyfile(os.path.join(d, x_src), xf)
             shutil.copyfile(os.path.join(d, y_src), yf)
             meta = json.load(open(os.path.join(d, 'meta.json')))
-            index[h] = {'key': key, 'final': 'x' if final_is_x else 'y'}
+            index[h] = {'key': key, 'final': 'x' if final_is_x else 'y', 'work': fixloop.WORK}
             items.append({'key': h, 'language': meta['item']['language'], 'x_file': xf, 'y_file': yf})
     json.dump(index, open(index_path, 'w'), indent=1)
     json.dump({'items': items}, sys.stdout)
@@ -52,7 +52,7 @@ def write(runs):
             cand, fid = index[h]['key'].split('/', 1)
             final = index[h]['final']
             other = 'y' if final == 'x' else 'x'
-            chk_path = os.path.join(fixloop.WORK, 'fixloop', cand, fid, 'check.json')
+            chk_path = os.path.join(index[h].get('work', fixloop.WORK), 'fixloop', cand, fid, 'check.json')
             chk = json.load(open(chk_path))
             chk['judge'] = {
                 'final_simpler': ans['simpler'] == final,

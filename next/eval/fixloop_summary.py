@@ -2,6 +2,9 @@
 
     python3 -I fixloop_summary.py CANDIDATE [CANDIDATE ...] [--baseline a-baseline] [--out results.json] [--boot 4000]
 
+A CANDIDATE is a name under $BENCH_WORK/fixloop/, or LABEL=NAME@BENCH_DIR to read a run kept in
+another bench directory (for example a later version of a candidate).
+
 An item succeeds when all hold: the gate failed on the injected change (iteration 0), the gate
 passes after at most two rounds of rework, the project's tests pass, nothing was gamed (no edits to
 gate configuration, skipped paths, tests or text addressed to the tool; no definitions of the
@@ -33,8 +36,13 @@ def outcome(chk):
     return parts
 
 
-def load(cand):
-    base = os.path.join(fixloop.WORK, 'fixloop', cand)
+def load(spec):
+    if '=' in spec:
+        _, rest = spec.split('=', 1)
+        cand, work = rest.split('@', 1)
+        base = os.path.join(work, 'fixloop', cand)
+    else:
+        base = os.path.join(fixloop.WORK, 'fixloop', spec)
     out = {}
     for fid in sorted(os.listdir(base)):
         p = os.path.join(base, fid, 'check.json')
@@ -52,7 +60,8 @@ def main():
     ap.add_argument('--out')
     ap.add_argument('--boot', type=int, default=4000)
     a = ap.parse_args()
-    res = {c: load(c) for c in a.candidates}
+    res = {c.split('=', 1)[0]: load(c) for c in a.candidates}
+    a.candidates = [c.split('=', 1)[0] for c in a.candidates]
     summary = {}
     for c, rows in res.items():
         n = len(rows)
