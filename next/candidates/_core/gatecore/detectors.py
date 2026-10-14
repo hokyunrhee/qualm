@@ -35,11 +35,11 @@ def where(f, lo, hi):
 # ---------------------------------------------------------------- debug output
 
 DEBUG_CALLS = {
-    'Go': re.compile(r'\b(fmt\.Print(?:ln|f)?|println|print|spew\.Dump|log\.Print(?:ln|f)?)\s*\('),
-    'Python': re.compile(r'(^|[^.\w])(print\s*\(|pprint\s*\(|pdb\.set_trace\s*\(|breakpoint\s*\(\s*\)|import\s+pdb\b|ipdb\.set_trace|from\s+pprint\s+import)'),
-    'TypeScript': re.compile(r'\b(console\.(log|debug|dir|trace|table)\s*\(|debugger\s*;?\s*$)'),
-    'JavaScript': re.compile(r'\b(console\.(log|debug|dir|trace|table)\s*\(|debugger\s*;?\s*$)'),
-    'Ruby': re.compile(r'(^\s*(puts|p|pp|print)\b[\s(]|binding\.pry|\bbyebug\b|binding\.irb|\bdebugger\b)'),
+    'Go': re.compile(r'\b(fmt\.Print(?:ln|f)?|println|print|spew\.Dump|log\.Print(?:ln|f)?)\s*\(|\bfmt\.Fprint(?:ln|f)?\(\s*os\.Stderr'),
+    'Python': re.compile(r'(^|[^.\w])(print\s*\(|pprint\s*\(|pdb\.set_trace\s*\(|breakpoint\s*\(\s*\)|import\s+pdb\b|ipdb\.set_trace|from\s+pprint\s+import)|\bsys\.stderr\.write\s*\('),
+    'TypeScript': re.compile(r'\b(console\.(log|debug|dir|trace|table)\s*\(|debugger\s*;?\s*$|process\.stderr\.write\s*\()'),
+    'JavaScript': re.compile(r'\b(console\.(log|debug|dir|trace|table)\s*\(|debugger\s*;?\s*$|process\.stderr\.write\s*\()'),
+    'Ruby': re.compile(r'(^\s*(puts|p|pp|print)\b[\s(]|\$stderr\.(puts|print|write)\b|\bSTDERR\.(puts|print|write)\b|binding\.pry|\bbyebug\b|binding\.irb|\bdebugger\b)'),
     'Java': re.compile(r'\b(System\.(out|err)\.print(?:ln|f)?\s*\(|\.printStackTrace\s*\(\s*\))'),
 }
 ALWAYS_DEBUG = re.compile(r'pdb\.set_trace|breakpoint\s*\(\s*\)|import\s+pdb|binding\.pry|byebug|binding\.irb|^\s*debugger\b|spew\.Dump|\.printStackTrace\s*\(')
@@ -56,7 +56,7 @@ def debug_output(f, ctx):
         code = f.code[n - 1]
         if not rx.search(code):
             continue
-        if f.language == 'Go' and re.search(r'\bfmt\.Fprint', code):
+        if f.language == 'Go' and re.search(r'\bfmt\.Fprint', code) and not re.search(r'\bfmt\.Fprint(?:ln|f)?\(\s*os\.Stderr', code):
             continue
         strong = bool(ALWAYS_DEBUG.search(code)) or any(DEBUG_WORDS.search(s.strip()) for s in f.strings[n - 1] if s.strip())
         if f.language == 'Go' and 'log.Print' in code and not strong:
