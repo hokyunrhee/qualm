@@ -184,12 +184,12 @@
   0.8835394599347942,
   -0.06643141545372618
  ],
- "threshold": 0.217,
+ "threshold": 0.611,
  "meta": {
   "trained_on": "dev split only",
   "items": 5139,
   "positives": 1133,
   "C": 0.3,
-  "threshold_rule": "best out-of-fold F1"
+  "threshold_rule": "highest out-of-fold recall with precision >= 0.65"
  }
 }

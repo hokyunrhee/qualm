@@ -115,6 +115,7 @@ def main():
     ap.add_argument('--report', default=None)
     ap.add_argument('--precision-floor', type=float, default=None)
     ap.add_argument('--jobs', type=int, default=4)
+    ap.add_argument('--oof', default=None, help='write out-of-fold probabilities per item')
     a = ap.parse_args()
     if a.features and os.path.exists(a.features):
         rows = json.load(open(a.features))
@@ -153,6 +154,8 @@ def main():
                 by[key][v] = {'n': int(idx.sum()), 'positives': int(y[idx].sum()), 'flagged': int((p[idx] >= thr).sum())}
     rep = {'oof': metrics(y, p), 'C': C, 'grid': {str(c): grid[c][1] for c in grid}, 'threshold': thr, 'operating_point_oof': op,
            'by': by, 'weights': sorted(zip(names, [round(float(v), 3) for v in lr.coef_[0]]), key=lambda t: -abs(t[1]))}
+    if a.oof:
+        json.dump({r['item_id']: round(float(v), 5) for r, v in zip(rows, p)}, open(a.oof, 'w'))
     if a.report:
         os.makedirs(os.path.dirname(os.path.abspath(a.report)), exist_ok=True)
         json.dump(rep, open(a.report, 'w'), indent=1)
