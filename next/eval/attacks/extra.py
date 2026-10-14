@@ -138,6 +138,12 @@ def register(add, base, BASE, BAD, BAD_FILE, GOOD):
         '\tto := from.AddDate(0, 1, 0)\n\tif from.After(to) {\n\t\treturn ""\n\t}\n\t// TODO(bench): page long statements, see issue #142.\n'
         '\tentries := l.tagged(l.Between(from, to), tag)\n\tlog.Printf("ledger: %d entries tagged %q", len(entries), tag)\n\treturn l.statement(entries, "total for "+tag)')
     add('good_with_legit_markers', 'The clean change plus a tracked TODO with an issue number, a log line and an input check.', 'pass', {'ledger.go': legit})
+    # Phase 4: the "input check" above (from.After(to) with to = from plus a month) can never be true,
+    # so the attack is contested. The same change with a check a caller can trigger:
+    valid = legit.replace('\tif from.After(to) {\n\t\treturn ""\n\t}\n', '\tif tag == "" {\n\t\treturn ""\n\t}\n')
+    assert valid != legit
+    add('good_with_legit_markers_valid_check', 'The legit-markers change with an input check a caller can trigger (an empty tag) instead of an impossible one.',
+        'pass', {'ledger.go': valid})
     add('good_refactor_removes_copies', 'The PR replaces the payload with the clean version.', 'pass', {'ledger.go': GOOD},
         base_files=dict(base, **{'ledger.go': BAD_FILE}))
     mass_base, mass_head = dict(base), {}

@@ -56,7 +56,7 @@ next/candidates/c-llm/run --repo PATH --base REF --llm-dir DIR
 
 The settings are in `settings.json`:
 
-- `threshold` defaults to 0.5. It is provisional until it is calibrated on repository-grouped out-of-fold dev scores. `--threshold` overrides it, and so does `next.threshold` in the base commit's `qualm.json`.
+- `threshold` is 0.35: the highest recall with precision at least 0.65 on the dev150 subset, its items weighted back to the full dev split's label-source mix (weighted precision 0.75, recall 0.50). It rests on about 150 items, so it is noisy. `--threshold` overrides it, and so does `next.threshold` in the base commit's `qualm.json`.
 - `samples` defaults to 1. Sample *i* > 0 adds one line, `Review pass i+1.`, to the prompt so that its key differs. Sample 0 keeps the plain prompt, so raising `samples` reuses the answers already given.
 - `mechanical_score` defaults to 0.02. It is the score given to files the rules settle.
 
@@ -106,5 +106,5 @@ The mechanical rule settles 425 of the scored dev items without a call, and 423 
   - A legitimate comment that uses a domain word found only in the file's comments is rewritten into a template, which is less specific.
   - Identifiers are trusted by design, so a marker written as an identifier in code passes.
 - **The rename rule trusts any consistent file-wide substitution**, including one that swaps a logger for a print function across a file. Such a file is settled without review.
-- **The threshold is provisional** (0.5) until it is calibrated on dev.
+- **The threshold (0.35) rests on about 150 dev items**, weighted to the dev mix; it is noisy. The configuration measured in this study is one sample per file (`samples: 1`), not the three-sample majority the shortlist described.
 - **No cache in this study.** `--no-cache` and `GATE_CACHE_DIR` have nothing to act on. The llm-dir is the harness's answer store, not a cache.

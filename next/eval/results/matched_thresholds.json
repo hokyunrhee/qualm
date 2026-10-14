@@ -1,0 +1,36 @@
+{
+ "target_fpr_natural_negatives": 0.0558,
+ "baseline": "a-baseline",
+ "thresholds": {
+  "d-cascade": {
+   "threshold": 0.51176,
+   "dev_recall_at_it": 0.361,
+   "weighted_subset": false
+  },
+  "e-spot": {
+   "threshold": 0.49394,
+   "dev_recall_at_it": 0.3001,
+   "weighted_subset": false
+  },
+  "b-offline": {
+   "threshold": 0.49239,
+   "dev_recall_at_it": 0.2533,
+   "weighted_subset": false
+  },
+  "n0-size": {
+   "threshold": 0.50939,
+   "dev_recall_at_it": 0.1977,
+   "weighted_subset": false
+  },
+  "a-recal": {
+   "threshold": 0.469,
+   "dev_recall_at_it": 0.3124,
+   "weighted_subset": false
+  },
+  "c-llm": {
+   "threshold": 0.35,
+   "dev_recall_at_it": 0.5028,
+   "weighted_subset": true
+  }
+ }
+}

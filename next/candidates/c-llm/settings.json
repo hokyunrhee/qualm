@@ -1,5 +1,6 @@
 {
- "threshold": 0.5,
+ "threshold": 0.35,
  "samples": 1,
- "mechanical_score": 0.02
+ "mechanical_score": 0.02,
+ "threshold_rule": "highest recall with precision >= 0.65 on the dev150 subset, items weighted back to the full dev split's label-source mix (weighted precision 0.75, recall 0.50); about 150 items, so the point is noisy"
 }

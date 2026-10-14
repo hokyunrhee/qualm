@@ -3,16 +3,27 @@
     python3 -I metrics.py SPLIT_FILE --run NAME=results.jsonl [--run ...] [--baseline NAME]
                           [--threshold NAME=0.5] [--out metrics.json] [--boot 2000] [--subset ids.txt]
 
-Per candidate: PR-AUC (average precision), ROC-AUC, Brier score, ECE (10 equal-width bins),
-precision / recall / F1 at the candidate's own gate (or a threshold given here), localization hit
-rate, and could-not-judge count, overall and by language, label source, smell and agent-written.
-Against the baseline: paired bootstrap 95% intervals over cases (a case is resampled with all its
-items, since files of one change are not independent).
+Per candidate: PR-AUC (average precision), ROC-AUC, Brier score with its decomposition, log loss,
+ECE (10 equal-width bins, and 10 equal-mass bins with a bootstrap interval), precision / recall /
+F1 at the candidate's own gate (or a threshold given here), localization hit rate, and the
+could-not-judge count; overall and by language, label source, smell, agent-written and added-line
+tercile (cut points fixed from dev). Against the baseline: paired bootstrap 95% intervals that
+resample repositories, a bootstrap p-value per difference, and Holm-adjusted p-values over the
+non-confirmatory candidates. Pooled results are also given without hard negatives, and natural
+results without approved_agent negatives.
 
-A skipped or kept file counts as a pass with score 0. A case the candidate could not judge (exit 2,
-no report) is counted and its items are left out of the accuracy metrics; the count is reported.
+A skipped or kept file counts as a pass with score 0. A file the candidate could not judge fails
+closed: it counts as a fail with score 1. That covers a case with no report (exit 2 or a crash),
+a file the report marks as an error, and a changed file the report leaves out.
 """
-import argparse, collections, gzip, json, random, sys
+import argparse, collections, gzip, json, math, random, sys
+
+# added-line tercile cut points, fixed from the dev split (33rd and 67th percentiles of its 5,139 scored items)
+TERCILES = (5, 28)
+
+
+def tercile(added):
+    return 'small (<%d added)' % TERCILES[0] if added < TERCILES[0] else 'medium' if added < TERCILES[1] else 'large (>=%d added)' % TERCILES[1]
 
 
 NATURAL_POS = {'reviewer_comment', 'followup_cleanup'}
@@ -38,7 +49,8 @@ def load_labels(path, subset=None):
                               'nit': bool(it.get('nit')), 'tier': it.get('tier') or '-',
                               'language': it['language'], 'source': it['label_source'], 'smell': it.get('smell') or '-',
                               'location': it.get('location'), 'agent_written': bool(c.get('agent_written')),
-                              'origin': c['source'].split(':')[0]})
+                              'origin': c['source'].split(':')[0], 'size': tercile(it.get('added') or 0),
+                              'hard_negative': it['label_source'] == 'hard_negative', 'approved_agent': it['label_source'] == 'approved_agent'})
     return items
 
 
@@ -56,19 +68,22 @@ def load_run(path):
 
 
 def file_view(rec, path, threshold=None):
-    """(score, failed, findings) for one file of one case, or None if the case wasn't judged."""
-    if rec is None or rec['exit'] not in (0, 1) or not rec.get('report'):
+    """(score, failed, findings) for one file of one case, or None if the candidate could not judge it:
+    no report, a file the report marks as an error, or a file the report leaves out."""
+    if rec is None or not rec.get('report'):
         return None
     for f in rec['report'].get('files') or []:
         if f['path'] == path:
-            if f.get('status') != 'judged':
+            if f.get('status') in ('skipped', 'kept'):
                 return (0.0, False, [])
+            if f.get('status') != 'judged':
+                return None
             s = f.get('score')
             if s is None:
                 return None
             failed = (s >= threshold) if threshold is not None else bool(f.get('failed'))
             return (float(s), failed, f.get('findings') or [])
-    return (0.0, False, [])  # not in the report: the candidate didn't consider it a judged change
+    return None
 
 
 def average_precision(ys, ss):
@@ -138,6 +153,27 @@ def ece_mass(ys, ss, bins=10):
     return tot
 
 
+def log_loss(ys, ss):
+    eps = 1e-6
+    return -sum(y * math.log(max(eps, s)) + (1 - y) * math.log(max(eps, 1 - s)) for y, s in zip(ys, ss)) / len(ys)
+
+
+def brier_parts(ys, ss, bins=10):
+    """Murphy's decomposition over equal-mass bins: Brier ~ reliability - resolution + uncertainty."""
+    n = len(ys)
+    base = sum(ys) / n
+    order = sorted(range(n), key=lambda i: ss[i])
+    rel = res = 0.0
+    for b in range(bins):
+        idx = order[b * n // bins:(b + 1) * n // bins]
+        if idx:
+            conf = sum(ss[i] for i in idx) / len(idx)
+            acc = sum(ys[i] for i in idx) / len(idx)
+            rel += len(idx) / n * (conf - acc) ** 2
+            res += len(idx) / n * (acc - base) ** 2
+    return {'reliability': rel, 'resolution': res, 'uncertainty': base * (1 - base)}
+
+
 def prf(ys, fs):
     tp = sum(1 for y, f in zip(ys, fs) if y and f)
     fp = sum(1 for y, f in zip(ys, fs) if not y and f)
@@ -171,9 +207,11 @@ def compute(rows):
              for r in loc_rows]
     ious = [max([iou(fd['lines'], r['location']) for fd in r['findings'] if fd.get('lines')] or [0.0]) for r in loc_rows]
     widths = [fd['lines'][1] - fd['lines'][0] + 1 for r in loc_rows for fd in r['findings'] if fd.get('lines')]
+    neg = [f for y, f in zip(ys, fs) if not y]
     return {'n': len(rows), 'positives': sum(ys), 'pr_auc': average_precision(ys, ss), 'roc_auc': roc_auc(ys, ss),
             'brier': brier(ys, ss) if rows else float('nan'), 'ece': ece(ys, ss) if rows else float('nan'),
-            'ece_mass': ece_mass(ys, ss) if rows else float('nan'),
+            'ece_mass': ece_mass(ys, ss) if rows else float('nan'), 'log_loss': log_loss(ys, ss) if rows else float('nan'),
+            'brier_parts': brier_parts(ys, ss) if rows else None, 'fpr': sum(neg) / len(neg) if neg else float('nan'),
             'precision': p, 'recall': rcl, 'f1': f1, 'fail_rate': sum(fs) / len(fs) if fs else float('nan'),
             'loc_n': len(loc_rows), 'loc_hit': sum(hits) / len(hits) if hits else float('nan'),
             'loc_hit_tight': sum(tight) / len(tight) if tight else float('nan'),
@@ -230,7 +268,7 @@ def paired_bootstrap(items, run_a, run_b, thr_a, thr_b, boot=2000, seed=7, clust
         by_case[ka[i][cluster]].append(i)
     cases = sorted(by_case)
     rng = random.Random(seed)
-    names = ['pr_auc', 'precision', 'recall', 'f1', 'brier', 'roc_auc']
+    names = ['pr_auc', 'precision', 'recall', 'f1', 'brier', 'roc_auc', 'ece_mass', 'log_loss', 'fpr']
     point_a = compute([ka[i] for i in common])
     point_b = compute([kb[i] for i in common])
     diffs = {n: [] for n in names}
@@ -246,9 +284,40 @@ def paired_bootstrap(items, run_a, run_b, thr_a, thr_b, boot=2000, seed=7, clust
     for n in names:
         ds = sorted(diffs[n])
         if ds:
+            le = sum(1 for d in ds if d <= 0) / len(ds)
+            ge = sum(1 for d in ds if d >= 0) / len(ds)
             out[n] = {'a': point_a[n], 'b': point_b[n], 'diff': point_a[n] - point_b[n],
-                      'ci95': [ds[int(0.025 * len(ds))], ds[min(len(ds) - 1, int(0.975 * len(ds)))]]}
+                      'ci95': [ds[int(0.025 * len(ds))], ds[min(len(ds) - 1, int(0.975 * len(ds)))]],
+                      'p_boot': min(1.0, 2 * min(le, ge))}
     return out
+
+
+def holm(pvals):
+    """Holm-adjusted p-values for {name: p}."""
+    order = sorted(pvals, key=lambda k: pvals[k])
+    out, run = {}, 0.0
+    m = len(order)
+    for i, k in enumerate(order):
+        run = max(run, min(1.0, (m - i) * pvals[k]))
+        out[k] = run
+    return out
+
+
+def interval(rows, metric, boot, seed=13, cluster='repo'):
+    """A bootstrap interval for one candidate's metric, resampling repositories."""
+    by = collections.defaultdict(list)
+    for r in rows:
+        by[r[cluster]].append(r)
+    keys = sorted(by)
+    rng = random.Random(seed)
+    vals = []
+    for _ in range(boot):
+        pick = [r for k in (rng.choice(keys) for _ in keys) for r in by[k]]
+        v = compute(pick)[metric]
+        if v == v:
+            vals.append(v)
+    vals.sort()
+    return [vals[int(0.025 * len(vals))], vals[min(len(vals) - 1, int(0.975 * len(vals)))]] if vals else None
 
 
 def matched_pairs(split_file, run, threshold=None):
@@ -298,6 +367,8 @@ def main():
     ap.add_argument('--subset')
     ap.add_argument('--boot', type=int, default=2000)
     ap.add_argument('--out')
+    ap.add_argument('--confirmatory', help='the one pre-registered comparison; the others are Holm-adjusted')
+    ap.add_argument('--no-extra', action='store_true', help='skip the sensitivity analyses and intervals (faster)')
     a = ap.parse_args()
     subset = set(l.strip() for l in open(a.subset) if l.strip()) if a.subset else None
     items = load_labels(a.split_file, subset)
@@ -314,6 +385,11 @@ def main():
         m['by_agent_written'] = breakdown(rows, 'agent_written')
         m['by_origin'] = breakdown(rows, 'origin')
         m['by_nit'] = breakdown(rows, 'nit')
+        m['by_size'] = breakdown(rows, 'size')
+        if not a.no_extra:
+            m['ece_mass_ci95'] = interval(rows, 'ece_mass', min(a.boot, 1000))
+            m['pr_auc_ci95'] = interval(rows, 'pr_auc', min(a.boot, 1000))
+        m['without_hard_negatives'] = compute([r for r in rows if not r['hard_negative']])
         m['threshold_override'] = thr.get(name)
         m['pr_level'] = pr_level(rows)
         result['candidates'][name] = m
@@ -321,6 +397,7 @@ def main():
     for name, run in runs.items():
         rows, _ = join(natural_items, run, thr.get(name))
         result['candidates'][name]['natural'] = compute(rows)
+        result['candidates'][name]['natural_without_approved_agent'] = compute([r for r in rows if not r['approved_agent']])
         result['candidates'][name]['pairs'] = matched_pairs(a.split_file, run, thr.get(name))
     if a.baseline:
         result['vs_baseline'] = {}
@@ -331,6 +408,13 @@ def main():
                 result['vs_baseline'][name] = paired_bootstrap(items, runs[name], runs[a.baseline], thr.get(name), thr.get(a.baseline), a.boot)
                 result['vs_baseline_natural'][name] = paired_bootstrap(natural_items, runs[name], runs[a.baseline], thr.get(name), thr.get(a.baseline), a.boot)
                 result['vs_baseline_by_origin'][name] = paired_bootstrap(items, runs[name], runs[a.baseline], thr.get(name), thr.get(a.baseline), a.boot, cluster='origin_change')
+                if not a.no_extra:
+                    result.setdefault('vs_baseline_without_hard_negatives', {})[name] = paired_bootstrap(
+                        [it for it in items if not it['hard_negative']], runs[name], runs[a.baseline], thr.get(name), thr.get(a.baseline), a.boot)
+                    result.setdefault('vs_baseline_natural_without_approved_agent', {})[name] = paired_bootstrap(
+                        [it for it in natural_items if not it['approved_agent']], runs[name], runs[a.baseline], thr.get(name), thr.get(a.baseline), a.boot)
+        others = {n: d['pr_auc']['p_boot'] for n, d in result['vs_baseline'].items() if n != a.confirmatory and 'pr_auc' in d}
+        result['holm_pr_auc'] = {'confirmatory': a.confirmatory, 'family': sorted(others), 'adjusted_p': holm(others) if others else {}}
     print('%-22s %5s %4s %7s %7s %6s %6s %6s %6s %6s %6s %5s' % ('candidate', 'n', 'pos', 'PR-AUC', 'ROC', 'Brier', 'ECE', 'P', 'R', 'F1', 'loc', 'cnj'))
     for name, m in result['candidates'].items():
         print('%-22s %5d %4d %7.3f %7.3f %6.3f %6.3f %6.3f %6.3f %6.3f %6.3f %5d' % (

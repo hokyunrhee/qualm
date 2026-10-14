@@ -58,6 +58,10 @@ VERB_TEXT = {
     'shorten': ('take a longer route than needed for what they compute',
                 'Rewrite the steps with the direct construct (a built-in, one loop instead of two, an early return instead of nesting) and keep the behaviour. Done when the construct named here is replaced, not when lines are merged.'),
 }
+# detector findings that already say, line by line, what a verb would say about a whole function
+VERB_DETECTORS = {'added_placeholders': ('debug_output', 'placeholder', 'stub', 'commented_out_code'), 'added_copies': ('near_copy',),
+                  'added_impossible_guards': ('defensive_guard',), 'remove': ('unused_code',), 'indirection': ('pass_through',),
+                  'added_unused_flexibility': ('pass_through', 'unused_code')}
 with open(os.path.join(HERE, 'verbs.json')) as _fh:
     VERB_STATS = json.load(_fh)['questions']
 
@@ -271,9 +275,14 @@ class Scorer:
             places = self.ask_places(f, use_cache=not self.args.no_cache)
         precise = {n for d in found if d['confidence'] >= 0.6 and d['lines'][1] - d['lines'][0] + 1 <= PRECISE
                    for n in range(d['lines'][0], d['lines'][1] + 1)}
+        precise_ids = [(d['id'], d['lines']) for d in found if d['confidence'] >= 0.6 and d['lines'][1] - d['lines'][0] + 1 <= PRECISE]
         asked = []
         for (lo, hi, name, rows), ans in zip(*places):
             if sum(1 for n in rows if n in precise) >= 0.5 * len(rows):
+                continue
+            verb = verb_of(ans)
+            # the detectors already name the exact lines of this kind of problem inside the place
+            if any(i in VERB_DETECTORS.get(verb, ()) and lo <= ls[0] and ls[1] <= hi for i, ls in precise_ids):
                 continue
             asked.append((ans['push_back'], lo, hi, name, ans, rows))
         asked.sort(key=lambda r: (-r[0], r[1]))
