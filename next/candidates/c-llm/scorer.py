@@ -12,7 +12,7 @@ needs is written in one pass, and the run exits 2 with "needs llm" until all are
 import hashlib, json, os
 
 from gatecore import cli, gitio, llmdir
-import mechanical, prompt, verify
+import mechanical, prompt, verify, view
 
 VERSION = '0.1.0'
 HERE = os.path.dirname(os.path.realpath(__file__))
@@ -114,7 +114,7 @@ class Scorer:
             if p is None:
                 return self.error('the reviewer\'s answer in responses/%s.json has no probability from 0 to 1' % key)
         taint = verify.Taint(f)
-        n_lines = len(f.lines)
+        n_lines = view.head_len(f)
         per_sample, records = [], []
         for p in parsed:
             kept, record = verify.check(f, p.comments, taint, n_lines)
