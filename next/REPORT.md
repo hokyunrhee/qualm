@@ -24,7 +24,7 @@ Every number here comes from a file in `next/eval/results/`. Section 2 is genera
 ## 1. The problem as now understood, and what Phase 0 revealed
 
 **The problem is three problems, and they behave differently.**
-1. **Trust.** Can the pull request steer or hide from its own judge? This is deterministic, and it is now solved.
+1. **Trust.** Can the pull request steer or hide from its own judge? This is deterministic, and every trust attack in the suite is now handled.
 2. **Ranking.** Is this file one a reviewer would push back on? This is judgement, and the headroom on real reviewer signal turned out small.
 3. **The report.** Can a coding agent act on what it is told? Here the evidence points the right way but is not conclusive.
 
