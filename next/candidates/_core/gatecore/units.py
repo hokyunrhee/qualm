@@ -37,11 +37,19 @@ class Unit:
 
 
 def _brace_end(masked, start_idx, limit=4000):
-    """Index of the line holding the brace that closes the first `{` at or after start_idx."""
-    depth, opened = 0, False
+    """Index of the line holding the brace that closes the body's opening `{` at or after start_idx.
+    Braces inside parentheses (`func f(v interface{})`, `f({a: 1})`) balance among themselves and
+    are not the body's."""
+    depth, opened, parens = 0, False, 0
     for k in range(start_idx, min(len(masked), start_idx + limit)):
         for ch in masked[k]:
-            if ch == '{':
+            if ch in '([':
+                parens += 1
+            elif ch in ')]':
+                parens = max(0, parens - 1)
+            elif parens:
+                continue
+            elif ch == '{':
                 depth += 1
                 opened = True
             elif ch == '}':

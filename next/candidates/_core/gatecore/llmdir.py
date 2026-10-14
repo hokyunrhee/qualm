@@ -9,11 +9,24 @@ Token counts are estimates (UTF-8 bytes / 3.5) because no tokenizer is available
 """
 import hashlib, json, os
 
+from .gitio import GateError
+
 PRICES = {'claude-haiku-5-5': (0.10, 0.50), 'claude-sonnet-5-5': (2.00, 10.00), 'claude-opus-5-5': (4.00, 20.00)}
 
 
 def est_tokens(text):
     return int(len(text.encode('utf-8')) / 3.5) + 1
+
+
+class BadAnswer(GateError):
+    """An answer file exists but is not a JSON object: the run cannot judge (exit 2), and the
+    request is not written again, so a harness that skips answered keys cannot loop."""
+
+
+def key_of(model, system, prompt, schema):
+    """The request key: the first 32 hex digits of the SHA-256 of the request's JSON (sorted keys)."""
+    req = {'model': model, 'system': system, 'prompt': prompt, 'schema': schema}
+    return hashlib.sha256(json.dumps(req, sort_keys=True).encode()).hexdigest()[:32]
 
 
 class LLM:
@@ -24,9 +37,8 @@ class LLM:
         self.cost = 0.0
 
     def ask(self, model, system, prompt, schema):
-        req = {'model': model, 'system': system, 'prompt': prompt, 'schema': schema}
-        key = hashlib.sha256(json.dumps(req, sort_keys=True).encode()).hexdigest()[:32]
-        req['key'] = key
+        key = key_of(model, system, prompt, schema)
+        req = {'model': model, 'system': system, 'prompt': prompt, 'schema': schema, 'key': key}
         resp_path = os.path.join(self.dir, 'responses', key + '.json')
         tin = est_tokens(system) + est_tokens(prompt) + est_tokens(json.dumps(schema))
         if os.path.exists(resp_path):
@@ -35,14 +47,15 @@ class LLM:
                     ans = json.load(fh)
             except (OSError, ValueError):
                 ans = None
-            if isinstance(ans, dict):
-                tout = est_tokens(json.dumps(ans))
-                pin, pout = PRICES.get(model, PRICES['claude-sonnet-5-5'])
-                self.requests += 1
-                self.input_tokens += tin
-                self.output_tokens += tout
-                self.cost += (tin * pin + tout * pout) / 1e6
-                return ans
+            if not isinstance(ans, dict):
+                raise BadAnswer('the answer to LLM request %s is not a JSON object' % key)
+            tout = est_tokens(json.dumps(ans))
+            pin, pout = PRICES.get(model, PRICES['claude-sonnet-5-5'])
+            self.requests += 1
+            self.input_tokens += tin
+            self.output_tokens += tout
+            self.cost += (tin * pin + tout * pout) / 1e6
+            return ans
         os.makedirs(os.path.join(self.dir, 'requests'), exist_ok=True)
         with open(os.path.join(self.dir, 'requests', key + '.json'), 'w') as fh:
             json.dump(req, fh)

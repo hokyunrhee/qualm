@@ -179,6 +179,14 @@ class LexerUnitTests(unittest.TestCase):
         got = [(u.name, u.start, u.end) for u in units.find_units(BAD_GO, 'Go')]
         self.assertIn(('TagStatement', 81, 111), got)
 
+    def test_braces_in_a_signature_do_not_end_the_unit(self):
+        src = 'package a\n\nfunc F(v interface{}) error {\n\t_ = v\n\treturn nil\n}\n'
+        self.assertEqual([(u.name, u.start, u.end) for u in units.find_units(src, 'Go')], [('F', 3, 6)])
+
+    def test_a_docstring_does_not_end_a_python_function(self):
+        src = 'def f():\n    """doc\n    more"""\n    return 1\n\ndef g():\n    pass\n'
+        self.assertEqual([(u.name, u.start, u.end) for u in units.find_units(src, 'Python')], [('f', 1, 4), ('g', 6, 7)])
+
     def test_diff_marks_added_lines(self):
         d = units.FileDiff('a\nb\nc\n', 'a\nx\nb\nc\n')
         self.assertEqual(d.added, {2})
@@ -344,6 +352,32 @@ class CliTests(unittest.TestCase):
             self.assertEqual(json.loads(out.getvalue())['files'][0]['status'], 'error')
         finally:
             r.close()
+
+    def test_a_crashing_scorer_cannot_judge(self):
+        def boom(args, policy):
+            raise ValueError('bad settings')
+        r = Repo({'ledger.go': BASE_GO})
+        try:
+            r.commit({'ledger.go': BAD_GO})
+            self.assertEqual(cli.run('t', '0', boom, ['--repo', r.dir, '--base', 'base'], out=io.StringIO(), err=io.StringIO()), 2)
+        finally:
+            r.close()
+
+    def test_a_bad_llm_answer_is_not_asked_again(self):
+        from gatecore import llmdir
+        d = tempfile.mkdtemp()
+        try:
+            llm = llmdir.LLM(d)
+            self.assertIsNone(llm.ask('m', 's', 'p', {}))
+            key = llmdir.key_of('m', 's', 'p', {})
+            self.assertTrue(os.path.exists(os.path.join(d, 'requests', key + '.json')))
+            os.makedirs(os.path.join(d, 'responses'))
+            with open(os.path.join(d, 'responses', key + '.json'), 'w') as fh:
+                fh.write('[1, 2]')
+            with self.assertRaises(llmdir.BadAnswer):
+                llm.ask('m', 's', 'p', {})
+        finally:
+            shutil.rmtree(d)
 
     def test_undecodable_code_file_fails_closed(self):
         r = Repo({'ledger.go': BASE_GO})

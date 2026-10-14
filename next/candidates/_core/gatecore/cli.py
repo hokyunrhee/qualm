@@ -62,14 +62,20 @@ def run(tool, version, make_scorer, argv=None, out=sys.stdout, err=sys.stderr):
     except gitio.GateError as e:
         print('%s: %s' % (tool, e), file=err)
         return 2
-    scorer = make_scorer(args, policy)
+    except Exception as e:
+        print('%s: could not judge: %s: %s' % (tool, type(e).__name__, str(e)[:300]), file=err)
+        return 2
     try:
+        scorer = make_scorer(args, policy)
         results = scorer.score(ctx, found, feats)
     except NeedsLLM as e:
         print('needs llm: %s' % e, file=err)
         return 2
     except gitio.GateError as e:
         print('%s: %s' % (tool, e), file=err)
+        return 2
+    except Exception as e:  # a crash is never a verdict: exit 2, not the 1 an uncaught error would give
+        print('%s: could not judge: %s: %s' % (tool, type(e).__name__, str(e)[:300]), file=err)
         return 2
     for f in ctx.files:
         r = results.get(f.path)

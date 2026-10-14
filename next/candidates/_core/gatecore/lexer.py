@@ -56,6 +56,11 @@ def scan(text, language):
     for n, line in enumerate(lines):
         L = out[n]
         i, m = 0, len(line)
+        # a string or block comment carried over from an earlier line: keep this line's indentation
+        # in the masked code, so indentation-based units still see where the line sits
+        lead = line[:len(line) - len(line.lstrip())] if isinstance(state, tuple) else ''
+        if lead:
+            L.code.append(lead)
         if state == 'rubydoc':
             if line.startswith('=end'):
                 state = None
