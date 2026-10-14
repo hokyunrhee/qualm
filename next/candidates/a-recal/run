@@ -1,0 +1,29 @@
+#!/usr/bin/env -S python3 -I
+"""a-recal: qualm 0.1.1 unmodified, with its push_back answer mapped through a Platt step fitted on
+dev. Same verdicts as qualm (the threshold is qualm's 0.6 mapped through the step); calibrated scores."""
+import json, math, os, subprocess, sys
+
+HERE = os.path.dirname(os.path.realpath(__file__))
+
+
+def main():
+    p = subprocess.run([os.path.join(HERE, '..', 'a-baseline', 'run')] + sys.argv[1:], capture_output=True, text=True)
+    sys.stderr.write(p.stderr)
+    if '--format' in sys.argv and sys.argv[sys.argv.index('--format') + 1] == 'text' or p.returncode not in (0, 1):
+        sys.stdout.write(p.stdout)
+        return p.returncode
+    platt = json.load(open(os.path.join(HERE, 'platt.json')))
+    rep = json.loads(p.stdout)
+    for f in rep.get('files') or []:
+        if f.get('status') == 'judged' and f.get('score') is not None:
+            q = min(max(f['score'], 1e-3), 1 - 1e-3)
+            f['signals'] = dict(f.get('signals') or {}, push_back_raw=f['score'])
+            f['score'] = round(1 / (1 + math.exp(-(platt['a'] * math.log(q / (1 - q)) + platt['b']))), 4)
+            f['threshold'] = platt['threshold']
+    rep['tool'] = 'a-recal'
+    print(json.dumps(rep, indent=1))
+    return p.returncode
+
+
+if __name__ == '__main__':
+    sys.exit(main())
