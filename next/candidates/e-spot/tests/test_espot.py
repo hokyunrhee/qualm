@@ -473,7 +473,7 @@ class TestGate(Base):
         self.assertEqual(len(fake.requests), first)
         self.assertEqual(rep['usage']['jev_requests'], 0)
 
-    def test_close_call_is_asked_twice_more(self):
+    def test_close_call_is_asked_four_more_times(self):
         # p = sigmoid(10 * 0.5 - 5) = 0.5: on the threshold
         fake = FakeJev(lambda st: 0.5)
         try:
@@ -481,7 +481,20 @@ class TestGate(Base):
             code, rep, err, _ = self.run_gate(repo, fake.url)
         finally:
             fake.close()
-        self.assertEqual(len(fake.requests), 2 * 3)
+        self.assertEqual(len(fake.requests), 2 * scorer.DRAWS)
+        self.assertTrue(rep['files'][0]['signals']['settled'])
+
+    def test_settled_answers_are_cached(self):
+        fake = FakeJev(lambda st: 0.5)
+        cache = os.path.join(self.tmp, 'cache')
+        try:
+            repo = self.repo({'calc.go': BASE_GO}, {'calc.go': HEAD_GO})
+            self.run_gate(repo, fake.url, cache_dir=cache)
+            first = len(fake.requests)
+            code, rep, err, _ = self.run_gate(repo, fake.url, cache_dir=cache)
+        finally:
+            fake.close()
+        self.assertEqual(len(fake.requests), first)
         self.assertTrue(rep['files'][0]['signals']['settled'])
 
     def test_text_report(self):

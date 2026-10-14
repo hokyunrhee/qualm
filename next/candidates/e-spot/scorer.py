@@ -6,11 +6,11 @@ per file (max and size-weighted mean per question, plus a noisy-or of push_back)
 core's features; a logistic model trained on dev (train.py, model.json) turns them into the
 probability that a reviewer would ask for the file's change to be simplified.
 
-A file whose answers land close to the threshold is asked twice more and judged on the median,
-so a fresh draw from Jev rarely flips the verdict. A file that cannot be asked about (no key, Jev
+A file whose score lands close to the threshold has each of its spots asked four more times and is
+judged on the mean of the five answers, so a fresh draw from Jev rarely flips the verdict. A file that cannot be asked about (no key, Jev
 failing after retries, the budget spent) is an error, and the run exits 2: it never passes.
 """
-import hashlib, math, os, statistics
+import hashlib, math, os
 from concurrent.futures import ThreadPoolExecutor
 
 from gatecore import gitio, jev, perimeter, units as unitmod
@@ -23,7 +23,8 @@ VERSION = '0.1.0'
 HERE = os.path.dirname(os.path.realpath(__file__))
 DEFAULT_BUDGET = 0.25   # dollars per run when --budget is not given
 JOBS = 6                # requests in flight at once
-CLOSE = 0.04            # a file this near its threshold is asked twice more
+CLOSE = 0.05            # a file this near its threshold is a close call
+DRAWS = 5               # answers per spot a close call is judged on (their mean)
 VERB_MIN = 0.5          # a verb answer this high makes a finding on a failing file
 ADVICE_MIN = 0.8        # ... and on a passing file, as advice
 DETECTOR_FAILING_MIN = 0.3
@@ -151,38 +152,53 @@ class Scorer:
         self.client = jev.Client(budget=self.budget, cache_dir=cache)
         return self.client
 
-    def _ask_all(self, jobs):
-        """jobs: [(key, state)] -> {key: answers or JevError}."""
-        out = {}
+    def _ask_one(self, st, use_cache):
+        for attempt in range(2):
+            try:
+                return self.client.ask(st, questions.QUESTIONS, use_cache=use_cache)
+            except jev.JevError as e:
+                # OpenRouter sometimes answers 499 (the request was dropped upstream); the core
+                # client does not retry it, so it is tried once more here
+                if attempt or 'HTTP 499' not in str(e):
+                    return e
 
-        def one(job):
-            key, st = job
-            for attempt in range(2):
-                try:
-                    return key, self.client.ask(st, questions.QUESTIONS, use_cache=self.use_cache)
-                except jev.JevError as e:
-                    # OpenRouter sometimes answers 499 (the request was dropped upstream); the core
-                    # client does not retry it, so it is tried once more here
-                    if attempt or 'HTTP 499' not in str(e):
-                        return key, e
+    def _ask_all(self, jobs, use_cache=True):
+        """jobs: [(key, state)] -> {key: answers or JevError}, asked JOBS at a time."""
+        use_cache = use_cache and self.use_cache
         with ThreadPoolExecutor(JOBS) as ex:
-            for key, res in ex.map(one, jobs):
-                out[key] = res
-        return out
+            return dict(zip([k for k, _ in jobs], ex.map(lambda job: self._ask_one(job[1], use_cache), jobs)))
 
-    def _settle(self, st, first):
-        """The median of three answers to one spot; the settled answers are cached under their own key."""
+    def _settled_key(self, st):
         req = self.client.request(st, questions.QUESTIONS)
-        skey = hashlib.sha256(('e-spot-settled:' + jev.Client.key_of(req)).encode()).hexdigest()
-        if self.use_cache:
-            hit = self.client.cache_get(skey)
-            if hit is not None and all(q in hit.get('answers', {}) for q in questions.IDS):
-                return hit['answers']
-        draws = [first] + [self.client.ask(st, questions.QUESTIONS, use_cache=False) for _ in range(2)]
-        med = {q: statistics.median(d[q] for d in draws) for q in questions.IDS}
-        if self.use_cache:
-            self.client.cache_put(skey, {'answers': med})
-        return med
+        return hashlib.sha256(('e-spot-settled-mean%d:' % DRAWS + jev.Client.key_of(req)).encode()).hexdigest()
+
+    def _settle(self, close, plan, got):
+        """Close calls: each spot's answers become the mean of DRAWS answers (the first plus fresh
+        ones, asked concurrently). Settled answers are cached under their own key, so a cached run
+        does not ask again. Returns {(path, i): answers or JevError}."""
+        out, fresh = {}, []
+        for path in close:
+            for i, st in enumerate(plan[path][2]):
+                hit = self.client.cache_get(self._settled_key(st)) if self.use_cache else None
+                if hit is not None and all(q in hit.get('answers', {}) for q in questions.IDS):
+                    out[(path, i)] = hit['answers']
+                else:
+                    fresh += [((path, i, k), st) for k in range(DRAWS - 1)]
+        more = self._ask_all(fresh, use_cache=False)
+        for path in close:
+            for i, st in enumerate(plan[path][2]):
+                if (path, i) in out:
+                    continue
+                draws = [got[(path, i)]] + [more[(path, i, k)] for k in range(DRAWS - 1)]
+                err = next((d for d in draws if isinstance(d, jev.JevError)), None)
+                if err is not None:
+                    out[(path, i)] = err
+                    continue
+                mean = {q: sum(d[q] for d in draws) / len(draws) for q in questions.IDS}
+                if self.use_cache:
+                    self.client.cache_put(self._settled_key(st), {'answers': mean})
+                out[(path, i)] = mean
+        return out
 
     def score(self, ctx, found, feats):
         if not ctx.files:
@@ -199,7 +215,7 @@ class Scorer:
             plan[f.path] = (asked, left, states)
             jobs += [((f.path, i), st) for i, st in enumerate(states)]
         got = self._ask_all(jobs)
-        out = {}
+        out, first = {}, {}
         for f in ctx.files:
             asked, left, states = plan[f.path]
             answers = [got[(f.path, i)] for i in range(len(asked))]
@@ -209,18 +225,23 @@ class Scorer:
                 continue
             x = dict(feats[f.path])
             x.update(aggregate(asked, answers, left))
-            p = self.model.predict(x)
-            settled = False
-            if asked and abs(p - self.threshold) <= CLOSE:
-                try:
-                    answers = [self._settle(st, a) for st, a in zip(states, answers)]
-                except jev.JevError as e:
-                    out[f.path] = {'error': 'could not judge: %s' % e}
+            first[f.path] = (x, answers, self.model.predict(x))
+        close = [path for path, (_, _, p) in first.items() if plan[path][0] and abs(p - self.threshold) <= CLOSE]
+        settled = self._settle(close, plan, got) if close else {}
+        for f in ctx.files:
+            if f.path not in first:
+                continue
+            asked, left, states = plan[f.path]
+            x, answers, p = first[f.path]
+            if f.path in close:
+                answers = [settled[(f.path, i)] for i in range(len(asked))]
+                errs = [a for a in answers if isinstance(a, jev.JevError)]
+                if errs:
+                    out[f.path] = {'error': 'could not judge: %s' % errs[0]}
                     continue
                 x.update(aggregate(asked, answers, left))
                 p = self.model.predict(x)
-                settled = True
-            out[f.path] = self._verdict(f, p, x, asked, left, answers, found[f.path], settled)
+            out[f.path] = self._verdict(f, p, x, asked, left, answers, found[f.path], f.path in close)
         errors = [r for r in out.values() if r.get('error')]
         if errors:
             self.warnings.append('%d file%s could not be judged by Jev, so the change does not pass.' % (len(errors), '' if len(errors) == 1 else 's'))
