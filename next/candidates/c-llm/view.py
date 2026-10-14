@@ -5,9 +5,10 @@ writes can be checked against the lines the change added, and no line of the fil
 part of the prompt around it. Removed base lines are shown with "-" and no number.
 
 When the whole view does not fit the prompt cap, long hunks are cut into pieces at function
-boundaries and the pieces holding the most added code are kept. Lines that are data (a table of
-literals), blank, comment-only, or moved from elsewhere in the file count for little, so a large
-table cannot push the code it hides out of the view.
+boundaries and the pieces holding the most added code are kept, code inside functions first.
+Blank, comment-only and moved lines count for little, and a piece that is mostly rows of
+literals (a data table) is shown only when nothing else is, so a large table cannot push the
+code it hides out of the view.
 """
 import collections
 
@@ -109,17 +110,22 @@ class Weigher:
             self.in_unit.update(range(u.start, u.end + 1))
 
     def line(self, k):
+        """(weight, is a data line) of head line k."""
         f = self.f
         if k not in f.added or not f.code[k - 1].strip():
-            return 0.0
+            return 0.0, False
         if self.moved.get(f.lines[k - 1].strip()):
-            return 0.1
+            return 0.1, False
         if data_like(f.code[k - 1], f.language):
-            return 0.0
-        return 1.0 if k in self.in_unit else 0.5
+            return 0.0, True
+        return (1.0 if k in self.in_unit else 0.5), False
 
     def piece(self, lo, hi):
-        return sum(self.line(k) for k in range(lo, hi + 1))
+        """The piece's weight, and whether it is mostly rows of literals."""
+        rows = [self.line(k) for k in range(lo, hi + 1)]
+        data = sum(1 for _, is_data in rows if is_data)
+        added = sum(1 for k in range(lo, hi + 1) if k in self.f.added and self.f.lines[k - 1].strip())
+        return sum(w for w, _ in rows), data > 0 and data * 2 >= added
 
 
 def pieces(f, lo, hi):
@@ -180,16 +186,12 @@ def build(f, budget):
     if nbytes(whole) <= budget:
         return View(join(f, blocks), [(lo, hi) for lo, hi, _ in blocks], [])
     weigh = Weigher(f)
-    cands = []
-    for lo, hi, _ in blocks:
-        for a, b in pieces(f, lo, hi):
-            rows = render(f, a, b, anch)
-            added = sum(1 for k in range(a, b + 1) if k in f.added)
-            cands.append((weigh.piece(a, b), a, b, rows, added))
+    cands = [(a, b) + weigh.piece(a, b) for lo, hi, _ in blocks for a, b in pieces(f, lo, hi)]
+    # pieces that are mostly rows of literals go only when there is nothing else to show
+    cands = [c for c in cands if not c[3]] or cands
     chosen, used = [], 0
-    for w, a, b, rows, added in sorted(cands, key=lambda c: (-c[0], c[1])):
-        if added and not w:
-            continue  # nothing but data, blank or comment lines
+    for a, b, w, _ in sorted(cands, key=lambda c: (-c[2], c[0])):
+        rows = render(f, a, b, anch)
         cost = nbytes(rows) + 60
         if used + cost <= budget:
             chosen.append((a, b, rows))
