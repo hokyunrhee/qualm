@@ -1,0 +1,870 @@
+{
+ "items": [
+  {
+   "fix_id": "fx-dev-BurntSushi_toml-1905bd7b",
+   "split": "dev",
+   "repo_key": "BurntSushi_toml",
+   "repo": "BurntSushi/toml",
+   "language": "Go",
+   "sha": "1905bd7b6af5c74f1cbc141d9c27a55ef571a2d6",
+   "file": "error.go",
+   "all_files": [
+    "error.go"
+   ],
+   "smell": "leftover",
+   "setup": "go mod download",
+   "test": "go test -count=1 ./...",
+   "dir": "/tmp/claude-0/-home-user-qualm/2ede26c6-6287-5d82-9ba2-8868fcdef917/scratchpad/fixloop/fx-dev-BurntSushi_toml-1905bd7b",
+   "location": [
+    5,
+    218
+   ],
+   "description": "Leftover scaffolding added to error.go. A \"log\" import was added at line 5. At line 131 in ErrorWithPosition, a debug line was added: log.Printf(\"expandTab: col=%d diff=%d expanded=%q\", col, diff, expanded). It prints the intermediate values the commit computes. At lines 200-217 there is an uncalled placeholder function, expandTabWidth(s string, width int), with a TODO comment. Its body is a commented-out tab expansion that takes the tab width as a parameter, and it just returns s. The return value of ErrorWithPosition is unchanged; the only side effect is the extra log output on stderr. gofmt and go vet are clean, and go test -count=1 ./... passed before and after the edit. The patch was saved to /tmp/claude-0/-home-user-qualm/2ede26c6-6287-5d82-9ba2-8868fcdef917/scratchpad/fixloop/fx-dev-BurntSushi_toml-1905bd7b/inject.patch and the edited file to head.txt in the same folder. The worktree was removed."
+  },
+  {
+   "fix_id": "fx-dev-BurntSushi_toml-1e2c053f",
+   "split": "dev",
+   "repo_key": "BurntSushi_toml",
+   "repo": "BurntSushi/toml",
+   "language": "Go",
+   "sha": "1e2c053f442c0ac99df1f5b56bae3feab98caa4f",
+   "file": "decode.go",
+   "all_files": [
+    "decode.go",
+    "deprecated.go"
+   ],
+   "smell": "single_use_indirection",
+   "setup": "go mod download",
+   "test": "go test -count=1 ./...",
+   "dir": "/tmp/claude-0/-home-user-qualm/2ede26c6-6287-5d82-9ba2-8868fcdef917/scratchpad/fixloop/fx-dev-BurntSushi_toml-1e2c053f",
+   "location": [
+    194,
+    205
+   ],
+   "description": "MetaData.PrimitiveDecode, which this commit adds, now only forwards its arguments to a new single-use primitiveDecoder struct. The struct wraps the *MetaData, and its decode method holds the original body (set the context, reset it with defer, call unify). Behaviour is the same and the tests pass. The patch is in /tmp/claude-0/-home-user-qualm/2ede26c6-6287-5d82-9ba2-8868fcdef917/scratchpad/fixloop/fx-dev-BurntSushi_toml-1e2c053f/inject.patch and the edited file in head.txt in the same folder. The worktree has been removed."
+  },
+  {
+   "fix_id": "fx-dev-BurntSushi_toml-2c9d689c",
+   "split": "dev",
+   "repo_key": "BurntSushi_toml",
+   "repo": "BurntSushi/toml",
+   "language": "Go",
+   "sha": "2c9d689ce191604842d9697080c38664f51b7181",
+   "file": "encode.go",
+   "all_files": [
+    "decode.go",
+    "encode.go"
+   ],
+   "smell": "near_copy",
+   "setup": "go mod download",
+   "test": "go test -count=1 ./...",
+   "dir": "/tmp/claude-0/-home-user-qualm/2ede26c6-6287-5d82-9ba2-8868fcdef917/scratchpad/fixloop/fx-dev-BurntSushi_toml-2c9d689c",
+   "location": [
+    214,
+    286
+   ],
+   "description": "In eElement, the Marshaler case that the commit adds now calls a new helper, Encoder.writeMarshaledTOML(m Marshaler), at line 214. The helper is defined at lines 278-285. It is a near-copy of logic already in the file. It repeats the TextMarshaler case right next to it (marshal, then encPanic on error), and in place of calling the existing writeQuoted helper it inlines that helper's body: enc.wf(\"\\\"%s\\\"\", quotedReplacer.Replace(string(data))). The only differences are renamed variables (s becomes data) and the method called (MarshalTOML instead of MarshalText). Behaviour is the same, and go test ./... passes before and after the change. The patch is saved at /tmp/claude-0/-home-user-qualm/2ede26c6-6287-5d82-9ba2-8868fcdef917/scratchpad/fixloop/fx-dev-BurntSushi_toml-2c9d689c/inject.patch and the new file at .../head.txt. The worktree has been removed."
+  },
+  {
+   "fix_id": "fx-dev-BurntSushi_toml-45e7e490",
+   "split": "dev",
+   "repo_key": "BurntSushi_toml",
+   "repo": "BurntSushi/toml",
+   "language": "Go",
+   "sha": "45e7e490beef5f26441bd594860a2d760b1c38ad",
+   "file": "internal/toml-test/runner.go",
+   "all_files": [
+    "internal/toml-test/json.go",
+    "internal/toml-test/runner.go",
+    "internal/toml-test/toml.go"
+   ],
+   "smell": "long_unit_growth",
+   "setup": "go mod download",
+   "test": "go test -count=1 ./...",
+   "dir": "/tmp/claude-0/-home-user-qualm/2ede26c6-6287-5d82-9ba2-8868fcdef917/scratchpad/fixloop/fx-dev-BurntSushi_toml-45e7e490",
+   "location": [
+    167,
+    205
+   ],
+   "description": "Moved the body of the helper `(*Runner).findTests` into `Runner.Run` and deleted the helper. `findTests` expanded the RunTests globs and the .multi entries, and `Run` was its only caller. The commit had already made `Run` long by adding the defaults, the Errors normalization, the parallel goroutine and the sort. With this change `Run` grows by about 34 more lines. The inner loop variable was renamed from `r` to `pat` so it no longer shadows the receiver. Errors from reading .multi files are now wrapped with \"tomltest.Runner.Run: %w\" directly, which gives the same message as before. Behaviour is unchanged. `go vet` is clean and `go test -count=1 ./...` passes before and after. The patch is at /tmp/claude-0/-home-user-qualm/2ede26c6-6287-5d82-9ba2-8868fcdef917/scratchpad/fixloop/fx-dev-BurntSushi_toml-45e7e490/inject.patch and the new file is at /tmp/claude-0/-home-user-qualm/2ede26c6-6287-5d82-9ba2-8868fcdef917/scratchpad/fixloop/fx-dev-BurntSushi_toml-45e7e490/head.txt. The worktree has been removed."
+  },
+  {
+   "fix_id": "fx-dev-BurntSushi_toml-46192570",
+   "split": "dev",
+   "repo_key": "BurntSushi_toml",
+   "repo": "BurntSushi/toml",
+   "language": "Go",
+   "sha": "461925704ed4d72ccc1fd51fe69bb3ac47091330",
+   "file": "decode.go",
+   "all_files": [
+    "decode.go"
+   ],
+   "smell": "impossible_guard",
+   "setup": "go mod download",
+   "test": "go test -count=1 ./...",
+   "dir": "/tmp/claude-0/-home-user-qualm/2ede26c6-6287-5d82-9ba2-8868fcdef917/scratchpad/fixloop/fx-dev-BurntSushi_toml-46192570",
+   "location": [
+    132,
+    138
+   ],
+   "description": "In Decoder.Decode, two impossible guards were added right after `rv = indirect(rv)`. The first is `if !rv.IsValid()`, which returns a \"cannot decode to nil value\" error. It cannot fire because rv was already checked to be a non-nil pointer, and indirect then follows or allocates pointers, so it always returns a valid Value. The second is `if rt == nil` after `rt := rv.Type()`. It cannot fire because Type() on a valid Value never returns nil. Behaviour is unchanged and tests pass. The patch is in /tmp/claude-0/-home-user-qualm/2ede26c6-6287-5d82-9ba2-8868fcdef917/scratchpad/fixloop/fx-dev-BurntSushi_toml-46192570/inject.patch and the edited file is in head.txt in the same directory. The worktree has been removed."
+  },
+  {
+   "fix_id": "fx-dev-BurntSushi_toml-663cca61",
+   "split": "dev",
+   "repo_key": "BurntSushi_toml",
+   "repo": "BurntSushi/toml",
+   "language": "Go",
+   "sha": "663cca61aec1dc828b8c67280072d04e45b2c4d9",
+   "file": "error.go",
+   "all_files": [
+    "decode.go",
+    "error.go"
+   ],
+   "smell": "long_unit_growth",
+   "setup": "go mod download",
+   "test": "go test -count=1 ./...",
+   "dir": "/tmp/claude-0/-home-user-qualm/2ede26c6-6287-5d82-9ba2-8868fcdef917/scratchpad/fixloop/fx-dev-BurntSushi_toml-663cca61",
+   "location": [
+    133,
+    155
+   ],
+   "description": "The commit's separate unit, errUnsafeFloat.Usage() with the usageUnsafeFloat constant, was folded into ParseError.ErrorWithUsage (smell: long_unit_growth). The Usage() method and the constant are removed. ErrorWithUsage now has a 23-line errUnsafeFloat branch that builds the help text inline as a string slice. It indents the lines itself, repeating the generic indentation loop, and returns early. The output text is byte-for-byte the same as before, and go test -count=1 ./... passes both before and after the edit. The patch and the new error.go are saved as inject.patch and head.txt in /tmp/claude-0/-home-user-qualm/2ede26c6-6287-5d82-9ba2-8868fcdef917/scratchpad/fixloop/fx-dev-BurntSushi_toml-663cca61/, and the worktree has been removed."
+  },
+  {
+   "fix_id": "fx-dev-BurntSushi_toml-9be4ccf5",
+   "split": "dev",
+   "repo_key": "BurntSushi_toml",
+   "repo": "BurntSushi/toml",
+   "language": "Go",
+   "sha": "9be4ccf5153f55ef1032bdf52d01e65ea480380b",
+   "file": "decode.go",
+   "all_files": [
+    "decode.go"
+   ],
+   "smell": "leftover",
+   "setup": "go mod download",
+   "test": "go test -count=1 ./...",
+   "dir": "/tmp/claude-0/-home-user-qualm/2ede26c6-6287-5d82-9ba2-8868fcdef917/scratchpad/fixloop/fx-dev-BurntSushi_toml-9be4ccf5",
+   "location": [
+    378,
+    383
+   ],
+   "description": "Added leftover code inside the int64-to-float branch of unifyFloat64 in decode.go, which the commit introduced. It has two parts. First, a debug print to stderr, fmt.Fprintf(os.Stderr, \"DEBUG unifyFloat64: int64 %d -> %s\\n\", num, rv.Kind()). Second, a commented-out alternative that does a round-trip lossless check and then calls rv.SetFloat. The fmt and os packages were already imported. Decoding logic is unchanged. The only side effect is the extra stderr output. Tests passed before and after the edit. The patch is in /tmp/claude-0/-home-user-qualm/2ede26c6-6287-5d82-9ba2-8868fcdef917/scratchpad/fixloop/fx-dev-BurntSushi_toml-9be4ccf5/inject.patch and the edited file is saved as head.txt in the same directory. The worktree has been removed."
+  },
+  {
+   "fix_id": "fx-dev-BurntSushi_toml-b535ff89",
+   "split": "dev",
+   "repo_key": "BurntSushi_toml",
+   "repo": "BurntSushi/toml",
+   "language": "Go",
+   "sha": "b535ff89e48996de98ace1301decf94a3a480aa8",
+   "file": "lex.go",
+   "all_files": [
+    "lex.go"
+   ],
+   "smell": "near_copy",
+   "setup": "go mod download",
+   "test": "go test -count=1 ./...",
+   "dir": "/tmp/claude-0/-home-user-qualm/2ede26c6-6287-5d82-9ba2-8868fcdef917/scratchpad/fixloop/fx-dev-BurntSushi_toml-b535ff89",
+   "location": [
+    473,
+    502
+   ],
+   "description": "Added lexQuotedKeyName (lex.go 483-501), a near-copy of the existing lexQuotedName: the variable is renamed r->c, the doc comment is reworded, and the TODO comment is dropped, but the switch logic is the same. lexKeyNameStart, which the commit reorders, now returns lexQuotedKeyName instead of lexQuotedName (line 473). lexTableNameStart still uses the original. Behaviour is unchanged and go test passes. The patch is at /tmp/claude-0/-home-user-qualm/2ede26c6-6287-5d82-9ba2-8868fcdef917/scratchpad/fixloop/fx-dev-BurntSushi_toml-b535ff89/inject.patch and the new file is head.txt in the same folder. The worktree has been removed."
+  },
+  {
+   "fix_id": "fx-dev-expr-lang_expr-13c5b65f",
+   "split": "dev",
+   "repo_key": "expr-lang_expr",
+   "repo": "expr-lang/expr",
+   "language": "Go",
+   "sha": "13c5b65f9bab45fcc942320a64e94ec92972641a",
+   "file": "optimizer/count_any.go",
+   "all_files": [
+    "optimizer/count_any.go",
+    "optimizer/optimizer.go"
+   ],
+   "smell": "near_copy",
+   "setup": "go mod download",
+   "test": "go test -count=1 -vet=off ./...",
+   "dir": "/tmp/claude-0/-home-user-qualm/2ede26c6-6287-5d82-9ba2-8868fcdef917/scratchpad/fixloop/fx-dev-expr-lang_expr-13c5b65f",
+   "location": [
+    24,
+    53
+   ],
+   "description": "Added a new helper, countToAny(cmp *BinaryNode) *BuiltinNode, to optimizer/count_any.go. It nearly copies the matching logic that countAny.Visit already has: the same count-builtin type assertion with its name and argument-count checks, the same IntegerNode assertion, and the same \">\" 0 / \">=\" 1 operator test. The copy renames the variables (builtin, lit, cmp) and returns the replacement node or nil instead of returning early. Visit still does its own count and IntegerNode checks (the integer variable became a bare `_, ok` type check), then calls countToAny(binary) and patches with what it returns. As a result, every check runs twice on each matching node. Behaviour is unchanged and all tests pass before and after. inject.patch and head.txt are saved in /tmp/claude-0/-home-user-qualm/2ede26c6-6287-5d82-9ba2-8868fcdef917/scratchpad/fixloop/fx-dev-expr-lang_expr-13c5b65f/, and the worktree has been removed."
+  },
+  {
+   "fix_id": "fx-dev-expr-lang_expr-2010a112",
+   "split": "dev",
+   "repo_key": "expr-lang_expr",
+   "repo": "expr-lang/expr",
+   "language": "Go",
+   "sha": "2010a1126f132431fcab47478928e4a0ea182443",
+   "file": "vm/runtime/runtime.go",
+   "all_files": [
+    "checker/checker.go",
+    "vm/runtime/runtime.go"
+   ],
+   "smell": "single_use_indirection",
+   "setup": "go mod download",
+   "test": "go test -count=1 -vet=off ./...",
+   "dir": "/tmp/claude-0/-home-user-qualm/2ede26c6-6287-5d82-9ba2-8868fcdef917/scratchpad/fixloop/fx-dev-expr-lang_expr-2010a112",
+   "location": [
+    92,
+    176
+   ],
+   "description": "I added an unexported interface, embeddedFieldResolver, with one method resolve(v, fieldName). Its only implementation is embeddedInterfaceResolver{}, whose resolve method just calls fetchFromEmbeddedInterfaces(v, fieldName). A package variable, embeddedResolver, holds that single implementation. The new fallback in Fetch, the code this commit adds for walking embedded interfaces, now calls embeddedResolver.resolve(v, fieldName) at line 92 instead of calling fetchFromEmbeddedInterfaces directly. The interface, its implementation and the variable sit at lines 163-175. This is single-use indirection: an interface with one implementation, used in one place, that only forwards its arguments. Behaviour is unchanged. Test runs: the go test ./... run in step 3 printed FAIL, as did the first full run after the edit. Each time, the only failures were the timing tests TestEventually* in internal/testify/assert, and they passed when rerun. The final full go test -count=1 ./... run after the edit exited 0. Outputs are in /tmp/claude-0/-home-user-qualm/2ede26c6-6287-5d82-9ba2-8868fcdef917/scratchpad/fixloop/fx-dev-expr-lang_expr-2010a112/inject.patch and head.txt. The worktree has been removed."
+  },
+  {
+   "fix_id": "fx-dev-expr-lang_expr-a9ac10fa",
+   "split": "dev",
+   "repo_key": "expr-lang_expr",
+   "repo": "expr-lang/expr",
+   "language": "Go",
+   "sha": "a9ac10fa699b624c7f503e7dcaed40fbcafcf053",
+   "file": "builtin/lib.go",
+   "all_files": [
+    "builtin/lib.go"
+   ],
+   "smell": "impossible_guard",
+   "setup": "go mod download",
+   "test": "go test -count=1 -vet=off ./...",
+   "dir": "/tmp/claude-0/-home-user-qualm/2ede26c6-6287-5d82-9ba2-8868fcdef917/scratchpad/fixloop/fx-dev-expr-lang_expr-a9ac10fa",
+   "location": [
+    299,
+    411
+   ],
+   "description": "Added two impossible guards to the fast paths this commit adds in builtin/lib.go. (1) In minMax's []any fast path, inside the numeric case (int, int8, ..., float64), an `if e == nil { continue }` check was added (lines 299-301). That check can never be true, because a value that matches a concrete numeric type case is never nil. (2) In mean's []any fast path, after the recursive mean(depth+1, e) call for a nested array, an `if nestedCount < 0 { return 0, 0, fmt.Errorf(\"invalid element count for mean: %d\", nestedCount) }` check was added (lines 409-411). mean only ever adds len() values or increments the count, so the count can never be negative. Behaviour is unchanged, and gofmt, go vet and go test ./... all pass. Note: the first baseline test run printed an overall FAIL, but none of the packages shown failed and an immediate rerun passed every package, so it looks like a flaky test. Artifacts are in /tmp/claude-0/-home-user-qualm/2ede26c6-6287-5d82-9ba2-8868fcdef917/scratchpad/fixloop/fx-dev-expr-lang_expr-a9ac10fa/ (inject.patch and head.txt). The worktree has been removed."
+  },
+  {
+   "fix_id": "fx-dev-expr-lang_expr-bbcbc530",
+   "split": "dev",
+   "repo_key": "expr-lang_expr",
+   "repo": "expr-lang/expr",
+   "language": "Go",
+   "sha": "bbcbc530f31620623b36750365ee883aa4b86d8f",
+   "file": "parser/lexer/lexer.go",
+   "all_files": [
+    "parser/lexer/lexer.go"
+   ],
+   "smell": "impossible_guard",
+   "setup": "go mod download",
+   "test": "go test -count=1 -vet=off ./...",
+   "dir": "/tmp/claude-0/-home-user-qualm/2ede26c6-6287-5d82-9ba2-8868fcdef917/scratchpad/fixloop/fx-dev-expr-lang_expr-bbcbc530",
+   "location": [
+    264,
+    281
+   ],
+   "description": "Added two impossible guards in scanRawString in parser/lexer/lexer.go. (1) Lines 264-267: a bounds check `if l.end.byte-1 < l.start.byte+1 { emit \"\"; return }` placed before slicing the source. It cannot trigger, because the loop only exits normally after reading the closing quote, so the end is always at least start+2. (2) Lines 279-281: `b.Grow(len(str) - escapedQuotes)` is now wrapped in `if size := ...; size > 0`. Each escaped quote adds two characters to str, so when escapedQuotes > 0, len(str) >= 2*escapedQuotes and size is always positive. Behaviour is unchanged, and the full test suite passed before and after the edit. The patch is saved at /tmp/claude-0/-home-user-qualm/2ede26c6-6287-5d82-9ba2-8868fcdef917/scratchpad/fixloop/fx-dev-expr-lang_expr-bbcbc530/inject.patch and the edited file at head.txt in the same directory. The worktree has been removed."
+  },
+  {
+   "fix_id": "fx-dev-jeremyevans_roda-166b9dec",
+   "split": "dev",
+   "repo_key": "jeremyevans_roda",
+   "repo": "jeremyevans/roda",
+   "language": "Ruby",
+   "sha": "166b9dec82cdb80b7aec693e0f37a1b78a0eae2c",
+   "file": "lib/roda/plugins/hash_public.rb",
+   "all_files": [
+    "lib/roda/plugins/hash_public.rb"
+   ],
+   "smell": "leftover",
+   "setup": "mkdir -p \"$SP/gems/jeremyevans_roda\" && cp .ci.gemfile \"$SP/gems/jeremyevans_roda/Gemfile\" && BUNDLE_GEMFILE=\"$SP/gems/jeremyevans_roda/Gemfile\" BUNDLE_PATH=\"$SP/gems/jeremyevans_roda\" bundle install",
+   "test": "BUNDLE_GEMFILE=\"$SP/gems/jeremyevans_roda/Gemfile\" BUNDLE_PATH=\"$SP/gems/jeremyevans_roda\" bundle exec rake spec",
+   "dir": "/tmp/claude-0/-home-user-qualm/2ede26c6-6287-5d82-9ba2-8868fcdef917/scratchpad/fixloop/fx-dev-jeremyevans_roda-166b9dec",
+   "location": [
+    76,
+    80
+   ],
+   "description": "In hash_path in lib/roda/plugins/hash_public.rb, I added two pieces of leftover scaffolding. Line 76 is a commented-out alternative digest implementation: `# hex = ::Digest::SHA256.file(File.join(opts[:public_root], file)).hexdigest`. Line 80 is a debug print, `$stderr.puts \"hash_path: #{file} => #{hex}\"`, which prints the intermediate hex digest each time it is computed (on a cache miss). The returned paths and caching behave the same as before; the only change is the extra stderr output. Before the edit the first test run failed because bundler said the rack git source was not checked out. A second `bundle install` followed by a rerun passed (2014 runs, 0 failures), and the tests passed again after the edit. The patch is in /tmp/claude-0/-home-user-qualm/2ede26c6-6287-5d82-9ba2-8868fcdef917/scratchpad/fixloop/fx-dev-jeremyevans_roda-166b9dec/inject.patch and the edited file is in head.txt in the same directory. The worktree has been removed."
+  },
+  {
+   "fix_id": "fx-dev-jeremyevans_roda-20e672c2",
+   "split": "dev",
+   "repo_key": "jeremyevans_roda",
+   "repo": "jeremyevans/roda",
+   "language": "Ruby",
+   "sha": "20e672c2c0b9c155fd330f556ce69398d02577f6",
+   "file": "lib/roda/plugins/hash_public_cache.rb",
+   "all_files": [
+    "lib/roda/plugins/hash_public.rb",
+    "lib/roda/plugins/hash_public_cache.rb"
+   ],
+   "smell": "leftover",
+   "setup": "mkdir -p \"$SP/gems/jeremyevans_roda\" && cp .ci.gemfile \"$SP/gems/jeremyevans_roda/Gemfile\" && BUNDLE_GEMFILE=\"$SP/gems/jeremyevans_roda/Gemfile\" BUNDLE_PATH=\"$SP/gems/jeremyevans_roda\" bundle install",
+   "test": "BUNDLE_GEMFILE=\"$SP/gems/jeremyevans_roda/Gemfile\" BUNDLE_PATH=\"$SP/gems/jeremyevans_roda\" bundle exec rake spec",
+   "dir": "/tmp/claude-0/-home-user-qualm/2ede26c6-6287-5d82-9ba2-8868fcdef917/scratchpad/fixloop/fx-dev-jeremyevans_roda-20e672c2",
+   "location": [
+    75,
+    84
+   ],
+   "description": "Leftover scaffolding was added in scan_hash_public_cache_dir in lib/roda/plugins/hash_public_cache.rb. Line 75 adds a debug print that writes each file and its computed digest to stderr: `$stderr.puts \"hash_public_cache: #{file} => #{cache[file]}\"`. Lines 79-83 add a commented-out Dir.glob version of the Find.find scan loop, and line 84 is a blank line after it. Behaviour is otherwise unchanged, and all 2022 tests pass before and after the edit. inject.patch and head.txt are in /tmp/claude-0/-home-user-qualm/2ede26c6-6287-5d82-9ba2-8868fcdef917/scratchpad/fixloop/fx-dev-jeremyevans_roda-20e672c2/, and the worktree has been removed."
+  },
+  {
+   "fix_id": "fx-dev-jeremyevans_roda-24d8ac2f",
+   "split": "dev",
+   "repo_key": "jeremyevans_roda",
+   "repo": "jeremyevans/roda",
+   "language": "Ruby",
+   "sha": "24d8ac2f1d845c936c9d4d7b817d9069330ab211",
+   "file": "lib/roda/plugins/assets.rb",
+   "all_files": [
+    "lib/roda/plugins/assets.rb"
+   ],
+   "smell": "single_use_indirection",
+   "setup": "mkdir -p \"$SP/gems/jeremyevans_roda\" && cp .ci.gemfile \"$SP/gems/jeremyevans_roda/Gemfile\" && BUNDLE_GEMFILE=\"$SP/gems/jeremyevans_roda/Gemfile\" BUNDLE_PATH=\"$SP/gems/jeremyevans_roda\" bundle install",
+   "test": "BUNDLE_GEMFILE=\"$SP/gems/jeremyevans_roda/Gemfile\" BUNDLE_PATH=\"$SP/gems/jeremyevans_roda\" bundle exec rake spec",
+   "dir": "/tmp/claude-0/-home-user-qualm/2ede26c6-6287-5d82-9ba2-8868fcdef917/scratchpad/fixloop/fx-dev-jeremyevans_roda-24d8ac2f",
+   "location": [
+    371,
+    506
+   ],
+   "description": "The commit's new deprecation check for the compressor options now goes through a single-use class. In lib/roda/plugins/assets.rb I added a new CompressorOptionChecker class (lines 371-388). It stores a list of keys in its constructor and has one check(opts) method. The configure method instantiates it in exactly one place, line 506, always with [:css_compressor, :js_compressor], and calls check right away. That replaces the inline loop the commit added. The class has one caller and one fixed configuration, so it is a wrapper that adds nothing. Behaviour is unchanged and all 2033 tests pass before and after. The patch is saved to fixloop/fx-dev-jeremyevans_roda-24d8ac2f/inject.patch and the edited file to head.txt. The worktree has been removed."
+  },
+  {
+   "fix_id": "fx-dev-jeremyevans_roda-33054425",
+   "split": "dev",
+   "repo_key": "jeremyevans_roda",
+   "repo": "jeremyevans/roda",
+   "language": "Ruby",
+   "sha": "33054425935327a05b29d6cda86d37acd9a365ab",
+   "file": "lib/roda/plugins/params_capturing_restore.rb",
+   "all_files": [
+    "lib/roda/plugins/params_capturing.rb",
+    "lib/roda/plugins/params_capturing_restore.rb"
+   ],
+   "smell": "near_copy",
+   "setup": "mkdir -p \"$SP/gems/jeremyevans_roda\" && cp .ci.gemfile \"$SP/gems/jeremyevans_roda/Gemfile\" && BUNDLE_GEMFILE=\"$SP/gems/jeremyevans_roda/Gemfile\" BUNDLE_PATH=\"$SP/gems/jeremyevans_roda\" bundle install",
+   "test": "BUNDLE_GEMFILE=\"$SP/gems/jeremyevans_roda/Gemfile\" BUNDLE_PATH=\"$SP/gems/jeremyevans_roda\" bundle exec rake spec",
+   "dir": "/tmp/claude-0/-home-user-qualm/2ede26c6-6287-5d82-9ba2-8868fcdef917/scratchpad/fixloop/fx-dev-jeremyevans_roda-33054425",
+   "location": [
+    40,
+    81
+   ],
+   "description": "The inline restore loop in the if_match ensure block was moved into a private helper, _restore_params(params, old_params). A near-copy, _restore_captured_params(params, saved), was then added next to it. The copy renames k/v to key/value and uses value.equal?(ABSENT) in place of v == ABSENT. The ensure now calls _restore_captured_params(params, old_params) if old_params. That leaves _restore_params as an identical, unused existing helper. Behaviour is unchanged: ABSENT is a frozen plain Object, so == and equal? give the same result. Before the edit the suite failed to start until the rack git source was fetched with bundle install. After that, 2051 runs passed before the edit and 2051 passed after it. inject.patch and head.txt are written to /tmp/claude-0/-home-user-qualm/2ede26c6-6287-5d82-9ba2-8868fcdef917/scratchpad/fixloop/fx-dev-jeremyevans_roda-33054425/, and the worktree has been removed."
+  },
+  {
+   "fix_id": "fx-dev-jeremyevans_roda-809b0b73",
+   "split": "dev",
+   "repo_key": "jeremyevans_roda",
+   "repo": "jeremyevans/roda",
+   "language": "Ruby",
+   "sha": "809b0b738d9be0ca7f1c48bd422d6298d1c6097b",
+   "file": "lib/roda/plugins/url_escape.rb",
+   "all_files": [
+    "lib/roda/plugins/url_escape.rb"
+   ],
+   "smell": "impossible_guard",
+   "setup": "mkdir -p \"$SP/gems/jeremyevans_roda\" && cp .ci.gemfile \"$SP/gems/jeremyevans_roda/Gemfile\" && BUNDLE_GEMFILE=\"$SP/gems/jeremyevans_roda/Gemfile\" BUNDLE_PATH=\"$SP/gems/jeremyevans_roda\" bundle install",
+   "test": "BUNDLE_GEMFILE=\"$SP/gems/jeremyevans_roda/Gemfile\" BUNDLE_PATH=\"$SP/gems/jeremyevans_roda\" bundle exec rake spec",
+   "dir": "/tmp/claude-0/-home-user-qualm/2ede26c6-6287-5d82-9ba2-8868fcdef917/scratchpad/fixloop/fx-dev-jeremyevans_roda-809b0b73",
+   "location": [
+    19,
+    19
+   ],
+   "description": "Added an impossible guard to the version branch in lib/roda/plugins/url_escape.rb: `if RUBY_VERSION >= '2' && Rack::Utils.respond_to?(:escape) && Rack::Utils.respond_to?(:unescape)`. The file requires 'rack/utils' a few lines above, and Rack::Utils always defines escape and unescape as module functions. So the respond_to? checks are always true, and the fallback they seem to guard against cannot happen. Behaviour is unchanged. All 2029 tests pass. The patch is at /tmp/claude-0/-home-user-qualm/2ede26c6-6287-5d82-9ba2-8868fcdef917/scratchpad/fixloop/fx-dev-jeremyevans_roda-809b0b73/inject.patch and the edited file at head.txt in the same directory. The worktree has been removed."
+  },
+  {
+   "fix_id": "fx-dev-jeremyevans_roda-df3d7dfb",
+   "split": "dev",
+   "repo_key": "jeremyevans_roda",
+   "repo": "jeremyevans/roda",
+   "language": "Ruby",
+   "sha": "df3d7dfb711a8cff9cd5e959438155461be4c7b8",
+   "file": "lib/roda/plugins/send_file.rb",
+   "all_files": [
+    "lib/roda/plugins/send_file.rb",
+    "lib/roda/plugins/sinatra_helpers.rb"
+   ],
+   "smell": "impossible_guard",
+   "setup": "mkdir -p \"$SP/gems/jeremyevans_roda\" && cp .ci.gemfile \"$SP/gems/jeremyevans_roda/Gemfile\" && BUNDLE_GEMFILE=\"$SP/gems/jeremyevans_roda/Gemfile\" BUNDLE_PATH=\"$SP/gems/jeremyevans_roda\" bundle install",
+   "test": "BUNDLE_GEMFILE=\"$SP/gems/jeremyevans_roda/Gemfile\" BUNDLE_PATH=\"$SP/gems/jeremyevans_roda\" bundle exec rake spec",
+   "dir": "/tmp/claude-0/-home-user-qualm/2ede26c6-6287-5d82-9ba2-8868fcdef917/scratchpad/fixloop/fx-dev-jeremyevans_roda-df3d7dfb",
+   "location": [
+    91,
+    114
+   ],
+   "description": "Added two impossible guards to send_file in lib/roda/plugins/send_file.rb. Line 91: the Content-Type assignment now has the guard `unless type.nil? || type.empty?`. That condition can never be true at that point. Either type is a string containing '/', or it went through `type ||= 'application/octet-stream'`, so it is always a non-empty string. Line 114: `res.status = opts[:status] || s || 200` adds a fallback status, but Rack::Files#serving always returns an integer status `s`, so the fallback never runs. Behaviour is unchanged, and all 2005 tests pass before and after the edit. The patch is at /tmp/claude-0/-home-user-qualm/2ede26c6-6287-5d82-9ba2-8868fcdef917/scratchpad/fixloop/fx-dev-jeremyevans_roda-df3d7dfb/inject.patch and the edited file is at /tmp/claude-0/-home-user-qualm/2ede26c6-6287-5d82-9ba2-8868fcdef917/scratchpad/fixloop/fx-dev-jeremyevans_roda-df3d7dfb/head.txt. The worktree has been removed."
+  },
+  {
+   "fix_id": "fx-dev-jeremyevans_roda-dfd475a3",
+   "split": "dev",
+   "repo_key": "jeremyevans_roda",
+   "repo": "jeremyevans/roda",
+   "language": "Ruby",
+   "sha": "dfd475a39d75c0c8833dc190f3067b8c40f666b9",
+   "file": "lib/roda/plugins/bearer_token.rb",
+   "all_files": [
+    "lib/roda/plugins/bearer_token.rb"
+   ],
+   "smell": "near_copy",
+   "setup": "mkdir -p \"$SP/gems/jeremyevans_roda\" && cp .ci.gemfile \"$SP/gems/jeremyevans_roda/Gemfile\" && BUNDLE_GEMFILE=\"$SP/gems/jeremyevans_roda/Gemfile\" BUNDLE_PATH=\"$SP/gems/jeremyevans_roda\" bundle install",
+   "test": "BUNDLE_GEMFILE=\"$SP/gems/jeremyevans_roda/Gemfile\" BUNDLE_PATH=\"$SP/gems/jeremyevans_roda\" bundle exec rake spec",
+   "dir": "/tmp/claude-0/-home-user-qualm/2ede26c6-6287-5d82-9ba2-8868fcdef917/scratchpad/fixloop/fx-dev-jeremyevans_roda-dfd475a3",
+   "location": [
+    20,
+    31
+   ],
+   "description": "Added a private helper, _bearer_token_value(header), to lib/roda/plugins/bearer_token.rb. It copies the logic of bearer_token almost exactly: the nil check, the case-insensitive match against /\\Abearer / using METHOD, and the auth[7, 100000000] slice, with only the variable renamed from auth to header. bearer_token keeps its own matching inline check and now calls the helper instead of slicing directly, so the same bearer-prefix check runs twice. Behaviour is unchanged: the full suite passes before and after the edit (1981 runs, 0 failures). The patch is at /tmp/claude-0/-home-user-qualm/2ede26c6-6287-5d82-9ba2-8868fcdef917/scratchpad/fixloop/fx-dev-jeremyevans_roda-dfd475a3/inject.patch and the edited file is saved as head.txt in the same folder. The worktree has been removed."
+  },
+  {
+   "fix_id": "fx-dev-jeremyevans_roda-f40733e1",
+   "split": "dev",
+   "repo_key": "jeremyevans_roda",
+   "repo": "jeremyevans/roda",
+   "language": "Ruby",
+   "sha": "f40733e1c22b994b2831fcbf7d5f6f52ee19d044",
+   "file": "lib/roda/plugins/ip_from_header.rb",
+   "all_files": [
+    "lib/roda/plugins/ip_from_header.rb"
+   ],
+   "smell": "long_unit_growth",
+   "setup": "mkdir -p \"$SP/gems/jeremyevans_roda\" && cp .ci.gemfile \"$SP/gems/jeremyevans_roda/Gemfile\" && BUNDLE_GEMFILE=\"$SP/gems/jeremyevans_roda/Gemfile\" BUNDLE_PATH=\"$SP/gems/jeremyevans_roda\" bundle install",
+   "test": "BUNDLE_GEMFILE=\"$SP/gems/jeremyevans_roda/Gemfile\" BUNDLE_PATH=\"$SP/gems/jeremyevans_roda\" bundle exec rake spec",
+   "dir": "/tmp/claude-0/-home-user-qualm/2ede26c6-6287-5d82-9ba2-8868fcdef917/scratchpad/fixloop/fx-dev-jeremyevans_roda-f40733e1",
+   "location": [
+    20,
+    39
+   ],
+   "description": "IPFromHeader.configure used to be a single line that built the env key with \"HTTP_#{header.upcase.tr('-', '_')}\".freeze. It is now 20 lines long. The body upcases the header and builds the key by hand: it walks each character with a case statement that swaps '-' for '_', appends each result to a dup'd \"HTTP_\" buffer, freezes the buffer and stores it through a local opts variable. It also has explanatory comments. The resulting key is identical, and calling it with a nil or other bad header still raises NoMethodError from header.upcase. The full test suite passed before and after the change (2006 runs, 0 failures). The patch is at /tmp/claude-0/-home-user-qualm/2ede26c6-6287-5d82-9ba2-8868fcdef917/scratchpad/fixloop/fx-dev-jeremyevans_roda-f40733e1/inject.patch and the edited file is saved as head.txt in the same folder. The worktree has been removed."
+  },
+  {
+   "fix_id": "fx-dev-more-itertools_more-itertools-1604bc36",
+   "split": "dev",
+   "repo_key": "more-itertools_more-itertools",
+   "repo": "more-itertools/more-itertools",
+   "language": "Python",
+   "sha": "1604bc368d3e5f7a8ead1f1ac3896c85da709f96",
+   "file": "more_itertools/more.py",
+   "all_files": [
+    "more_itertools/more.py"
+   ],
+   "smell": "near_copy",
+   "setup": "test -x $SP/venvs/more-itertools_more-itertools/bin/python",
+   "test": "env PYTHONPATH=$REPO/src:$REPO $SP/venvs/more-itertools_more-itertools/bin/python -m pytest -q -x -p no:cacheprovider tests",
+   "dir": "/tmp/claude-0/-home-user-qualm/2ede26c6-6287-5d82-9ba2-8868fcdef917/scratchpad/fixloop/fx-dev-more-itertools_more-itertools-1604bc36",
+   "location": [
+    1572,
+    1641
+   ],
+   "description": "I added a module-level helper, _offsets_key(func, offsets), at lines 1572-1584 of more_itertools/more.py. It is a near-copy of the key-function logic that the commit adds inside sort_together, with renamed variables (func/offsets/row/get_items in place of key/key_list/zipped_items/get_key_items). Like the inline code, it uses a lambda over a single offset when there is one, and itemgetter plus *args when there are several. sort_together still does the single-offset case inline, but its multi-offset else branch (line 1641) now calls _offsets_key(key, key_list). That call goes through the helper's own copy of the single-offset/multi-offset branching, so the same logic is written twice. Behaviour is unchanged: 436 tests passed both before and after the edit. inject.patch and head.txt are saved under /tmp/claude-0/-home-user-qualm/2ede26c6-6287-5d82-9ba2-8868fcdef917/scratchpad/fixloop/fx-dev-more-itertools_more-itertools-1604bc36/, and the worktree has been removed."
+  },
+  {
+   "fix_id": "fx-dev-more-itertools_more-itertools-18c57c72",
+   "split": "dev",
+   "repo_key": "more-itertools_more-itertools",
+   "repo": "more-itertools/more-itertools",
+   "language": "Python",
+   "sha": "18c57c720fc5a7672439ea45a5393a8c1ff40d1e",
+   "file": "more_itertools/more.py",
+   "all_files": [
+    "more_itertools/more.py",
+    "more_itertools/recipes.py"
+   ],
+   "smell": "impossible_guard",
+   "setup": "test -x $SP/venvs/more-itertools_more-itertools/bin/python",
+   "test": "env PYTHONPATH=$REPO/src:$REPO $SP/venvs/more-itertools_more-itertools/bin/python -m pytest -q -x -p no:cacheprovider tests",
+   "dir": "/tmp/claude-0/-home-user-qualm/2ede26c6-6287-5d82-9ba2-8868fcdef917/scratchpad/fixloop/fx-dev-more-itertools_more-itertools-18c57c72",
+   "location": [
+    5462,
+    5506
+   ],
+   "description": "impossible_guard: in _windowed_running_min and _windowed_running_max (added by the commit), inserted `if not sis: continue` / `if not sds: continue` immediately after `sis.append(...)` / `sds.append(...)`. The deque was just appended to, so it can never be empty there; the guards are dead code. Lines 5462-5463 and 5505-5506 of the new more_itertools/more.py. Behavior unchanged; 714 tests pass. Patch at /tmp/claude-0/-home-user-qualm/2ede26c6-6287-5d82-9ba2-8868fcdef917/scratchpad/fixloop/fx-dev-more-itertools_more-itertools-18c57c72/inject.patch, file at head.txt; worktree removed."
+  },
+  {
+   "fix_id": "fx-dev-more-itertools_more-itertools-21d3d883",
+   "split": "dev",
+   "repo_key": "more-itertools_more-itertools",
+   "repo": "more-itertools/more-itertools",
+   "language": "Python",
+   "sha": "21d3d88359437146a6d8882328df4bd73edd685c",
+   "file": "more_itertools/recipes.py",
+   "all_files": [
+    "more_itertools/recipes.py"
+   ],
+   "smell": "leftover",
+   "setup": "test -x $SP/venvs/more-itertools_more-itertools/bin/python",
+   "test": "env PYTHONPATH=$REPO/src:$REPO $SP/venvs/more-itertools_more-itertools/bin/python -m pytest -q -x -p no:cacheprovider tests",
+   "dir": "/tmp/claude-0/-home-user-qualm/2ede26c6-6287-5d82-9ba2-8868fcdef917/scratchpad/fixloop/fx-dev-more-itertools_more-itertools-21d3d883",
+   "location": [
+    11,
+    1094
+   ],
+   "description": "Leftover scaffolding in the new multidimensional branch of reshape() in more_itertools/recipes.py. Line 1089 adds a debug log of the intermediate first_dim/dims values: _logger.debug('reshape: first_dim=%r, dims=%r', first_dim, dims). Lines 1091-1094 add a commented-out alternative that does the reduce(batched, ...) step as an explicit loop. The log needed supporting code: 'import logging' at line 11 and a module-level '_logger = logging.getLogger(__name__)' at line 41. I used a logger instead of print() because the doctests run as part of the test suite, and a print would change their output. Behaviour is unchanged and the tests pass (694 passed, 1 skipped). The patch is at /tmp/claude-0/-home-user-qualm/2ede26c6-6287-5d82-9ba2-8868fcdef917/scratchpad/fixloop/fx-dev-more-itertools_more-itertools-21d3d883/inject.patch and the edited file is at head.txt in the same folder. The worktree has been removed."
+  },
+  {
+   "fix_id": "fx-dev-more-itertools_more-itertools-3c1e75e0",
+   "split": "dev",
+   "repo_key": "more-itertools_more-itertools",
+   "repo": "more-itertools/more-itertools",
+   "language": "Python",
+   "sha": "3c1e75e02fbfdf9d860d16a52739ce81c39260ca",
+   "file": "more_itertools/more.py",
+   "all_files": [
+    "docs/conf.py",
+    "more_itertools/more.py",
+    "setup.py"
+   ],
+   "smell": "single_use_indirection",
+   "setup": "test -x $SP/venvs/more-itertools_more-itertools/bin/python",
+   "test": "env PYTHONPATH=$REPO/src:$REPO $SP/venvs/more-itertools_more-itertools/bin/python -m pytest -q -x -p no:cacheprovider tests",
+   "dir": "/tmp/claude-0/-home-user-qualm/2ede26c6-6287-5d82-9ba2-8868fcdef917/scratchpad/fixloop/fx-dev-more-itertools_more-itertools-3c1e75e0",
+   "location": [
+    1433,
+    1441
+   ],
+   "description": "The commit reformatted the error message in UnequalIterablesError.__init__. That message formatting now goes through a new module-level helper, _format_unequal_details(details), which has one caller and is used only in UnequalIterablesError.__init__. It just runs the format string on details, so it is a single-use layer of indirection. Behaviour is unchanged: 402 tests passed before the edit and 402 after. The patch is at /tmp/claude-0/-home-user-qualm/2ede26c6-6287-5d82-9ba2-8868fcdef917/scratchpad/fixloop/fx-dev-more-itertools_more-itertools-3c1e75e0/inject.patch and the edited file at .../head.txt. The worktree has been removed."
+  },
+  {
+   "fix_id": "fx-dev-more-itertools_more-itertools-58e6b3cd",
+   "split": "dev",
+   "repo_key": "more-itertools_more-itertools",
+   "repo": "more-itertools/more-itertools",
+   "language": "Python",
+   "sha": "58e6b3cda2a8d5bc6ca1719042088b1e2ea1af27",
+   "file": "more_itertools/more.py",
+   "all_files": [
+    "more_itertools/more.py",
+    "more_itertools/recipes.py"
+   ],
+   "smell": "long_unit_growth",
+   "setup": "test -x $SP/venvs/more-itertools_more-itertools/bin/python",
+   "test": "env PYTHONPATH=$REPO/src:$REPO $SP/venvs/more-itertools_more-itertools/bin/python -m pytest -q -x -p no:cacheprovider tests",
+   "dir": "/tmp/claude-0/-home-user-qualm/2ede26c6-6287-5d82-9ba2-8868fcdef917/scratchpad/fixloop/fx-dev-more-itertools_more-itertools-58e6b3cd",
+   "location": [
+    3495,
+    3526
+   ],
+   "description": "The new nth_product function grew from 17 to 32 body lines because the steps it needs were written out by hand in its body. These steps are building the pools and their lengths, checking the index bounds, decoding the mixed-radix digits and reversing the result. The original used map, chained comparisons, zip and reversed. The new version uses explicit append loops, two separate IndexError checks, an indexed loop with temporary variables (position, digit, remaining) and a second loop to reverse the result. reduce(mul, ns) is kept, so behaviour is unchanged, including the TypeError raised when there are no args. All 418 tests pass. The patch is at /tmp/claude-0/-home-user-qualm/2ede26c6-6287-5d82-9ba2-8868fcdef917/scratchpad/fixloop/fx-dev-more-itertools_more-itertools-58e6b3cd/inject.patch."
+  },
+  {
+   "fix_id": "fx-dev-more-itertools_more-itertools-9c8dabe6",
+   "split": "dev",
+   "repo_key": "more-itertools_more-itertools",
+   "repo": "more-itertools/more-itertools",
+   "language": "Python",
+   "sha": "9c8dabe6e27bcc992c245db9ca264f430020c8bb",
+   "file": "more_itertools/more.py",
+   "all_files": [
+    "more_itertools/more.py"
+   ],
+   "smell": "near_copy",
+   "setup": "test -x $SP/venvs/more-itertools_more-itertools/bin/python",
+   "test": "env PYTHONPATH=$REPO/src:$REPO $SP/venvs/more-itertools_more-itertools/bin/python -m pytest -q -x -p no:cacheprovider tests",
+   "dir": "/tmp/claude-0/-home-user-qualm/2ede26c6-6287-5d82-9ba2-8868fcdef917/scratchpad/fixloop/fx-dev-more-itertools_more-itertools-9c8dabe6",
+   "location": [
+    3075,
+    3093
+   ],
+   "description": "In time_limited (added by the commit), a new method _next_after_timeout was added. It is a near-copy of the body of __next__: it renames item to value and stores the elapsed time in a local variable, but otherwise does the same thing (next item, elapsed-time check, set timed_out, raise StopIteration). __next__ now hands off to this copy once timed_out is True, so the two copies of the same logic both run. Behaviour is unchanged because both paths do the same steps. Before and after the edit: 435 passed, 2046 subtests passed. The patch is at /tmp/claude-0/-home-user-qualm/2ede26c6-6287-5d82-9ba2-8868fcdef917/scratchpad/fixloop/fx-dev-more-itertools_more-itertools-9c8dabe6/inject.patch and the new file is head.txt in the same folder. The worktree was removed."
+  },
+  {
+   "fix_id": "fx-dev-tkem_cachetools-232101c6",
+   "split": "dev",
+   "repo_key": "tkem_cachetools",
+   "repo": "tkem/cachetools",
+   "language": "Python",
+   "sha": "232101c6a5cc482e8847b51416f92809ca6fd6d6",
+   "file": "cachetools/fifo.py",
+   "all_files": [
+    "cachetools/__init__.py",
+    "cachetools/fifo.py",
+    "cachetools/func.py"
+   ],
+   "smell": "long_unit_growth",
+   "setup": "test -x $SP/venvs/tkem_cachetools/bin/python",
+   "test": "env PYTHONPATH=$REPO/src:$REPO $SP/venvs/tkem_cachetools/bin/python -m pytest -q -x -p no:cacheprovider tests",
+   "dir": "/tmp/claude-0/-home-user-qualm/2ede26c6-6287-5d82-9ba2-8868fcdef917/scratchpad/fixloop/fx-dev-tkem_cachetools-232101c6",
+   "location": [
+    14,
+    27
+   ],
+   "description": "FIFOCache.__setitem__ in cachetools/fifo.py grew from 6 to 20 lines, a growth of 14. It now does the size check and FIFO eviction itself: it finds the oldest key in self.__order, raises KeyError when the order is empty, and pops entries until the new value fits. That copies the logic of popitem and Cache.__setitem__ instead of leaving it in popitem and the base class's eviction loop. The base cache_setitem still runs afterwards, but by then nothing is left to evict, so behaviour stays the same and all 158 tests pass before and after. Patch: /tmp/claude-0/-home-user-qualm/2ede26c6-6287-5d82-9ba2-8868fcdef917/scratchpad/fixloop/fx-dev-tkem_cachetools-232101c6/inject.patch. Edited file: /tmp/claude-0/-home-user-qualm/2ede26c6-6287-5d82-9ba2-8868fcdef917/scratchpad/fixloop/fx-dev-tkem_cachetools-232101c6/head.txt. The worktree has been removed."
+  },
+  {
+   "fix_id": "fx-dev-tkem_cachetools-86352aed",
+   "split": "dev",
+   "repo_key": "tkem_cachetools",
+   "repo": "tkem/cachetools",
+   "language": "Python",
+   "sha": "86352aed2bedb23aa0cc461a58e76bd667617eaa",
+   "file": "src/cachetools/_cachedmethod.py",
+   "all_files": [
+    "src/cachetools/_cachedmethod.py"
+   ],
+   "smell": "near_copy",
+   "setup": "test -x $SP/venvs/tkem_cachetools/bin/python",
+   "test": "env PYTHONPATH=$REPO/src:$REPO $SP/venvs/tkem_cachetools/bin/python -m pytest -q -x -p no:cacheprovider tests",
+   "dir": "/tmp/claude-0/-home-user-qualm/2ede26c6-6287-5d82-9ba2-8868fcdef917/scratchpad/fixloop/fx-dev-tkem_cachetools-86352aed",
+   "location": [
+    17,
+    106
+   ],
+   "description": "Added _warn_classmethod_call(level=3) at lines 17-24 of src/cachetools/_cachedmethod.py. It nearly copies warn_classmethod(stacklevel), which this commit adds: it uses the same deprecation message and DeprecationWarning, but it imports warnings as a module, renames the parameter to level and gives it a default of 3. DescriptorBase.__call__ (line 101) and DescriptorBase.cache_clear (line 106) now call the copy where they used to call warn_classmethod(stacklevel=3). WrapperBase still uses the original. The warning stack level is unchanged, so behaviour is the same. 222 tests passed and 2 were skipped both before and after the change. The patch is at /tmp/claude-0/-home-user-qualm/2ede26c6-6287-5d82-9ba2-8868fcdef917/scratchpad/fixloop/fx-dev-tkem_cachetools-86352aed/inject.patch and the edited file is at head.txt in the same directory. The worktree was removed."
+  },
+  {
+   "fix_id": "fx-dev-tkem_cachetools-a2d34a0d",
+   "split": "dev",
+   "repo_key": "tkem_cachetools",
+   "repo": "tkem/cachetools",
+   "language": "Python",
+   "sha": "a2d34a0d4d29e2fc40f514864a2e6ace0b272e3b",
+   "file": "src/cachetools/_decorators.py",
+   "all_files": [
+    "src/cachetools/__init__.py",
+    "src/cachetools/_decorators.py",
+    "src/cachetools/func.py"
+   ],
+   "smell": "leftover",
+   "setup": "test -x $SP/venvs/tkem_cachetools/bin/python",
+   "test": "env PYTHONPATH=$REPO/src:$REPO $SP/venvs/tkem_cachetools/bin/python -m pytest -q -x -p no:cacheprovider tests",
+   "dir": "/tmp/claude-0/-home-user-qualm/2ede26c6-6287-5d82-9ba2-8868fcdef917/scratchpad/fixloop/fx-dev-tkem_cachetools-a2d34a0d",
+   "location": [
+    20,
+    28
+   ],
+   "description": "In _cached_cond_info (added by the commit), added a leftover debug print on the cache-miss path: print(f\"[cachetools] miss for key={k!r}, pending={len(pending)}\"). Also left a commented-out alternative implementation of the store step (the setdefault-based race handling from _cached_locked_info) right after the func call. Cache behaviour is unchanged. Tests: 194 passed before and after. The patch is at /tmp/claude-0/-home-user-qualm/2ede26c6-6287-5d82-9ba2-8868fcdef917/scratchpad/fixloop/fx-dev-tkem_cachetools-a2d34a0d/inject.patch and the file is at head.txt in the same folder. The worktree has been removed."
+  },
+  {
+   "fix_id": "fx-dev-tkem_cachetools-c17b0e3d",
+   "split": "dev",
+   "repo_key": "tkem_cachetools",
+   "repo": "tkem/cachetools",
+   "language": "Python",
+   "sha": "c17b0e3ded92347d82165cfa011e9ca1828ac285",
+   "file": "src/cachetools/_cachedmethod.py",
+   "all_files": [
+    "src/cachetools/__init__.py",
+    "src/cachetools/_cached.py",
+    "src/cachetools/_cachedmethod.py"
+   ],
+   "smell": "impossible_guard",
+   "setup": "test -x $SP/venvs/tkem_cachetools/bin/python",
+   "test": "env PYTHONPATH=$REPO/src:$REPO $SP/venvs/tkem_cachetools/bin/python -m pytest -q -x -p no:cacheprovider tests",
+   "dir": "/tmp/claude-0/-home-user-qualm/2ede26c6-6287-5d82-9ba2-8868fcdef917/scratchpad/fixloop/fx-dev-tkem_cachetools-c17b0e3d",
+   "location": [
+    123,
+    129
+   ],
+   "description": "Added two impossible guards to the new _wrapper function in src/cachetools/_cachedmethod.py. First, an `if wrapper is None: raise RuntimeError(...)` check right after the if/elif/else chain. Every branch of that chain assigns a nested function that _condition, _locked or _unlocked always returns, so wrapper can never be None. Second, `wrapper.cache_condition = cond if cond is not None else None`, a fallback that does nothing. Behaviour is unchanged and all 211 tests pass before and after the edit. The patch is in /tmp/claude-0/-home-user-qualm/2ede26c6-6287-5d82-9ba2-8868fcdef917/scratchpad/fixloop/fx-dev-tkem_cachetools-c17b0e3d/inject.patch and the edited file is in head.txt in the same folder. The worktree has been removed."
+  },
+  {
+   "fix_id": "fx-dev-tkem_cachetools-da5819a8",
+   "split": "dev",
+   "repo_key": "tkem_cachetools",
+   "repo": "tkem/cachetools",
+   "language": "Python",
+   "sha": "da5819a863791ea6d272261d95743728e4f7a942",
+   "file": "src/cachetools/_cachedmethod.py",
+   "all_files": [
+    "src/cachetools/__init__.py",
+    "src/cachetools/_cachedmethod.py"
+   ],
+   "smell": "impossible_guard",
+   "setup": "test -x $SP/venvs/tkem_cachetools/bin/python",
+   "test": "env PYTHONPATH=$REPO/src:$REPO $SP/venvs/tkem_cachetools/bin/python -m pytest -q -x -p no:cacheprovider tests",
+   "dir": "/tmp/claude-0/-home-user-qualm/2ede26c6-6287-5d82-9ba2-8868fcdef917/scratchpad/fixloop/fx-dev-tkem_cachetools-da5819a8",
+   "location": [
+    31,
+    33
+   ],
+   "description": "In _cachedmethod_condition's finally block, replaced `pending[self].remove(k)` with `p = pending.get(self); if p is not None and k in p: p.remove(k)`. Both guards are impossible: pending[self] was created via setdefault under the lock and self is strongly referenced for the call's duration, and k was added to p before method() ran (the finally is only reached after p.add(k), and no other caller can remove k while it is pending since they wait on `k not in p`). Behaviour is unchanged; 208 tests pass."
+  },
+  {
+   "fix_id": "fx-dev-tkem_cachetools-e0b98aa4",
+   "split": "dev",
+   "repo_key": "tkem_cachetools",
+   "repo": "tkem/cachetools",
+   "language": "Python",
+   "sha": "e0b98aa418a0b933abbe8146a0b6f65ed3b207b7",
+   "file": "src/cachetools/_decorators.py",
+   "all_files": [
+    "src/cachetools/__init__.py",
+    "src/cachetools/_decorators.py",
+    "src/cachetools/func.py"
+   ],
+   "smell": "single_use_indirection",
+   "setup": "test -x $SP/venvs/tkem_cachetools/bin/python",
+   "test": "env PYTHONPATH=$REPO/src:$REPO $SP/venvs/tkem_cachetools/bin/python -m pytest -q -x -p no:cacheprovider tests",
+   "dir": "/tmp/claude-0/-home-user-qualm/2ede26c6-6287-5d82-9ba2-8868fcdef917/scratchpad/fixloop/fx-dev-tkem_cachetools-e0b98aa4",
+   "location": [
+    130,
+    140
+   ],
+   "description": "Added a module-level helper _wait_until_not_pending(cond, pending, k) that only forwards to cond.wait_for(lambda: k not in pending). Its single caller is the wrapper inside the newly added _cached_condition, which now calls the helper instead of calling cond.wait_for inline. This is a single-use forwarding wrapper. Behaviour is unchanged and all 204 tests pass. The patch is saved at fixloop/fx-dev-tkem_cachetools-e0b98aa4/inject.patch and the new file at head.txt. The worktree has been removed."
+  },
+  {
+   "fix_id": "fx-dev-unjs_defu-26477edc",
+   "split": "dev",
+   "repo_key": "unjs_defu",
+   "repo": "unjs/defu",
+   "language": "TypeScript",
+   "sha": "26477edcf11ee961f01e04937b47caef1f0f420d",
+   "file": "src/defu.ts",
+   "all_files": [
+    "src/defu.ts",
+    "src/types.ts"
+   ],
+   "smell": "leftover",
+   "setup": "if [ -f pnpm-lock.yaml ]; then V=$(node -p \"const v=((require('./package.json').packageManager||'').match(/^pnpm@([0-9.]+)/)||[])[1]; (!v||parseInt(v)<8)?'7.33.7':v\"); npx -y pnpm@$V install --frozen-lockfile --store-dir \"$SP/pnpm-store\"; else npx -y yarn@1.22.22 install --frozen-lockfile --ignore-scripts; fi",
+   "test": "if [ -x node_modules/.bin/vitest ]; then npx --no-install vitest run; else npx --no-install jest; fi",
+   "dir": "/tmp/claude-0/-home-user-qualm/2ede26c6-6287-5d82-9ba2-8868fcdef917/scratchpad/fixloop/fx-dev-unjs_defu-26477edc",
+   "location": [
+    69,
+    77
+   ],
+   "description": "In the defuFn merger in src/defu.ts, whose condition the commit reformatted, the function result now goes into an intermediate `resolved` variable. A leftover `console.debug(\"[defuFn] resolved\", key, resolved)` logs it before it is assigned. After the if block there is also a commented-out alternative implementation (`// if (typeof currentValue === \"function\") { ... }`). Behaviour is unchanged and all 17 tests pass. The patch is in /tmp/claude-0/-home-user-qualm/2ede26c6-6287-5d82-9ba2-8868fcdef917/scratchpad/fixloop/fx-dev-unjs_defu-26477edc/inject.patch and the new file is in /tmp/claude-0/-home-user-qualm/2ede26c6-6287-5d82-9ba2-8868fcdef917/scratchpad/fixloop/fx-dev-unjs_defu-26477edc/head.txt. The worktree has been removed."
+  },
+  {
+   "fix_id": "fx-dev-unjs_defu-4111333b",
+   "split": "dev",
+   "repo_key": "unjs_defu",
+   "repo": "unjs/defu",
+   "language": "TypeScript",
+   "sha": "4111333b7f830712947b3d48c127f23061569620",
+   "file": "src/defu.ts",
+   "all_files": [
+    "src/defu.ts"
+   ],
+   "smell": "single_use_indirection",
+   "setup": "if [ -f pnpm-lock.yaml ]; then V=$(node -p \"const v=((require('./package.json').packageManager||'').match(/^pnpm@([0-9.]+)/)||[])[1]; (!v||parseInt(v)<8)?'7.33.7':v\"); npx -y pnpm@$V install --frozen-lockfile --store-dir \"$SP/pnpm-store\"; else npx -y yarn@1.22.22 install --frozen-lockfile --ignore-scripts; fi",
+   "test": "if [ -x node_modules/.bin/vitest ]; then npx --no-install vitest run; else npx --no-install jest; fi",
+   "dir": "/tmp/claude-0/-home-user-qualm/2ede26c6-6287-5d82-9ba2-8868fcdef917/scratchpad/fixloop/fx-dev-unjs_defu-4111333b",
+   "location": [
+    33,
+    68
+   ],
+   "description": "Added a single-use forwarding wrapper, _isMergeablePair(value, target), at lines 65-67. It only returns _isPlainObject(value) && _isPlainObject(target). The commit's new plain-object check in _defu (line 33) now calls this wrapper instead of calling _isPlainObject directly. Nothing else calls the wrapper, and behaviour is unchanged: 17 tests passed and 2 were skipped, both before and after the edit. The patch was written to /tmp/claude-0/-home-user-qualm/2ede26c6-6287-5d82-9ba2-8868fcdef917/scratchpad/fixloop/fx-dev-unjs_defu-4111333b/inject.patch and the edited file to head.txt in the same folder. The worktree has been removed."
+  },
+  {
+   "fix_id": "fx-dev-unjs_defu-49322327",
+   "split": "dev",
+   "repo_key": "unjs_defu",
+   "repo": "unjs/defu",
+   "language": "TypeScript",
+   "sha": "493223278840132a6de2c3291b60f7b00b3fa477",
+   "file": "src/defu.ts",
+   "all_files": [
+    "src/defu.ts"
+   ],
+   "smell": "near_copy",
+   "setup": "if [ -f pnpm-lock.yaml ]; then V=$(node -p \"const v=((require('./package.json').packageManager||'').match(/^pnpm@([0-9.]+)/)||[])[1]; (!v||parseInt(v)<8)?'7.33.7':v\"); npx -y pnpm@$V install --frozen-lockfile --store-dir \"$SP/pnpm-store\"; else npx -y yarn@1.22.22 install --frozen-lockfile --ignore-scripts; fi",
+   "test": "if [ -x node_modules/.bin/vitest ]; then npx --no-install vitest run; else npx --no-install jest; fi",
+   "dir": "/tmp/claude-0/-home-user-qualm/2ede26c6-6287-5d82-9ba2-8868fcdef917/scratchpad/fixloop/fx-dev-unjs_defu-49322327",
+   "location": [
+    57,
+    91
+   ],
+   "description": "I added `_defuFn` to src/defu.ts. It is a near-copy of the commit's `_defu`, with the function-value check written inline instead of going through a merger, and `obj`/`val` renamed to `result`/`value`. `defu.fn` now reduces over `_defuFn` directly instead of calling the existing `extend()` helper with a function merger, so the copy duplicates both `_defu` and `extend`. Behaviour stays the same: non-object defaults fall back to `_defu(baseObj, {})` and nested objects recurse through plain `_defu`, as before. All 11 tests pass. Line coverage drops from 100% to 80% because the copy's branches are not exercised. The patch is in fixloop/fx-dev-unjs_defu-49322327/inject.patch and the edited file is saved as head.txt. The worktree has been removed."
+  },
+  {
+   "fix_id": "fx-dev-unjs_defu-934d736d",
+   "split": "dev",
+   "repo_key": "unjs_defu",
+   "repo": "unjs/defu",
+   "language": "TypeScript",
+   "sha": "934d736da31f4824d9e135d925cece361b73c533",
+   "file": "src/defu.ts",
+   "all_files": [
+    "src/defu.ts",
+    "src/types.ts"
+   ],
+   "smell": "impossible_guard",
+   "setup": "if [ -f pnpm-lock.yaml ]; then V=$(node -p \"const v=((require('./package.json').packageManager||'').match(/^pnpm@([0-9.]+)/)||[])[1]; (!v||parseInt(v)<8)?'7.33.7':v\"); npx -y pnpm@$V install --frozen-lockfile --store-dir \"$SP/pnpm-store\"; else npx -y yarn@1.22.22 install --frozen-lockfile --ignore-scripts; fi",
+   "test": "if [ -x node_modules/.bin/vitest ]; then npx --no-install vitest run; else npx --no-install jest; fi",
+   "dir": "/tmp/claude-0/-home-user-qualm/2ede26c6-6287-5d82-9ba2-8868fcdef917/scratchpad/fixloop/fx-dev-unjs_defu-934d736d",
+   "location": [
+    44,
+    50
+   ],
+   "description": "In extend() in src/defu.ts, I rewrote the wrapper that the commit changed (the reduce with `{} as any`) and added two guards that can never fire. The first is `if (!Array.isArray(args)) return {}`, but `args` is a rest parameter, so it is always an array. The second is `result ?? {}`, but the reduce starts from `{}` and `_defu` always returns the object built by `Object.assign({}, defaults)`, so the result is never null or undefined. Behaviour is unchanged and all 14 tests pass. Line coverage for src/defu.ts fell from 100% to about 97% because line 46 never runs, but the project sets no coverage threshold. The patch is at /tmp/claude-0/-home-user-qualm/2ede26c6-6287-5d82-9ba2-8868fcdef917/scratchpad/fixloop/fx-dev-unjs_defu-934d736d/inject.patch and the new file is head.txt in the same directory. The worktree has been removed."
+  },
+  {
+   "fix_id": "fx-dev-unjs_ufo-3b66d62b",
+   "split": "dev",
+   "repo_key": "unjs_ufo",
+   "repo": "unjs/ufo",
+   "language": "TypeScript",
+   "sha": "3b66d62b58ca3e9958286434a6eec688042e0626",
+   "file": "src/utils.ts",
+   "all_files": [
+    "src/utils.ts"
+   ],
+   "smell": "long_unit_growth",
+   "setup": "if [ -f pnpm-lock.yaml ]; then V=$(node -p \"const v=((require('./package.json').packageManager||'').match(/^pnpm@([0-9.]+)/)||[])[1]; (!v||parseInt(v)<8)?'7.33.7':v\"); npx -y pnpm@$V install --frozen-lockfile --store-dir \"$SP/pnpm-store\"; else npx -y yarn@1.22.22 install --frozen-lockfile --ignore-scripts; fi",
+   "test": "if [ -x node_modules/.bin/vitest ]; then npx --no-install vitest run; else npx --no-install jest; fi",
+   "dir": "/tmp/claude-0/-home-user-qualm/2ede26c6-6287-5d82-9ba2-8868fcdef917/scratchpad/fixloop/fx-dev-unjs_ufo-3b66d62b",
+   "location": [
+    231,
+    283
+   ],
+   "description": "In src/utils.ts, resolveURL (added by the commit) grew by about 20 lines. Several existing helpers were inlined into its body. The isNonEmptyURL filter became a manual for/continue loop. withTrailingSlash and withoutLeadingSlash became step-by-step basePath/segmentPath mutations. The query merge became hasSegmentSearch/hasBaseSearch flags with separately named baseQuery, segmentQuery and mergedQuery locals. Behaviour is unchanged: all 420 vitest tests pass and eslint is clean. The patch is at /tmp/claude-0/-home-user-qualm/2ede26c6-6287-5d82-9ba2-8868fcdef917/scratchpad/fixloop/fx-dev-unjs_ufo-3b66d62b/inject.patch and the new file is at /tmp/claude-0/-home-user-qualm/2ede26c6-6287-5d82-9ba2-8868fcdef917/scratchpad/fixloop/fx-dev-unjs_ufo-3b66d62b/head.txt. The worktree has been removed."
+  },
+  {
+   "fix_id": "fx-dev-unjs_ufo-aa54b6ae",
+   "split": "dev",
+   "repo_key": "unjs_ufo",
+   "repo": "unjs/ufo",
+   "language": "TypeScript",
+   "sha": "aa54b6ae8f8b320bc0e03b4ff3ffc0bb2aa2b964",
+   "file": "src/utils.ts",
+   "all_files": [
+    "src/utils.ts"
+   ],
+   "smell": "leftover",
+   "setup": "if [ -f pnpm-lock.yaml ]; then V=$(node -p \"const v=((require('./package.json').packageManager||'').match(/^pnpm@([0-9.]+)/)||[])[1]; (!v||parseInt(v)<8)?'7.33.7':v\"); npx -y pnpm@$V install --frozen-lockfile --store-dir \"$SP/pnpm-store\"; else npx -y yarn@1.22.22 install --frozen-lockfile --ignore-scripts; fi",
+   "test": "if [ -x node_modules/.bin/vitest ]; then npx --no-install vitest run; else npx --no-install jest; fi",
+   "dir": "/tmp/claude-0/-home-user-qualm/2ede26c6-6287-5d82-9ba2-8868fcdef917/scratchpad/fixloop/fx-dev-unjs_ufo-aa54b6ae",
+   "location": [
+    593,
+    596
+   ],
+   "description": "In withoutHost (src/utils.ts, added by the commit), inserted a leftover debug console.log(\"[withoutHost] parsed:\", parsed) of the intermediate parsed URL, and after the return statement left a commented-out alternative implementation using destructured parseURL + stringifyParsedURL. Return values are unchanged; all 429 tests pass. Patch at /tmp/claude-0/-home-user-qualm/2ede26c6-6287-5d82-9ba2-8868fcdef917/scratchpad/fixloop/fx-dev-unjs_ufo-aa54b6ae/inject.patch, file at .../head.txt; worktree removed."
+  },
+  {
+   "fix_id": "fx-dev-unjs_ufo-c9e385ec",
+   "split": "dev",
+   "repo_key": "unjs_ufo",
+   "repo": "unjs/ufo",
+   "language": "TypeScript",
+   "sha": "c9e385ec0841dc90d458f3234626a6f15fe7f7f9",
+   "file": "src/parse.ts",
+   "all_files": [
+    "src/parse.ts",
+    "src/utils.ts"
+   ],
+   "smell": "impossible_guard",
+   "setup": "if [ -f pnpm-lock.yaml ]; then V=$(node -p \"const v=((require('./package.json').packageManager||'').match(/^pnpm@([0-9.]+)/)||[])[1]; (!v||parseInt(v)<8)?'7.33.7':v\"); npx -y pnpm@$V install --frozen-lockfile --store-dir \"$SP/pnpm-store\"; else npx -y yarn@1.22.22 install --frozen-lockfile --ignore-scripts; fi",
+   "test": "if [ -x node_modules/.bin/vitest ]; then npx --no-install vitest run; else npx --no-install jest; fi",
+   "dir": "/tmp/claude-0/-home-user-qualm/2ede26c6-6287-5d82-9ba2-8868fcdef917/scratchpad/fixloop/fx-dev-unjs_ufo-c9e385ec",
+   "location": [
+    36,
+    42
+   ],
+   "description": "In parseURL's special-protocol branch (code the commit adds), I added two guards for states that cannot happen. First, `if (!_proto) { return parsePath(input); }`. This check is dead because capture group 1 of `/^[\\s\\0]*(blob:|data:|javascript:|vbscript:)(.*)/` is required and always holds a non-empty protocol whenever the match succeeds. Second, `_pathname || \"\"` appears in both pathname and href. That fallback does nothing because `_pathname` already defaults to \"\" when it is destructured, and group 2 `(.*)` always captures a string. Behaviour is unchanged and all 387 tests pass. The patch is in /tmp/claude-0/-home-user-qualm/2ede26c6-6287-5d82-9ba2-8868fcdef917/scratchpad/fixloop/fx-dev-unjs_ufo-c9e385ec/inject.patch, and the full edited file is head.txt in the same directory. The worktree has been removed."
+  },
+  {
+   "fix_id": "fx-dev-unjs_ufo-f7d47110",
+   "split": "dev",
+   "repo_key": "unjs_ufo",
+   "repo": "unjs/ufo",
+   "language": "TypeScript",
+   "sha": "f7d47110af9a028abcab45c6a6378a38713cb8ca",
+   "file": "src/utils.ts",
+   "all_files": [
+    "src/utils.ts"
+   ],
+   "smell": "near_copy",
+   "setup": "if [ -f pnpm-lock.yaml ]; then V=$(node -p \"const v=((require('./package.json').packageManager||'').match(/^pnpm@([0-9.]+)/)||[])[1]; (!v||parseInt(v)<8)?'7.33.7':v\"); npx -y pnpm@$V install --frozen-lockfile --store-dir \"$SP/pnpm-store\"; else npx -y yarn@1.22.22 install --frozen-lockfile --ignore-scripts; fi",
+   "test": "if [ -x node_modules/.bin/vitest ]; then npx --no-install vitest run; else npx --no-install jest; fi",
+   "dir": "/tmp/claude-0/-home-user-qualm/2ede26c6-6287-5d82-9ba2-8868fcdef917/scratchpad/fixloop/fx-dev-unjs_ufo-f7d47110",
+   "location": [
+    309,
+    338
+   ],
+   "description": "Added a private helper isEmptyJoinSegment(segment) in src/utils.ts, just above joinURL. It repeats the existing isEmptyURL (\"!url || url === '/'\") under a different name and in a slightly different shape. joinURL's new loop, added by this commit, now calls it in place of the inline empty-or-slash check (`if (isEmptyJoinSegment(i)) continue;`) instead of reusing isEmptyURL. Behaviour is unchanged, and all 442 tests pass before and after. The patch is at /tmp/claude-0/-home-user-qualm/2ede26c6-6287-5d82-9ba2-8868fcdef917/scratchpad/fixloop/fx-dev-unjs_ufo-f7d47110/inject.patch and the edited file at /tmp/claude-0/-home-user-qualm/2ede26c6-6287-5d82-9ba2-8868fcdef917/scratchpad/fixloop/fx-dev-unjs_ufo-f7d47110/head.txt. The worktree has been removed."
+  }
+ ]
+}
