@@ -430,4 +430,4 @@ The winner needs only `OPENROUTER_API_KEY`.
 
 **Time.** About 6 hours of wall-clock time:
 - first spend: 2026-10-13 23:12 UTC (`spend_summary.json`);
-- this report finalized: 2026-10-14 05:05 UTC (`git log`).
+- this report finalized: 2026-10-14 05:02 UTC (`git log`).
