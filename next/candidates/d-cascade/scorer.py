@@ -17,6 +17,7 @@ import json, math, os, statistics
 from concurrent.futures import ThreadPoolExecutor
 
 from gatecore import cli, gitio, jev, llmdir, perimeter
+from gatecore.units import added_ranges as units_ranges
 from gatecore.model import LogisticModel
 
 import asks
@@ -25,7 +26,7 @@ import review
 VERSION = '0.1.0'
 HERE = os.path.dirname(os.path.realpath(__file__))
 CLOSE = 0.05          # a probability this near the threshold is a close call
-MAX_HUNKS = 6         # hunks asked about when localizing a failing file
+MAX_HUNKS = 6         # places (functions or runs of added code) asked about when localizing a failing file
 DET_FAILING_MIN = 0.3
 DET_ADVICE_MIN = 0.6
 
@@ -134,31 +135,46 @@ class Scorer:
         return {'p': p, 'readings': ps, 'raw': raw, 'masked': masked, 'x': x, 'masked_diff': masked_d}
 
     # ---------------------------------------------------------------- findings
+    def pieces(self, f):
+        """The places a reviewer would comment on: each changed top-level function, and each run of
+        added code outside any function, as (lo, hi, name, added lines). Comments are masked."""
+        masked = asks.masked_text(f.head, f.language).split('\n')
+        added_code = set(f.added_code_lines())
+        out, covered = [], set()
+        for u in f.top_units:
+            rows = [n for n in range(u.start, u.end + 1) if n in added_code]
+            covered.update(range(u.start, u.end + 1))
+            if len(rows) >= 2:
+                out.append((u.start, u.end, u.name, rows))
+        loose = sorted(n for n in added_code if n not in covered)
+        for lo, hi in units_ranges(loose):
+            rows = [n for n in loose if lo <= n <= hi]
+            if len(rows) >= 2:
+                out.append((max(1, lo - 3), min(len(masked), hi + 3), None, rows))
+        out.sort(key=lambda r: -len(r[3]))
+        return out[:MAX_HUNKS], masked
+
     def localize(self, f, masked_d, found):
         lang = asks.language(f.path)
-        header, _ = asks.hunks(masked_d)
-        rows = []
-        for lo, hi, text in asks.hunk_ranges(masked_d):
-            added = [lo + k for k, line in enumerate(l for l in text.splitlines()[1:] if not l.startswith('-')) if line.startswith('+')]
-            added = [n for n in added if n in f.added and n <= len(f.code) and f.code[n - 1].strip()]
-            if len(added) >= 2:
-                rows.append((len(added), min(added), max(added), header + text))
-        rows.sort(reverse=True)
-        out = []
-        for _, lo, hi, piece in rows[:MAX_HUNKS]:
+        pieces, masked = self.pieces(f)
+        asked = []
+        for lo, hi, name, rows in pieces:
+            body = ''.join(('+' if n in f.added else ' ') + masked[n - 1] + '\n' for n in range(lo, hi + 1))
+            piece = '--- a/%s\n+++ b/%s\n@@ -%d +%d,%d @@%s\n%s' % (f.path, f.path, lo, lo, hi - lo + 1, (' ' + name) if name else '', body)
             ans = self.client.ask(asks.state(piece, lang, asks.MASKED_FORMAT), asks.HUNK_QUESTIONS, use_cache=not self.args.no_cache)
-            out.append((ans['push_back'], lo, hi, ans))
-        out.sort(key=lambda r: -r[0])
+            asked.append((ans['push_back'], min(rows), max(rows), name, ans))
+        asked.sort(key=lambda r: -r[0])
         findings = []
-        for k, (pb, lo, hi, ans) in enumerate(out):
+        for k, (pb, lo, hi, name, ans) in enumerate(asked):
             if pb < 0.5 and k > 0:
                 continue
             if any(not (hi < d['lines'][0] or lo > d['lines'][1]) and d['confidence'] >= 0.6 for d in found):
-                continue  # an exact detector finding already covers this hunk
+                continue  # an exact detector finding already covers this place
             verb = max(VERB_TEXT, key=lambda q: ans.get(q, 0.0))
             what, fix = VERB_TEXT[verb]
             span = 'Line %d' % lo if lo == hi else 'Lines %d-%d' % (lo, hi)
-            findings.append({'id': 'review.' + verb, 'lines': [lo, hi], 'message': '%s %s.' % (span, what), 'fix': fix,
+            where = ' (in %s)' % name if name else ''
+            findings.append({'id': 'review.' + verb, 'lines': [lo, hi], 'message': '%s%s %s.' % (span, where, what), 'fix': fix,
                              'confidence': round(pb, 2), 'related': []})
         return findings
 
