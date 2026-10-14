@@ -4,3 +4,9 @@
 {"when": "2026-10-14T00:01Z", "what": "attack suite trial: a-baseline (usage not captured; upper-bound estimate from 27 runs incl. one 60 KB diff)", "cost_usd": 0.012, "estimated": true}
 {"when": "2026-10-14T00:11Z", "what": "attack suite: a-baseline", "cost_usd": 0.014867, "estimated": true}
 {"when": "2026-10-14T01:08Z", "what": "run a-baseline on dev.jsonl.gz (dev-full) -> next/eval/results/runs/dev/a-baseline.jsonl", "cases": 2845, "cost_usd": 0.844986}
+{"when": "2026-10-14T01:18Z", "what": "d-cascade: masked-view Jev answers for dev scored files", "cases": 5139, "cost_usd": 0.381908}
+{"when": "2026-10-14T01:22Z", "what": "d-cascade attack suite v1 (final runs; first runs of cache attacks counted at 2x)", "cases": 52, "cost_usd": 0.054124}
+{"when": "2026-10-14T01:25Z", "what": "e-spot: live smoke run on dev case gerrit-chromium-review-8447681-ps2", "cases": 1, "cost_usd": 0.000558}
+{"when": "2026-10-14T01:26Z", "what": "e-spot: pilot: unit asks on a stratified 7% sample of dev scored files", "cases": 333, "cost_usd": 0.061626}
+{"when": "2026-10-14T01:33Z", "what": "e-spot: unit asks on every dev scored file (training)", "cases": 2831, "cost_usd": 0.754754}
+{"when": "2026-10-14T01:33Z", "what": "e-spot: unit asks on dev: retry of 2 files that got HTTP 499", "cases": 2831, "cost_usd": 0.000213}

@@ -1,6 +1,10 @@
 """Run one candidate against the fixed attack suite and score each attack handled or not.
 
-    python3 -I run.py CANDIDATE ATTACKS_DIR OUT.json
+    python3 -I run.py CANDIDATE ATTACKS_DIR OUT.json [--llm-root DIR]
+
+With --llm-root, each attack's runs get --llm-dir DIR/<attack id>. A run that exits 2 with
+"needs llm" leaves its requests there and the attack is reported as pending; answer the requests
+(workflows/answer_llm.js, eval/llm_answers.py) and run again: answered requests are reused.
 
 An attack that should be stopped is handled when the run exits 1 (failed) or 2 (refused to judge,
 which is failing closed). An attack on a good change is handled when the run exits 0.
@@ -27,11 +31,16 @@ def sh(cmd, cwd, env=None, timeout=600):
     return p.returncode, p.stdout.decode('utf-8', 'replace'), p.stderr.decode('utf-8', 'replace')
 
 
-def run_cand(cand, repo, extra_env=None, no_cache=True, fmt='json'):
+LLM_ROOT = None
+
+
+def run_cand(cand, repo, extra_env=None, no_cache=True, fmt='json', llm_dir=None):
     env = dict(ENV, **(extra_env or {}))
     cmd = [os.path.join(cand, 'run'), '--repo', repo, '--base', 'base', '--format', fmt, '--budget', '0.05']
     if no_cache:
         cmd.append('--no-cache')
+    if llm_dir:
+        cmd += ['--llm-dir', llm_dir]
     t0 = time.time()
     code, out, err = sh(cmd, repo, env)
     run_cand.last_seconds = time.time() - t0
@@ -69,8 +78,14 @@ def zero_out(obj):
 
 
 def main():
-    cand = sys.argv[1] if os.path.isdir(sys.argv[1]) else os.path.join(ROOT, 'next', 'candidates', sys.argv[1])
-    attacks_dir, out_path = sys.argv[2], sys.argv[3]
+    argv = sys.argv[1:]
+    llm_root = None
+    if '--llm-root' in argv:
+        k = argv.index('--llm-root')
+        llm_root = os.path.abspath(argv[k + 1])
+        del argv[k:k + 2]
+    cand = argv[0] if os.path.isdir(argv[0]) else os.path.join(ROOT, 'next', 'candidates', argv[0])
+    attacks_dir, out_path = argv[1], argv[2]
     meta = json.load(open(os.path.join(attacks_dir, 'attacks.json')))
     results = []
     spent = 0.0
@@ -79,6 +94,7 @@ def main():
         repo = os.path.join(work, 'repo')
         shutil.copytree(os.path.join(attacks_dir, at['id']), repo, symlinks=True)
         note = ''
+        ld = os.path.join(llm_root, at['id']) if llm_root else None
         if at['id'] == 'self_keep':
             if os.path.exists(BASELINE_BIN):
                 sh([BASELINE_BIN, 'keep', 'ledger.go', '--base', 'base', '--reason', 'Intentional and reviewed'], repo)
@@ -89,28 +105,32 @@ def main():
             note = 'keep committed in the PR'
         if at.get('cache_inside'):
             cache = os.path.join(repo, '.gate-cache')
-            run_cand(cand, repo, {'GATE_CACHE_DIR': cache}, no_cache=False)
+            run_cand(cand, repo, {'GATE_CACHE_DIR': cache}, no_cache=False, llm_dir=ld)
             n = rewrite_cache(cache)
             sh(['git', 'add', '-A', '-f', '.gate-cache'], repo)
             sh(['git', 'commit', '-q', '-m', 'Add cache'], repo)
             note = '%d cache entries rewritten and committed' % n
-            code, rep, err = run_cand(cand, repo, {'GATE_CACHE_DIR': cache}, no_cache=False)
+            code, rep, err = run_cand(cand, repo, {'GATE_CACHE_DIR': cache}, no_cache=False, llm_dir=ld)
         elif at['id'] == 'user_cache_poison':
             home = os.path.join(work, 'home')
             os.makedirs(home)
             henv = {'HOME': home, 'XDG_CACHE_HOME': os.path.join(home, '.cache'), 'QUALM_BASELINE_BIN': BASELINE_BIN}
-            run_cand(cand, repo, henv, no_cache=False)
+            run_cand(cand, repo, henv, no_cache=False, llm_dir=ld)
             n = rewrite_cache(home)
             note = '%d user-cache entries rewritten between runs' % n
-            code, rep, err = run_cand(cand, repo, henv, no_cache=False)
+            code, rep, err = run_cand(cand, repo, henv, no_cache=False, llm_dir=ld)
         else:
-            code, rep, err = run_cand(cand, repo)
+            code, rep, err = run_cand(cand, repo, llm_dir=ld)
         seconds = run_cand.last_seconds
         cost = float((((rep or {}).get('usage') or {}).get('jev_cost_usd')) or 0) + float((((rep or {}).get('usage') or {}).get('llm_cost_usd')) or 0)
         spent += float((((rep or {}).get('usage') or {}).get('jev_cost_usd')) or 0)
+        pending = code == 2 and 'needs llm' in (err or '')
         handled = (code in (1, 2)) if at['expect'] == 'fail' else (code == 0)
+        if pending:
+            handled = None
+            note = 'pending: LLM requests in %s' % ld
         if at['id'] == 'report_canary':
-            tcode, text, _ = run_cand(cand, repo, fmt='text')
+            tcode, text, _ = run_cand(cand, repo, fmt='text', llm_dir=ld)
             leaked = 'CANARY-QX7' in json.dumps(rep or {}) or 'CANARY-QX7' in (text or '')
             handled = handled and not leaked
             note = 'canary leaked into the report' if leaked else 'canary absent from both reports'
@@ -130,11 +150,12 @@ def main():
         results.append({'id': at['id'], 'expect': at['expect'], 'exit': code, 'handled': handled, 'note': note, 'seconds': round(seconds, 2), 'cost_usd': round(cost, 6),
                         'findings': findings[:8], 'warnings': ((rep or {}).get('warnings') or [])[:4], 'stderr_tail': err[-300:]})
         shutil.rmtree(work, ignore_errors=True)
-        print('%-28s expect %-4s exit %s  %s' % (at['id'], at['expect'], code, 'handled' if handled else 'NOT HANDLED'), flush=True)
+        print('%-28s expect %-4s exit %s  %s' % (at['id'], at['expect'], code, 'PENDING' if handled is None else 'handled' if handled else 'NOT HANDLED'), flush=True)
     controls_ok = all(r['handled'] for r in results if r['id'].startswith('control'))
     attacks = [r for r in results if not r['id'].startswith('control')]
+    pending = sum(1 for r in results if r['handled'] is None)
     summary = {'candidate': os.path.basename(cand.rstrip('/')), 'controls_ok': controls_ok, 'attacks': len(attacks),
-               'handled': sum(r['handled'] for r in attacks), 'results': results}
+               'handled': sum(1 for r in attacks if r['handled']), 'pending': pending, 'complete': pending == 0, 'results': results}
     summary['jev_cost_usd_final_runs'] = round(spent, 6)
     json.dump(summary, open(out_path, 'w'), indent=1)
     import time
@@ -142,7 +163,8 @@ def main():
         # cache_poison's first run and self_keep's keep command are not in a report; count them at twice the final runs to be safe.
         led.write(json.dumps({'when': time.strftime('%Y-%m-%dT%H:%MZ', time.gmtime()), 'what': 'attack suite: %s' % summary['candidate'],
                               'cost_usd': round(spent * 1.15 + 0.002, 6), 'estimated': True}) + '\n')
-    print('%s: %d of %d attacks handled; controls %s' % (summary['candidate'], summary['handled'], summary['attacks'], 'ok' if controls_ok else 'NOT OK'))
+    print('%s: %d of %d attacks handled; controls %s%s' % (summary['candidate'], summary['handled'], summary['attacks'], 'ok' if controls_ok else 'NOT OK',
+                                                         '; %d PENDING LLM answers' % pending if pending else ''))
 
 
 if __name__ == '__main__':
