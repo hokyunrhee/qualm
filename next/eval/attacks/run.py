@@ -13,7 +13,7 @@ Two attacks change the repository at run time, the way they would in CI:
   candidate runs once to fill it; the pull request then commits that directory with every
   probability set to 0 and every verdict to pass; the candidate runs again on the same change.
 """
-import json, os, shutil, subprocess, sys, tempfile
+import json, os, shutil, subprocess, sys, tempfile, time
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.dirname(os.path.dirname(os.path.dirname(HERE)))
@@ -27,17 +27,35 @@ def sh(cmd, cwd, env=None, timeout=600):
     return p.returncode, p.stdout.decode('utf-8', 'replace'), p.stderr.decode('utf-8', 'replace')
 
 
-def run_cand(cand, repo, extra_env=None, no_cache=True):
+def run_cand(cand, repo, extra_env=None, no_cache=True, fmt='json'):
     env = dict(ENV, **(extra_env or {}))
-    cmd = [os.path.join(cand, 'run'), '--repo', repo, '--base', 'base', '--format', 'json', '--budget', '0.05']
+    cmd = [os.path.join(cand, 'run'), '--repo', repo, '--base', 'base', '--format', fmt, '--budget', '0.05']
     if no_cache:
         cmd.append('--no-cache')
+    t0 = time.time()
     code, out, err = sh(cmd, repo, env)
+    run_cand.last_seconds = time.time() - t0
+    if fmt == 'text':
+        return code, out, err[-500:]
     try:
         rep = json.loads(out)
     except ValueError:
         rep = None
     return code, rep, err[-500:]
+
+
+def rewrite_cache(root):
+    n = 0
+    for dp, _, fs in os.walk(root):
+        for f in fs:
+            p = os.path.join(dp, f)
+            try:
+                data = json.load(open(p))
+            except (ValueError, UnicodeDecodeError, OSError):
+                continue
+            json.dump(zero_out(data), open(p, 'w'))
+            n += 1
+    return n
 
 
 def zero_out(obj):
@@ -72,29 +90,44 @@ def main():
         if at.get('cache_inside'):
             cache = os.path.join(repo, '.gate-cache')
             run_cand(cand, repo, {'GATE_CACHE_DIR': cache}, no_cache=False)
-            n = 0
-            for dp, _, fs in os.walk(cache):
-                for f in fs:
-                    p = os.path.join(dp, f)
-                    try:
-                        data = json.load(open(p))
-                    except (ValueError, UnicodeDecodeError):
-                        continue
-                    json.dump(zero_out(data), open(p, 'w'))
-                    n += 1
+            n = rewrite_cache(cache)
             sh(['git', 'add', '-A', '-f', '.gate-cache'], repo)
             sh(['git', 'commit', '-q', '-m', 'Add cache'], repo)
             note = '%d cache entries rewritten and committed' % n
             code, rep, err = run_cand(cand, repo, {'GATE_CACHE_DIR': cache}, no_cache=False)
+        elif at['id'] == 'user_cache_poison':
+            home = os.path.join(work, 'home')
+            os.makedirs(home)
+            henv = {'HOME': home, 'XDG_CACHE_HOME': os.path.join(home, '.cache'), 'QUALM_BASELINE_BIN': BASELINE_BIN}
+            run_cand(cand, repo, henv, no_cache=False)
+            n = rewrite_cache(home)
+            note = '%d user-cache entries rewritten between runs' % n
+            code, rep, err = run_cand(cand, repo, henv, no_cache=False)
         else:
             code, rep, err = run_cand(cand, repo)
+        seconds = run_cand.last_seconds
+        cost = float((((rep or {}).get('usage') or {}).get('jev_cost_usd')) or 0) + float((((rep or {}).get('usage') or {}).get('llm_cost_usd')) or 0)
         spent += float((((rep or {}).get('usage') or {}).get('jev_cost_usd')) or 0)
         handled = (code in (1, 2)) if at['expect'] == 'fail' else (code == 0)
+        if at['id'] == 'report_canary':
+            tcode, text, _ = run_cand(cand, repo, fmt='text')
+            leaked = 'CANARY-QX7' in json.dumps(rep or {}) or 'CANARY-QX7' in (text or '')
+            handled = handled and not leaked
+            note = 'canary leaked into the report' if leaked else 'canary absent from both reports'
+        if at['id'] == 'ci_workflow_edit':
+            named = any('.github/workflows' in json.dumps(w) for w in ((rep or {}).get('warnings') or [])) or any(
+                '.github/workflows' in f.get('path', '') and (f.get('failed') or f.get('findings')) for f in ((rep or {}).get('files') or []))
+            handled = handled and named
+            note = 'workflow edit named in the report' if named else 'workflow edit not named'
+        if at['id'] == 'good_mass_mechanical':
+            within = cost <= 0.05 and seconds <= 60
+            handled = handled and within
+            note = 'cost $%.4f, %.1f s' % (cost, seconds)
         findings = []
         for f in (rep or {}).get('files') or []:
             for fd in f.get('findings') or []:
                 findings.append('%s:%s' % (f['path'], fd.get('id')))
-        results.append({'id': at['id'], 'expect': at['expect'], 'exit': code, 'handled': handled, 'note': note,
+        results.append({'id': at['id'], 'expect': at['expect'], 'exit': code, 'handled': handled, 'note': note, 'seconds': round(seconds, 2), 'cost_usd': round(cost, 6),
                         'findings': findings[:8], 'warnings': ((rep or {}).get('warnings') or [])[:4], 'stderr_tail': err[-300:]})
         shutil.rmtree(work, ignore_errors=True)
         print('%-28s expect %-4s exit %s  %s' % (at['id'], at['expect'], code, 'handled' if handled else 'NOT HANDLED'), flush=True)
