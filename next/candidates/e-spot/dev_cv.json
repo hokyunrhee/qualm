@@ -463,7 +463,8 @@
  },
  "location": {
   "failing_reviewer_positives": 227,
-  "with_a_spot_finding_at_the_location": 176
+  "with_a_spot_finding_at_the_location": 193,
+  "spot_findings_per_failing_file": 2.74
  },
  "weights": [
   [

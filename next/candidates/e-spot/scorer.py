@@ -7,10 +7,15 @@ core's features; a logistic model trained on dev (train.py, model.json) turns th
 probability that a reviewer would ask for the file's change to be simplified.
 
 A file whose score lands close to the threshold has each of its spots asked four more times and is
-judged on the mean of the five answers, so a fresh draw from Jev rarely flips the verdict. A file that cannot be asked about (no key, Jev
-failing after retries, the budget spent) is an error, and the run exits 2: it never passes.
+judged on the mean of the five answers, so a fresh draw from Jev rarely flips the verdict. A file
+that cannot be asked about (no key, Jev failing after retries, the budget spent) is an error, and
+the run exits 2: it never passes.
+
+Findings: each spot whose answers are unusual (against spots of dev files no reviewer flagged)
+becomes one finding at its added lines, naming its most unusual verb; the core detectors' exact-line
+findings come first. A failing file always carries at least one finding.
 """
-import hashlib, math, os
+import bisect, hashlib, math, os
 from concurrent.futures import ThreadPoolExecutor
 
 from gatecore import gitio, jev, perimeter, units as unitmod
@@ -25,7 +30,7 @@ DEFAULT_BUDGET = 0.25   # dollars per run when --budget is not given
 JOBS = 6                # requests in flight at once
 CLOSE = 0.05            # a file this near its threshold is a close call
 DRAWS = 5               # answers per spot a close call is judged on (their mean)
-VERB_MIN = 0.5          # a verb answer this high makes a finding on a failing file
+VERB_MIN = 0.5          # without a rarity table: a verb answer this high makes a finding on a failing file
 ADVICE_MIN = 0.8        # ... and on a passing file, as advice
 DETECTOR_FAILING_MIN = 0.3
 DETECTOR_ADVICE_MIN = 0.6
@@ -89,39 +94,70 @@ def unit_finding(f, spot, verb, value, sim=None):
             'fix': t['fix'].format(span=span, where=where, unit=unit, related=related), 'confidence': round(float(value), 2), 'related': rel}
 
 
-def spot_findings(f, spot_list, answers, minimum):
+class Verbs:
+    """How unusual an answer is: its percentile among the answers Jev gave about spots of dev files
+    no reviewer flagged (train.py stores the table in the model's meta). A verb makes a finding on a
+    failing file when its answer reaches CUT_PCT, and as advice on a passing file at ADVICE_PCT;
+    raw answers are not comparable across verbs (Jev rates most code as shortenable)."""
+    CUT_PCT, ADVICE_PCT = 90, 98
+
+    def __init__(self, meta=None):
+        self.table = (meta or {}).get('rarity') or {}
+
+    def rarity(self, q, v):
+        t = self.table.get(q)
+        if not t:
+            return v
+        return bisect.bisect_right(t, v) / float(len(t))
+
+    def cut(self, q, advice=False):
+        t = self.table.get(q)
+        if not t:
+            return ADVICE_MIN if advice else VERB_MIN
+        return t[self.ADVICE_PCT if advice else self.CUT_PCT]
+
+    def choose(self, kind, a, advice=False):
+        """(rarity, verb) for the verb a spot's finding names, or None when no answer is unusual."""
+        cands = [(self.rarity(v, a[v]), v) for v in questions.VERBS
+                 if a[v] >= self.cut(v, advice) and not (v == 'split' and kind == 'module')]
+        if not cands and a['push_back'] >= self.cut('push_back', advice):
+            cands = [(self.rarity('push_back', a['push_back']), 'push_back')]
+        return max(cands) if cands else None
+
+
+def spot_findings(f, spot_list, answers, verbs, advice=False):
+    """One finding per spot whose answers are unusual, naming its most unusual verb."""
     out = []
     for s, a in zip(spot_list, answers):
-        verbs = sorted(((a[v], v) for v in questions.VERBS if a[v] >= minimum and not (v == 'split' and s.kind == 'module')), reverse=True)[:2]
-        if not verbs and a['push_back'] >= minimum:
-            verbs = [(a['push_back'], 'push_back')]
-        for value, verb in verbs:
-            out.append(unit_finding(f, s, verb, value, spots.similar(f, s) if verb == 'merge' else None))
-    out.sort(key=lambda d: (-d['confidence'], d['lines'][0]))
-    return out[:MAX_UNIT_FINDINGS]
+        c = verbs.choose(s.kind, a, advice)
+        if c:
+            out.append((c[0], unit_finding(f, s, c[1], a[c[1]], spots.similar(f, s) if c[1] == 'merge' else None)))
+    out.sort(key=lambda t: (-t[0], t[1]['lines'][0]))
+    return [d for _, d in out[:MAX_UNIT_FINDINGS]]
 
 
-def strongest(f, spot_list, answers):
-    """The one finding a failing file always carries: its most suspicious spot, by its top verb."""
+def strongest(f, spot_list, answers, verbs=None):
+    """The one finding a failing file always carries: its most unusual spot, by its most unusual verb."""
+    verbs = verbs or Verbs()
     if not spot_list:
         added = sorted(f.added) or [h[2] for h in f.diff.hunks] or [1]
         s = spots.Spot('module', 'module', added[0], added[-1], added)
         return unit_finding(f, s, 'push_back', 0.5)
-    k = max(range(len(spot_list)), key=lambda i: (answers[i]['push_back'] + max(answers[i][v] for v in questions.VERBS), -i))
-    a, s = answers[k], spot_list[k]
-    value, verb = max(((a[v], v) for v in questions.VERBS if not (v == 'split' and s.kind == 'module')), default=(a['push_back'], 'push_back'))
-    if value < 0.5 and a['push_back'] >= value:
-        value, verb = a['push_back'], 'push_back'
+    best = None
+    for s, a in zip(spot_list, answers):
+        for v in questions.IDS:
+            if v == 'split' and s.kind == 'module':
+                continue
+            key = (verbs.rarity(v, a[v]), v != 'push_back')
+            if best is None or key > best[0]:
+                best = (key, s, v, a[v])
+    _, s, verb, value = best
     return unit_finding(f, s, verb, value, spots.similar(f, s) if verb == 'merge' else None)
 
 
 def merge_findings(unit_found, detector_found):
-    """Detector findings are exact-line and come first when they cover the same lines."""
-    out = list(detector_found)
-    for d in unit_found:
-        out.append(d)
-    out.sort(key=lambda d: (-d['confidence'], d['lines'][0]))
-    return out
+    """The detectors' exact-line findings first (by confidence), then the spots' (most unusual first)."""
+    return sorted(detector_found, key=lambda d: (-d['confidence'], d['lines'][0])) + list(unit_found)
 
 
 # ------------------------------------------------------------------ the scorer
@@ -129,6 +165,7 @@ def merge_findings(unit_found, detector_found):
 class Scorer:
     def __init__(self, args, policy, model_path=None, client=None):
         self.model = LogisticModel.load(model_path or os.path.join(HERE, 'model.json'))
+        self.verbs = Verbs(self.model.meta)
         self.threshold = getattr(args, 'threshold', None) or getattr(policy, 'threshold', None) or self.model.threshold
         self.budget = args.budget if getattr(args, 'budget', None) is not None else DEFAULT_BUDGET
         self.use_cache = not getattr(args, 'no_cache', False)
@@ -250,12 +287,12 @@ class Scorer:
     def _verdict(self, f, p, x, asked, left, answers, detector_found, settled):
         failed = p >= self.threshold
         if failed:
-            unit_found = spot_findings(f, asked, answers, VERB_MIN)
+            unit_found = spot_findings(f, asked, answers, self.verbs)
             det = [d for d in detector_found if d['confidence'] >= DETECTOR_FAILING_MIN]
             if not unit_found and not det:
-                unit_found = [strongest(f, asked, answers)]
+                unit_found = [strongest(f, asked, answers, self.verbs)]
         else:
-            unit_found = spot_findings(f, asked, answers, ADVICE_MIN)
+            unit_found = spot_findings(f, asked, answers, self.verbs, advice=True)
             det = [d for d in detector_found if d['confidence'] >= DETECTOR_ADVICE_MIN]
         signals = {k: round(v, 4) for k, v in x.items() if k.startswith(('jev.', 'spots.'))}
         signals['spots'] = [{'unit': s.label, 'lines': [s.start, s.end], 'added': s.n_added,

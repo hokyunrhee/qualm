@@ -346,20 +346,35 @@ def strata(rows, y, p, thr):
     return out
 
 
-def location_hits(rows, p, thr):
-    """Of the failing reviewer positives, how many carry a spot finding within 3 lines of the
-    reviewer's location (the spots that would become findings at VERB_MIN)."""
+def rarity_table(rows):
+    """Per question, the answers about spots of dev files no reviewer flagged (label 0), at the
+    percentiles 0..100: what scorer.Verbs measures how unusual an answer is against."""
+    import numpy as np
+    out = {}
+    for q in questions.IDS:
+        v = np.array([a[q] for r in rows if r['label'] == 0 for a in r['answers']])
+        out[q] = [round(float(x), 4) for x in np.percentile(v, list(range(101)))]
+    return out
+
+
+def location_hits(rows, p, thr, verbs):
+    """Of the failing reviewer positives, how many carry a spot finding within 2 lines of the
+    reviewer's location (the findings `run` would print, before the detectors')."""
     hit = n = 0
+    per_file = []
     for r, s in zip(rows, p):
-        if r['label_source'] != 'reviewer_comment' or s < thr or not r.get('location'):
+        if s < thr:
+            continue
+        found = [m for m, a in zip(r['spots'], r['answers']) if verbs.choose(m['kind'], a)]
+        found = found[:scorer.MAX_UNIT_FINDINGS]
+        per_file.append(len(found))
+        if r['label_source'] != 'reviewer_comment' or not r.get('location'):
             continue
         lo, hi = r['location']
         n += 1
-        for meta, a in zip(r['spots'], r['answers']):
-            if max(a[v] for v in questions.IDS) >= scorer.VERB_MIN and meta['lo'] - 3 <= hi and lo <= meta['hi'] + 3:
-                hit += 1
-                break
-    return {'failing_reviewer_positives': n, 'with_a_spot_finding_at_the_location': hit}
+        hit += any(m['lo'] - 2 <= hi and lo <= m['hi'] + 2 for m in found)
+    return {'failing_reviewer_positives': n, 'with_a_spot_finding_at_the_location': hit,
+            'spot_findings_per_failing_file': round(sum(per_file) / max(1, len(per_file)), 2)}
 
 
 def cmd_fit(a):
@@ -393,16 +408,18 @@ def cmd_fit(a):
     for n in scorer.names():
         k = names.index(n)
         single[n] = metrics(y, X[:, k])
+    table = rarity_table(rows)
     model = {'names': names, 'mean': [float(v) for v in sc.mean_], 'scale': [float(v) for v in sc.scale_],
              'coef': [float(v) for v in lr.coef_[0]], 'intercept': float(lr.intercept_[0]), 'platt': [a_, b_], 'threshold': round(thr, 3),
              'meta': {'trained_on': 'dev split only', 'items': len(rows), 'positives': int(y.sum()), 'C': C,
                       'threshold_rule': 'highest out-of-fold recall with precision >= %s' % a.precision_floor if a.precision_floor else 'best out-of-fold F1',
-                      'questions': {q: v['instructions'] for q, v in questions.QUESTIONS.items()}}}
+                      'questions': {q: v['instructions'] for q, v in questions.QUESTIONS.items()},
+                      'rarity': table}}
     if a.out:
         json.dump(model, open(a.out, 'w'), indent=1)
     rep = {'oof': metrics(y, p), 'C': C, 'grid': {str(c): grid[c][1] for c in grid}, 'threshold': thr, 'operating_point_oof': op,
            'at_threshold_oof': at_threshold(y, p, thr), 'by': strata(rows, y, p, thr), 'ablations_oof': ablations,
-           'single_answer_auc': single, 'location': location_hits(rows, p, thr),
+           'single_answer_auc': single, 'location': location_hits(rows, p, thr, scorer.Verbs({'rarity': table})),
            'weights': sorted(zip(names, [round(float(v), 3) for v in lr.coef_[0]]), key=lambda t: -abs(t[1]))}
     if a.report:
         os.makedirs(os.path.dirname(os.path.abspath(a.report)), exist_ok=True)

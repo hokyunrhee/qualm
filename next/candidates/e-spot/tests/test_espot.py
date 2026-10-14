@@ -338,7 +338,7 @@ class TestFindings(unittest.TestCase):
         f = ctx_of('calc.go', HEAD_GO, BASE_GO)
         asked, _ = spots.select(f)
         answers = [dict({q: 0.1 for q in questions.IDS}, remove=0.9, push_back=0.8) if s.label == 'Add' else {q: 0.1 for q in questions.IDS} for s in asked]
-        found = scorer.spot_findings(f, asked, answers, scorer.VERB_MIN)
+        found = scorer.spot_findings(f, asked, answers, scorer.Verbs())
         self.assertEqual(len(found), 1)
         d = found[0]
         self.assertEqual(d['id'], 'spot_remove')
@@ -346,6 +346,18 @@ class TestFindings(unittest.TestCase):
         self.assertIn('lines 9-12 (in Add)', d['message'])
         self.assertIn('Done when', d['fix'])
         self.assertEqual(d['confidence'], 0.9)
+
+    def test_the_most_unusual_verb_is_named(self):
+        # Jev rates most code as shortenable: 0.6 for shorten is ordinary, 0.4 for remove is not
+        table = {q: [0.6 * k / 100 for k in range(101)] for q in questions.IDS}
+        table['shorten'] = [min(1.0, 0.3 + 0.35 * k / 100) for k in range(101)]
+        verbs = scorer.Verbs({'rarity': table})
+        a = dict({q: 0.05 for q in questions.IDS}, shorten=0.6, remove=0.58)
+        self.assertEqual(verbs.choose('unit', a)[1], 'remove')
+        self.assertIsNone(verbs.choose('unit', {q: 0.05 for q in questions.IDS}))
+        self.assertIsNone(verbs.choose('module', dict({q: 0.05 for q in questions.IDS}, split=0.9)))  # no split for module code
+        self.assertEqual(verbs.choose('unit', dict({q: 0.05 for q in questions.IDS}, push_back=0.59))[1], 'push_back')
+        self.assertIsNone(verbs.choose('unit', dict({q: 0.05 for q in questions.IDS}, remove=0.56), advice=True))
 
     def test_every_verb_has_a_template(self):
         f = ctx_of('calc.go', HEAD_GO, BASE_GO)
