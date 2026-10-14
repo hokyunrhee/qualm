@@ -1,5 +1,3 @@
 __pycache__/
 *.pyc
 /data/work/
-/collect/fixrepos.json
-/collect/fixrepos_b.json

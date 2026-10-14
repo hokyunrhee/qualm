@@ -1,0 +1,439 @@
+{
+ "repos": {
+  "more-itertools_more-itertools": {
+   "language": "Python",
+   "url": "https://github.com/more-itertools/more-itertools",
+   "setup": "python3 -m venv $SP/venvs/more-itertools_more-itertools && $SP/venvs/more-itertools_more-itertools/bin/pip install -q pytest -e $REPO",
+   "test": "$SP/venvs/more-itertools_more-itertools/bin/python -m pytest -q -x -p no:cacheprovider tests",
+   "notes": "System Python 3.13 venv outside the repo; editable install (flit). pytest runs the unittest suite in tests/ (python -m pytest puts the checkout on sys.path, so the checkout's more_itertools is what gets tested). Setup must be re-run per checkout because the editable install points at $REPO. No untracked files are left behind. The two newest commits take about 15-18s because of a large subtest count; older ones take about 2s.",
+   "commits": [
+    {
+     "sha": "18c57c720fc5a7672439ea45a5393a8c1ff40d1e",
+     "files": [
+      "more_itertools/more.py",
+      "more_itertools/recipes.py"
+     ],
+     "added": 167,
+     "tests_pass": true,
+     "seconds": 18.3
+    },
+    {
+     "sha": "21d3d88359437146a6d8882328df4bd73edd685c",
+     "files": [
+      "more_itertools/recipes.py"
+     ],
+     "added": 60,
+     "tests_pass": true,
+     "seconds": 14.7
+    },
+    {
+     "sha": "1604bc368d3e5f7a8ead1f1ac3896c85da709f96",
+     "files": [
+      "more_itertools/more.py"
+     ],
+     "added": 35,
+     "tests_pass": true,
+     "seconds": 1.9
+    },
+    {
+     "sha": "9c8dabe6e27bcc992c245db9ca264f430020c8bb",
+     "files": [
+      "more_itertools/more.py"
+     ],
+     "added": 25,
+     "tests_pass": true,
+     "seconds": 2.0
+    },
+    {
+     "sha": "58e6b3cda2a8d5bc6ca1719042088b1e2ea1af27",
+     "files": [
+      "more_itertools/more.py",
+      "more_itertools/recipes.py"
+     ],
+     "added": 28,
+     "tests_pass": true,
+     "seconds": 1.7
+    },
+    {
+     "sha": "29288c851dfc90c3e773e3607ccc39abbc43a19d",
+     "files": [
+      "more_itertools/more.py"
+     ],
+     "added": 133,
+     "tests_pass": true,
+     "seconds": 1.8
+    },
+    {
+     "sha": "ac26d863f8d67ff8edde8c2944c68583a3c0d54b",
+     "files": [
+      "more_itertools/more.py"
+     ],
+     "added": 32,
+     "tests_pass": true,
+     "seconds": 1.5
+    },
+    {
+     "sha": "3c1e75e02fbfdf9d860d16a52739ce81c39260ca",
+     "files": [
+      "docs/conf.py",
+      "more_itertools/more.py",
+      "setup.py"
+     ],
+     "added": 114,
+     "tests_pass": true,
+     "seconds": 1.5
+    }
+   ],
+   "setup_ws": "test -x $SP/venvs/more-itertools_more-itertools/bin/python",
+   "test_ws": "env PYTHONPATH=$REPO/src:$REPO $SP/venvs/more-itertools_more-itertools/bin/python -m pytest -q -x -p no:cacheprovider tests"
+  },
+  "tkem_cachetools": {
+   "language": "Python",
+   "url": "https://github.com/tkem/cachetools",
+   "setup": "python3 -m venv $SP/venvs/tkem_cachetools && $SP/venvs/tkem_cachetools/bin/pip install -q pytest -e $REPO",
+   "test": "$SP/venvs/tkem_cachetools/bin/python -m pytest -q -x -p no:cacheprovider tests",
+   "notes": "System Python 3.13 venv outside the repo. The editable install handles both the old flat cachetools/ layout and the newer src/ layout. Setup must be re-run per checkout. bb72c21aab fails at its own commit (AttributeError '_DescriptorBase__deprecated' in tests/test_cachedmethod.py::test_decorator_no_set_name). That is a bug in the code at that commit, not an environment problem.",
+   "commits": [
+    {
+     "sha": "bb72c21aab48bdd720fbe173ff1938bd5d923e43",
+     "files": [
+      "src/cachetools/__init__.py",
+      "src/cachetools/_cachedmethod.py"
+     ],
+     "added": 196,
+     "tests_pass": false,
+     "seconds": 0.6
+    },
+    {
+     "sha": "86352aed2bedb23aa0cc461a58e76bd667617eaa",
+     "files": [
+      "src/cachetools/_cachedmethod.py"
+     ],
+     "added": 143,
+     "tests_pass": true,
+     "seconds": 0.8
+    },
+    {
+     "sha": "2aeffb0448b06151c60b239f95a139d58dc458fd",
+     "files": [
+      "src/cachetools/__init__.py"
+     ],
+     "added": 55,
+     "tests_pass": true,
+     "seconds": 0.7
+    },
+    {
+     "sha": "c17b0e3ded92347d82165cfa011e9ca1828ac285",
+     "files": [
+      "src/cachetools/__init__.py",
+      "src/cachetools/_cached.py",
+      "src/cachetools/_cachedmethod.py"
+     ],
+     "added": 59,
+     "tests_pass": true,
+     "seconds": 0.6
+    },
+    {
+     "sha": "da5819a863791ea6d272261d95743728e4f7a942",
+     "files": [
+      "src/cachetools/__init__.py",
+      "src/cachetools/_cachedmethod.py"
+     ],
+     "added": 50,
+     "tests_pass": true,
+     "seconds": 0.8
+    },
+    {
+     "sha": "e0b98aa418a0b933abbe8146a0b6f65ed3b207b7",
+     "files": [
+      "src/cachetools/__init__.py",
+      "src/cachetools/_decorators.py",
+      "src/cachetools/func.py"
+     ],
+     "added": 67,
+     "tests_pass": true,
+     "seconds": 0.7
+    },
+    {
+     "sha": "a2d34a0d4d29e2fc40f514864a2e6ace0b272e3b",
+     "files": [
+      "src/cachetools/__init__.py",
+      "src/cachetools/_decorators.py",
+      "src/cachetools/func.py"
+     ],
+     "added": 53,
+     "tests_pass": true,
+     "seconds": 0.6
+    },
+    {
+     "sha": "232101c6a5cc482e8847b51416f92809ca6fd6d6",
+     "files": [
+      "cachetools/__init__.py",
+      "cachetools/fifo.py",
+      "cachetools/func.py"
+     ],
+     "added": 49,
+     "tests_pass": true,
+     "seconds": 0.6
+    },
+    {
+     "sha": "eba03ddaca58b849073a2fcc9ab0d2e08e33cbd9",
+     "files": [
+      "cachetools/__init__.py",
+      "cachetools/func.py",
+      "cachetools/mru.py"
+     ],
+     "added": 55,
+     "tests_pass": true,
+     "seconds": 0.7
+    }
+   ],
+   "setup_ws": "test -x $SP/venvs/tkem_cachetools/bin/python",
+   "test_ws": "env PYTHONPATH=$REPO/src:$REPO $SP/venvs/tkem_cachetools/bin/python -m pytest -q -x -p no:cacheprovider tests"
+  },
+  "mahmoud_boltons": {
+   "language": "Python",
+   "url": "https://github.com/mahmoud/boltons",
+   "setup": "python3 -m venv $SP/venvs/mahmoud_boltons && $SP/venvs/mahmoud_boltons/bin/pip install -q 'pytest>=8,<9' -e $REPO",
+   "test": "$SP/venvs/mahmoud_boltons/bin/python -m pytest -q -x -p no:cacheprovider --doctest-modules boltons tests",
+   "notes": "System Python 3.13 venv. pytest is pinned to 8.x because tests/conftest.py before 2025-12-30 uses the pytest_ignore_collect(path, ...) hook signature, which pytest 9 rejects. Doctests in boltons/ are included, as tox does. On Python 3.13, commits older than about 2025 fail for stdlib reasons. html.parser now sets HTMLParser.scripting, which breaks the strutils.html2text doctest (3bfcfdd043, 6505c6b556, 1f07518303, also 3bbb9487aa). pprint._safe_repr was removed in 3.10, which breaks ecoutils (8e1526e8a5, 2d7f4a1558). 1b1d37875f fails test_human_readable_list at its own commit. Three recent commits under 25 lines (967864f897, b5c495bec2, 4e5faa3d7e) were tested and listed in place of the three oldest failing picks (2d7f4a1558, 8e1526e8a5, 3bbb9487aa).",
+   "commits": [
+    {
+     "sha": "4e5faa3d7e4008d89e0d8bf1ea87b6d9a061a16d",
+     "files": [
+      "boltons/ioutils.py"
+     ],
+     "added": 21,
+     "tests_pass": true,
+     "seconds": 4.5
+    },
+    {
+     "sha": "e00c10a809525027b8167fbb7ac233cfc25a01f5",
+     "files": [
+      "boltons/listutils.py",
+      "boltons/setutils.py"
+     ],
+     "added": 39,
+     "tests_pass": true,
+     "seconds": 5.1
+    },
+    {
+     "sha": "967864f89791509f9eb36b22b4579d36b72a6df2",
+     "files": [
+      "boltons/statsutils.py"
+     ],
+     "added": 22,
+     "tests_pass": true,
+     "seconds": 4.3
+    },
+    {
+     "sha": "673e010d0afabc2f530e8d1f67f0a47c37afa7f4",
+     "files": [
+      "boltons/strutils.py"
+     ],
+     "added": 63,
+     "tests_pass": true,
+     "seconds": 4.4
+    },
+    {
+     "sha": "b5c495bec206741ec25cd82ecc869e0b59bb0d10",
+     "files": [
+      "boltons/funcutils.py"
+     ],
+     "added": 24,
+     "tests_pass": true,
+     "seconds": 4.1
+    },
+    {
+     "sha": "289edfcd20474b92850ec0f982032c4e79e72432",
+     "files": [
+      "boltons/funcutils.py"
+     ],
+     "added": 34,
+     "tests_pass": true,
+     "seconds": 4.7
+    },
+    {
+     "sha": "42586df3dd672c11f5376b8d9a42e26c05cf5543",
+     "files": [
+      "boltons/funcutils.py"
+     ],
+     "added": 35,
+     "tests_pass": true,
+     "seconds": 4.0
+    },
+    {
+     "sha": "49f381eedbdcd695f7ed95110ebb1088582de7f3",
+     "files": [
+      "boltons/iterutils.py"
+     ],
+     "added": 38,
+     "tests_pass": true,
+     "seconds": 4.2
+    },
+    {
+     "sha": "1b1d37875f5702a7c86990e3f415093fb360db4d",
+     "files": [
+      "boltons/strutils.py"
+     ],
+     "added": 34,
+     "tests_pass": false,
+     "seconds": 3.5
+    },
+    {
+     "sha": "3bfcfdd04395b6cc74a5c0cdc72c8f64cc4ac01f",
+     "files": [
+      "boltons/fileutils.py"
+     ],
+     "added": 36,
+     "tests_pass": false,
+     "seconds": 2.0
+    },
+    {
+     "sha": "1f07518303de8a087cb945c5c0375cbeeb09ba71",
+     "files": [
+      "boltons/iterutils.py"
+     ],
+     "added": 75,
+     "tests_pass": false,
+     "seconds": 2.0
+    },
+    {
+     "sha": "6505c6b5565275d484e0e3907a471944441f0c57",
+     "files": [
+      "boltons/ioutils.py"
+     ],
+     "added": 95,
+     "tests_pass": false,
+     "seconds": 2.2
+    }
+   ],
+   "setup_ws": "test -x $SP/venvs/mahmoud_boltons/bin/python",
+   "test_ws": "env PYTHONPATH=$REPO/src:$REPO $SP/venvs/mahmoud_boltons/bin/python -m pytest -q -x -p no:cacheprovider --doctest-modules boltons tests"
+  },
+  "python-humanize_humanize": {
+   "language": "Python",
+   "url": "https://github.com/python-humanize/humanize",
+   "setup": "python3 -m venv $SP/venvs/python-humanize_humanize && $SP/venvs/python-humanize_humanize/bin/pip install -q pytest polib -e \"$REPO[tests]\" && $SP/venvs/python-humanize_humanize/bin/python -c \"import glob,polib; [polib.pofile(p).save_as_mofile(p[:-3]+'.mo') for p in glob.glob('src/humanize/locale/*/LC_MESSAGES/humanize.po')]\"",
+   "test": "$SP/venvs/python-humanize_humanize/bin/python -m pytest -q -x -p no:cacheprovider",
+   "notes": "System Python 3.13 venv with the repo's [tests] extra (freezegun, pytest-benchmark, pytest-codspeed, pytest-cov). gettext msgfmt is not available, so setup compiles the translation catalogs with polib into src/humanize/locale/*/LC_MESSAGES/*.mo (*.mo is git-ignored). hatch-vcs writes src/humanize/_version.py, which is also git-ignored. Without the .mo step about 110 i18n tests are skipped. 2 tests still skip because they need xgettext. Only 6 candidate commits exist, and all of them pass.",
+   "commits": [
+    {
+     "sha": "bada0f88b4d115b96d94db1fe73b20579e84fc14",
+     "files": [
+      "src/humanize/i18n.py",
+      "src/humanize/number.py"
+     ],
+     "added": 52,
+     "tests_pass": true,
+     "seconds": 6.3
+    },
+    {
+     "sha": "a47a89ea9111a5eaba138c391e8a564134a15c60",
+     "files": [
+      "src/humanize/time.py"
+     ],
+     "added": 15,
+     "tests_pass": true,
+     "seconds": 2.7
+    },
+    {
+     "sha": "b172d67eac6a623db14020653cb311d29338d01f",
+     "files": [
+      "src/humanize/filesize.py"
+     ],
+     "added": 26,
+     "tests_pass": true,
+     "seconds": 2.8
+    },
+    {
+     "sha": "38c99686b9c9e211a3e27c5e1ad99bfdc8e82f04",
+     "files": [
+      "src/humanize/number.py"
+     ],
+     "added": 23,
+     "tests_pass": true,
+     "seconds": 2.2
+    },
+    {
+     "sha": "0f5d2948d674a88a611f8e341c0df520767b1b80",
+     "files": [
+      "src/humanize/time.py"
+     ],
+     "added": 94,
+     "tests_pass": true,
+     "seconds": 2.4
+    },
+    {
+     "sha": "d7f5dc5d60a4eb8f43b1ff6ddb842030062e9910",
+     "files": [
+      "src/humanize/__init__.py",
+      "src/humanize/lists.py"
+     ],
+     "added": 36,
+     "tests_pass": true,
+     "seconds": 2.5
+    }
+   ],
+   "setup_ws": "test -x $SP/venvs/python-humanize_humanize/bin/python && $SP/venvs/python-humanize_humanize/bin/python -c \"import glob,polib; [polib.pofile(p).save_as_mofile(p[:-3]+'.mo') for p in glob.glob('src/humanize/locale/*/LC_MESSAGES/humanize.po')]\" && (test -f src/humanize/_version.py || echo '__version__ = \"0.0.0\"' > src/humanize/_version.py)",
+   "test_ws": "env PYTHONPATH=$REPO/src:$REPO $SP/venvs/python-humanize_humanize/bin/python -m pytest -q -x -p no:cacheprovider"
+  },
+  "astanin_python-tabulate": {
+   "language": "Python",
+   "url": "https://github.com/astanin/python-tabulate",
+   "setup": "python3.12 -m venv $SP/venvs/astanin_python-tabulate && $SP/venvs/astanin_python-tabulate/bin/pip install -q pytest 'numpy<2' 'pandas<2.3' -e $REPO",
+   "test": "timeout 300 $SP/venvs/astanin_python-tabulate/bin/python -m pytest -q -x -p no:cacheprovider --doctest-modules --ignore=benchmark --ignore=benchmark.py --ignore=setup.py",
+   "notes": "Uses a Python 3.12 venv, not 3.13, so that numpy<2 and pandas<2.3 install from wheels. Older commits fail under numpy 2: cf45298f3f breaks on the removed 'a32' dtype. wcwidth is deliberately NOT installed. With wcwidth present, test/test_internal.py::test_wrap_text_wide_chars hangs indefinitely at f0a5df6ee7 and cf45298f3f (seen with wcwidth 0.2.13, 0.5.3 and 0.9.2). Without it, those wide-char tests are skipped (about 25 skips). The test command covers both the old tabulate.py/setup.py layout and the new tabulate/ package. It is wrapped in 'timeout 300' as a guard. flit_scm/setuptools_scm write tabulate/_version.py, which is git-ignored. Only 5 candidate commits exist. 38d345b4fa fails at its own commit: test_numpy_2d raises 'truth value of an array is ambiguous', with numpy 1.26 too. a610a4dab9 (2020) cannot import on Python 3.10+ because it uses collections.Iterable.",
+   "commits": [
+    {
+     "sha": "4a95974490cde56f81f97aa85dc94958ef309c60",
+     "files": [
+      "benchmark/benchmark.py",
+      "tabulate/__init__.py"
+     ],
+     "added": 33,
+     "tests_pass": true,
+     "seconds": 3.0
+    },
+    {
+     "sha": "f0a5df6ee72fa1bb27596e43b64ff2746fee284b",
+     "files": [
+      "tabulate/__init__.py"
+     ],
+     "added": 30,
+     "tests_pass": true,
+     "seconds": 2.5
+    },
+    {
+     "sha": "cf45298f3f01ad05264b9ab9a2ad4cbd2c32d9aa",
+     "files": [
+      "tabulate/__init__.py"
+     ],
+     "added": 21,
+     "tests_pass": true,
+     "seconds": 2.5
+    },
+    {
+     "sha": "38d345b4fad79ad3b8e19345e0d0c3bdd01ad132",
+     "files": [
+      "tabulate.py"
+     ],
+     "added": 25,
+     "tests_pass": false,
+     "seconds": 1.7
+    },
+    {
+     "sha": "a610a4dab98b8883959bc44bbaa81c1e9b84a5b2",
+     "files": [
+      "tabulate.py"
+     ],
+     "added": 26,
+     "tests_pass": false,
+     "seconds": 0.4
+    }
+   ],
+   "setup_ws": "test -x $SP/venvs/astanin_python-tabulate/bin/python",
+   "test_ws": "timeout 300 env PYTHONPATH=$REPO/src:$REPO $SP/venvs/astanin_python-tabulate/bin/python -m pytest -q -x -p no:cacheprovider --doctest-modules --ignore=benchmark --ignore=benchmark.py --ignore=setup.py"
+  }
+ }
+}

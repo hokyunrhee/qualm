@@ -1,0 +1,889 @@
+{
+ "repos": {
+  "expr-lang_expr": {
+   "language": "Go",
+   "url": "https://github.com/expr-lang/expr",
+   "setup": "go mod download",
+   "test": "go test -count=1 -vet=off ./...",
+   "notes": "go test ./... covers the root module (all packages incl. test/...); repl/ and debug/ are separate modules not exercised. -vet=off is needed because Go 1.24's vet 'tests' analyzer rejects Example functions in older commits (e.g. ExampleOperator_Decimal, mid-2024 commits) and fails the build; -count=1 disables Go's test-result cache. ~12-25s per run on a shared 4-core machine (mostly compilation).",
+   "commits": [
+    {
+     "sha": "2010a1126f132431fcab47478928e4a0ea182443",
+     "files": [
+      "checker/checker.go",
+      "vm/runtime/runtime.go"
+     ],
+     "added": 67,
+     "tests_pass": true,
+     "seconds": 22.9
+    },
+    {
+     "sha": "a9ac10fa699b624c7f503e7dcaed40fbcafcf053",
+     "files": [
+      "builtin/lib.go"
+     ],
+     "added": 180,
+     "tests_pass": true,
+     "seconds": 23.2
+    },
+    {
+     "sha": "13c5b65f9bab45fcc942320a64e94ec92972641a",
+     "files": [
+      "optimizer/count_any.go",
+      "optimizer/optimizer.go"
+     ],
+     "added": 37,
+     "tests_pass": true,
+     "seconds": 19.6
+    },
+    {
+     "sha": "713a26a272ae656fa73685994b875bda8322a5af",
+     "files": [
+      "parser/lexer/lexer.go",
+      "parser/lexer/utils.go"
+     ],
+     "added": 66,
+     "tests_pass": true,
+     "seconds": 18.1
+    },
+    {
+     "sha": "55e913be02efc62fa751f769f4a3dd2e110b493d",
+     "files": [
+      "vm/vm.go"
+     ],
+     "added": 107,
+     "tests_pass": true,
+     "seconds": 14.6
+    },
+    {
+     "sha": "bbcbc530f31620623b36750365ee883aa4b86d8f",
+     "files": [
+      "parser/lexer/lexer.go"
+     ],
+     "added": 37,
+     "tests_pass": true,
+     "seconds": 13.2
+    },
+    {
+     "sha": "ed9de341c58b43d844af11244f315300d419e381",
+     "files": [
+      "checker/checker.go",
+      "patcher/operator_override.go"
+     ],
+     "added": 44,
+     "tests_pass": true,
+     "seconds": 13.0
+    },
+    {
+     "sha": "3a58a8b0016a4d00d46c7a99c94d8b4dd3641e69",
+     "files": [
+      "builtin/builtin.go"
+     ],
+     "added": 51,
+     "tests_pass": true,
+     "seconds": 11.7
+    }
+   ]
+  },
+  "BurntSushi_toml": {
+   "language": "Go",
+   "url": "https://github.com/BurntSushi/toml",
+   "setup": "go mod download",
+   "test": "go test -count=1 ./...",
+   "notes": "Single module, no external deps; go test ./... runs the root package (incl. embedded toml-test suite) in a few seconds. -count=1 disables Go's test-result cache.",
+   "commits": [
+    {
+     "sha": "b535ff89e48996de98ace1301decf94a3a480aa8",
+     "files": [
+      "lex.go"
+     ],
+     "added": 30,
+     "tests_pass": true,
+     "seconds": 4.5
+    },
+    {
+     "sha": "1e2c053f442c0ac99df1f5b56bae3feab98caa4f",
+     "files": [
+      "decode.go",
+      "deprecated.go"
+     ],
+     "added": 32,
+     "tests_pass": true,
+     "seconds": 4.4
+    },
+    {
+     "sha": "1905bd7b6af5c74f1cbc141d9c27a55ef571a2d6",
+     "files": [
+      "error.go"
+     ],
+     "added": 40,
+     "tests_pass": true,
+     "seconds": 5.1
+    },
+    {
+     "sha": "663cca61aec1dc828b8c67280072d04e45b2c4d9",
+     "files": [
+      "decode.go",
+      "error.go"
+     ],
+     "added": 30,
+     "tests_pass": true,
+     "seconds": 4.4
+    },
+    {
+     "sha": "461925704ed4d72ccc1fd51fe69bb3ac47091330",
+     "files": [
+      "decode.go"
+     ],
+     "added": 40,
+     "tests_pass": true,
+     "seconds": 4.5
+    },
+    {
+     "sha": "9be4ccf5153f55ef1032bdf52d01e65ea480380b",
+     "files": [
+      "decode.go"
+     ],
+     "added": 30,
+     "tests_pass": true,
+     "seconds": 4.3
+    },
+    {
+     "sha": "2c9d689ce191604842d9697080c38664f51b7181",
+     "files": [
+      "decode.go",
+      "encode.go"
+     ],
+     "added": 36,
+     "tests_pass": true,
+     "seconds": 5.0
+    },
+    {
+     "sha": "45e7e490beef5f26441bd594860a2d760b1c38ad",
+     "files": [
+      "internal/toml-test/json.go",
+      "internal/toml-test/runner.go",
+      "internal/toml-test/toml.go"
+     ],
+     "added": 185,
+     "tests_pass": true,
+     "seconds": 5.9
+    }
+   ]
+  },
+  "tidwall_gjson": {
+   "language": "Go",
+   "url": "https://github.com/tidwall/gjson",
+   "setup": "go mod download",
+   "test": "go test -count=1 ./...",
+   "notes": "Single package (gjson.go); deps tidwall/match and tidwall/pretty fetched into the Go module cache. Full test run ~13s (includes a slow random/fuzz-style test). -count=1 disables Go's test-result cache. 4 of 12 attempted commits fail: three 2022-2023 commits fail TestJSONString under Go >= 1.22 (encoding/json escaping change) and eaae8c6333 has a genuinely failing upstream test.",
+   "commits": [
+    {
+     "sha": "690362d6edf4bcbde1e9f54d552d3814f1cd5bcb",
+     "files": [
+      "gjson.go"
+     ],
+     "added": 69,
+     "tests_pass": true,
+     "seconds": 16.2
+    },
+    {
+     "sha": "8d89927eff414537088a6092d53fecf6711c1e75",
+     "files": [
+      "gjson.go"
+     ],
+     "added": 25,
+     "tests_pass": true,
+     "seconds": 17.1
+    },
+    {
+     "sha": "eaae8c63338d6d71ea606b788243ca1c5b39a068",
+     "files": [
+      "gjson.go"
+     ],
+     "added": 41,
+     "tests_pass": false,
+     "seconds": 15.3,
+     "failure": "TestIntOverflow assertion fails at this upstream commit (passes at the next commit 8d89927eff)"
+    },
+    {
+     "sha": "0fac2c9aa6eb5d5564bfaaaad513ce0d5d2314de",
+     "files": [
+      "gjson.go"
+     ],
+     "added": 41,
+     "tests_pass": true,
+     "seconds": 15.3
+    },
+    {
+     "sha": "e8e87f2a00dc41f3aba5631094e21f59a8cf8cbf",
+     "files": [
+      "gjson.go"
+     ],
+     "added": 59,
+     "tests_pass": false,
+     "seconds": 13.4,
+     "failure": "TestJSONString mismatch: test compares against encoding/json, which since Go 1.22 escapes \\b/\\f as short escapes (toolchain drift, Go 1.24.7 here)"
+    },
+    {
+     "sha": "8d2c36ffa41368759c3bcb25b8790c8ce1e5562d",
+     "files": [
+      "gjson.go"
+     ],
+     "added": 140,
+     "tests_pass": false,
+     "seconds": 13.8,
+     "failure": "TestJSONString mismatch: test compares against encoding/json, which since Go 1.22 escapes \\b/\\f as short escapes (toolchain drift, Go 1.24.7 here)"
+    },
+    {
+     "sha": "c3bb2c39ba202da03b359abb4b61555368dc3afb",
+     "files": [
+      "gjson.go"
+     ],
+     "added": 59,
+     "tests_pass": false,
+     "seconds": 13.3,
+     "failure": "TestJSONString mismatch: test compares against encoding/json, which since Go 1.22 escapes \\b/\\f as short escapes (toolchain drift, Go 1.24.7 here)"
+    },
+    {
+     "sha": "e4fc67c92aeebf2089fabc7872f010e340d105db",
+     "files": [
+      "gjson.go"
+     ],
+     "added": 36,
+     "tests_pass": true,
+     "seconds": 13.3
+    },
+    {
+     "sha": "6b6af2ad5e5c06e6cc3968ca7a2c0f9c20da8924",
+     "files": [
+      "gjson.go"
+     ],
+     "added": 51,
+     "tests_pass": true,
+     "seconds": 14.2
+    },
+    {
+     "sha": "2c9fd2476ab6648576dc53a77d8f629e1a697689",
+     "files": [
+      "gjson.go"
+     ],
+     "added": 204,
+     "tests_pass": true,
+     "seconds": 13.8
+    },
+    {
+     "sha": "7cadbb575617824cfa39a8a7e1cf0b059a7c6f67",
+     "files": [
+      "gjson.go"
+     ],
+     "added": 50,
+     "tests_pass": true,
+     "seconds": 15.5
+    },
+    {
+     "sha": "0cbc0f402f9f91228a22d414f7caf4863edd6bed",
+     "files": [
+      "gjson.go"
+     ],
+     "added": 69,
+     "tests_pass": true,
+     "seconds": 14.3
+    }
+   ]
+  },
+  "google_go-cmp": {
+   "language": "Go",
+   "url": "https://github.com/google/go-cmp",
+   "setup": "go mod download",
+   "test": "go test -count=1 ./...",
+   "notes": "No external deps; go test ./... covers cmp, cmpopts and internal packages in a few seconds. -count=1 disables Go's test-result cache.",
+   "commits": [
+    {
+     "sha": "391980c4b2e1cc2c30d2bfae6039815350490495",
+     "files": [
+      "cmp/cmpopts/sort.go",
+      "cmp/internal/function/func.go"
+     ],
+     "added": 51,
+     "tests_pass": true,
+     "seconds": 15.5
+    },
+    {
+     "sha": "c3ad8435e7bef96af35732bc0789e5a2278c6d5f",
+     "files": [
+      "cmp/cmpopts/equate.go",
+      "cmp/options.go"
+     ],
+     "added": 31,
+     "tests_pass": true,
+     "seconds": 9.5
+    },
+    {
+     "sha": "c5c3378d8544789f76de8a338a95307b0854e816",
+     "files": [
+      "cmp/report_slices.go"
+     ],
+     "added": 142,
+     "tests_pass": true,
+     "seconds": 7.3
+    },
+    {
+     "sha": "449e17c6c9daf9b0c84a35fef7d79321b9535763",
+     "files": [
+      "cmp/internal/diff/diff.go"
+     ],
+     "added": 27,
+     "tests_pass": true,
+     "seconds": 8.3
+    },
+    {
+     "sha": "dc6435e426906757e7c944f74758028d3d2edc3c",
+     "files": [
+      "cmp/report_slices.go"
+     ],
+     "added": 21,
+     "tests_pass": true,
+     "seconds": 9.5
+    },
+    {
+     "sha": "d103655696d8ae43c4125ee61454dbf03d8e8324",
+     "files": [
+      "cmp/report_slices.go"
+     ],
+     "added": 18,
+     "tests_pass": true,
+     "seconds": 9.3
+    },
+    {
+     "sha": "9181d1e7c97613e12da2beec65ca4bd834a7a7da",
+     "files": [
+      "cmp/report_slices.go"
+     ],
+     "added": 17,
+     "tests_pass": true,
+     "seconds": 9.1
+    },
+    {
+     "sha": "ab46b8bd0abd4c4557cc4709ad7ae12d47570603",
+     "files": [
+      "cmp/cmpopts/ignore.go",
+      "cmp/internal/value/iface.go",
+      "cmp/options.go"
+     ],
+     "added": 20,
+     "tests_pass": true,
+     "seconds": 8.1
+    }
+   ]
+  },
+  "unjs_ufo": {
+   "language": "TypeScript",
+   "url": "https://github.com/unjs/ufo",
+   "setup": "if [ -f pnpm-lock.yaml ]; then V=$(node -p \"const v=((require('./package.json').packageManager||'').match(/^pnpm@([0-9.]+)/)||[])[1]; (!v||parseInt(v)<8)?'7.33.7':v\"); npx -y pnpm@$V install --frozen-lockfile --store-dir \"$SP/pnpm-store\"; else npx -y yarn@1.22.22 install --frozen-lockfile --ignore-scripts; fi",
+   "test": "if [ -x node_modules/.bin/vitest ]; then npx --no-install vitest run; else npx --no-install jest; fi",
+   "notes": "node_modules is gitignored. Setup installs per checkout with --frozen-lockfile (lockfiles are not modified): pnpm at the exact version in package.json packageManager via npx, except pnpm<8 (lockfile v5.x), which fails on Node 22 with ERR_INVALID_THIS and is replaced by pnpm 7.33.7; store at $SP/pnpm-store (hardlinked, repeat installs are fast). Commits predating pnpm use yarn@1 with yarn.lock. Tests run vitest (jest on old yarn-era commits); the lint/typecheck steps of `pnpm test` are skipped. The main clone at $SP/fixrepos/unjs_ufo also has a HEAD node_modules (gitignored).",
+   "commits": [
+    {
+     "sha": "3c4b43de1128f2c04c2131db9a7e9fe2c7daf0d5",
+     "files": [
+      "src/utils.ts"
+     ],
+     "added": 28,
+     "tests_pass": true,
+     "seconds": 7.7
+    },
+    {
+     "sha": "69e26f8983a6a67aa5bf8c50d9b9c06f17d32796",
+     "files": [
+      "src/utils.ts"
+     ],
+     "added": 29,
+     "tests_pass": true,
+     "seconds": 7.7
+    },
+    {
+     "sha": "f7d47110af9a028abcab45c6a6378a38713cb8ca",
+     "files": [
+      "src/utils.ts"
+     ],
+     "added": 41,
+     "tests_pass": true,
+     "seconds": 9.1
+    },
+    {
+     "sha": "3b66d62b58ca3e9958286434a6eec688042e0626",
+     "files": [
+      "src/utils.ts"
+     ],
+     "added": 42,
+     "tests_pass": true,
+     "seconds": 9.1
+    },
+    {
+     "sha": "f4c0400d0956fe8e124066a5d7fbf8a88b381962",
+     "files": [
+      "src/utils.ts"
+     ],
+     "added": 38,
+     "tests_pass": true,
+     "seconds": 14.3
+    },
+    {
+     "sha": "aa54b6ae8f8b320bc0e03b4ff3ffc0bb2aa2b964",
+     "files": [
+      "src/utils.ts"
+     ],
+     "added": 16,
+     "tests_pass": true,
+     "seconds": 21.9
+    },
+    {
+     "sha": "c9e385ec0841dc90d458f3234626a6f15fe7f7f9",
+     "files": [
+      "src/parse.ts",
+      "src/utils.ts"
+     ],
+     "added": 16,
+     "tests_pass": true,
+     "seconds": 13.4
+    },
+    {
+     "sha": "3bfbf5ac78085db4d7513fe96900dcce13776226",
+     "files": [
+      "src/parse.ts"
+     ],
+     "added": 15,
+     "tests_pass": true,
+     "seconds": 16.6
+    },
+    {
+     "sha": "4d3375807b0d8315caabcb0a7ac506adcb3629b4",
+     "files": [
+      "src/parse.ts",
+      "src/utils.ts"
+     ],
+     "added": 26,
+     "tests_pass": true,
+     "seconds": 4.1
+    }
+   ]
+  },
+  "unjs_defu": {
+   "language": "TypeScript",
+   "url": "https://github.com/unjs/defu",
+   "setup": "if [ -f pnpm-lock.yaml ]; then V=$(node -p \"const v=((require('./package.json').packageManager||'').match(/^pnpm@([0-9.]+)/)||[])[1]; (!v||parseInt(v)<8)?'7.33.7':v\"); npx -y pnpm@$V install --frozen-lockfile --store-dir \"$SP/pnpm-store\"; else npx -y yarn@1.22.22 install --frozen-lockfile --ignore-scripts; fi",
+   "test": "if [ -x node_modules/.bin/vitest ]; then npx --no-install vitest run; else npx --no-install jest; fi",
+   "notes": "node_modules is gitignored. Setup installs per checkout with --frozen-lockfile (lockfiles are not modified): pnpm at the exact version in package.json packageManager via npx, except pnpm<8 (lockfile v5.x), which fails on Node 22 with ERR_INVALID_THIS and is replaced by pnpm 7.33.7; store at $SP/pnpm-store (hardlinked, repeat installs are fast). Commits predating pnpm use yarn@1 with yarn.lock. Tests run vitest (jest on old yarn-era commits); the lint/typecheck steps of `pnpm test` are skipped. Only 5 candidate commits exist (2 pnpm/vitest, 3 yarn/jest); all pass.",
+   "commits": [
+    {
+     "sha": "4111333b7f830712947b3d48c127f23061569620",
+     "files": [
+      "src/defu.ts"
+     ],
+     "added": 19,
+     "tests_pass": true,
+     "seconds": 2.4
+    },
+    {
+     "sha": "26477edcf11ee961f01e04937b47caef1f0f420d",
+     "files": [
+      "src/defu.ts",
+      "src/types.ts"
+     ],
+     "added": 106,
+     "tests_pass": true,
+     "seconds": 2.4
+    },
+    {
+     "sha": "934d736da31f4824d9e135d925cece361b73c533",
+     "files": [
+      "src/defu.ts",
+      "src/types.ts"
+     ],
+     "added": 82,
+     "tests_pass": true,
+     "seconds": 2.9
+    },
+    {
+     "sha": "493223278840132a6de2c3291b60f7b00b3fa477",
+     "files": [
+      "src/defu.ts"
+     ],
+     "added": 32,
+     "tests_pass": true,
+     "seconds": 2.9
+    },
+    {
+     "sha": "397ce0fea0ddf5a6c9129b46e6ff0d0fedbfe5ef",
+     "files": [
+      "jest.config.js",
+      "lib/index.js"
+     ],
+     "added": 40,
+     "tests_pass": true,
+     "seconds": 1.9
+    }
+   ]
+  },
+  "unjs_pathe": {
+   "language": "TypeScript",
+   "url": "https://github.com/unjs/pathe",
+   "setup": "if [ -f pnpm-lock.yaml ]; then V=$(node -p \"const v=((require('./package.json').packageManager||'').match(/^pnpm@([0-9.]+)/)||[])[1]; (!v||parseInt(v)<8)?'7.33.7':v\"); npx -y pnpm@$V install --frozen-lockfile --store-dir \"$SP/pnpm-store\"; else npx -y yarn@1.22.22 install --frozen-lockfile --ignore-scripts; fi",
+   "test": "if [ -x node_modules/.bin/vitest ]; then npx --no-install vitest run; else npx --no-install jest; fi",
+   "notes": "node_modules is gitignored. Setup installs per checkout with --frozen-lockfile (lockfiles are not modified): pnpm at the exact version in package.json packageManager via npx, except pnpm<8 (lockfile v5.x), which fails on Node 22 with ERR_INVALID_THIS and is replaced by pnpm 7.33.7; store at $SP/pnpm-store (hardlinked, repeat installs are fast). Commits predating pnpm use yarn@1 with yarn.lock. Tests run vitest (jest on old yarn-era commits); the lint/typecheck steps of `pnpm test` are skipped. ",
+   "commits": [
+    {
+     "sha": "a48a60053f9965ffe57b8f64823f81d78657ebc4",
+     "files": [
+      "src/index.ts",
+      "src/utils.ts"
+     ],
+     "added": 31,
+     "tests_pass": true,
+     "seconds": 7.9
+    },
+    {
+     "sha": "91582889fc1fecefe023690bf8badabe5d38084f",
+     "files": [
+      "src/utils.ts"
+     ],
+     "added": 31,
+     "tests_pass": true,
+     "seconds": 5.4
+    },
+    {
+     "sha": "0888daf8902f3ed2a6bfac8eb6117a648973d9a8",
+     "files": [
+      "build.config.ts",
+      "src/index.ts",
+      "src/path.ts"
+     ],
+     "added": 59,
+     "tests_pass": true,
+     "seconds": 2.2
+    },
+    {
+     "sha": "6136b3ca9c1c26ec2a0002b24f08f8dcf28a78af",
+     "files": [
+      "src/index.ts",
+      "src/path.ts"
+     ],
+     "added": 27,
+     "tests_pass": true,
+     "seconds": 2.2
+    },
+    {
+     "sha": "14928279dca5ff27287086256c361378fc12e429",
+     "files": [
+      "src/_path.ts"
+     ],
+     "added": 16,
+     "tests_pass": true,
+     "seconds": 1.7
+    },
+    {
+     "sha": "a8b484075fed602ac68080e93f253cf0bf30e239",
+     "files": [
+      "src/_internal.ts"
+     ],
+     "added": 17,
+     "tests_pass": true,
+     "seconds": 1.7
+    },
+    {
+     "sha": "871ce835a99b948265b230053de17a5380b88112",
+     "files": [
+      "src/_path.ts",
+      "src/index.ts",
+      "src/utils.ts"
+     ],
+     "added": 16,
+     "tests_pass": true,
+     "seconds": 1.7
+    },
+    {
+     "sha": "b91e344e39e9b1dfb366d8e8222bc2471a885440",
+     "files": [
+      "src/path.ts"
+     ],
+     "added": 16,
+     "tests_pass": true,
+     "seconds": 1.7
+    },
+    {
+     "sha": "1ece780a7568d2151c4f839481759997101a0e93",
+     "files": [
+      "src/_internal.ts",
+      "src/path.ts",
+      "src/utils.ts"
+     ],
+     "added": 36,
+     "tests_pass": true,
+     "seconds": 2.4
+    },
+    {
+     "sha": "3807727df86858e157f3e87bf7e57e77fc368c09",
+     "files": [
+      "src/_internal.ts",
+      "src/path.ts",
+      "src/utils.ts"
+     ],
+     "added": 62,
+     "tests_pass": true,
+     "seconds": 2.4
+    }
+   ]
+  },
+  "unjs_scule": {
+   "language": "TypeScript",
+   "url": "https://github.com/unjs/scule",
+   "setup": "if [ -f pnpm-lock.yaml ]; then V=$(node -p \"const v=((require('./package.json').packageManager||'').match(/^pnpm@([0-9.]+)/)||[])[1]; (!v||parseInt(v)<8)?'7.33.7':v\"); npx -y pnpm@$V install --frozen-lockfile --store-dir \"$SP/pnpm-store\"; else npx -y yarn@1.22.22 install --frozen-lockfile --ignore-scripts; fi",
+   "test": "if [ -x node_modules/.bin/vitest ]; then npx --no-install vitest run; else npx --no-install jest; fi",
+   "notes": "node_modules is gitignored. Setup installs per checkout with --frozen-lockfile (lockfiles are not modified): pnpm at the exact version in package.json packageManager via npx, except pnpm<8 (lockfile v5.x), which fails on Node 22 with ERR_INVALID_THIS and is replaced by pnpm 7.33.7; store at $SP/pnpm-store (hardlinked, repeat installs are fast). Commits predating pnpm use yarn@1 with yarn.lock. Tests run vitest (jest on old yarn-era commits); the lint/typecheck steps of `pnpm test` are skipped. Only 8 candidate commits exist; the 2021 initial commit has a corrupted yarn.lock.",
+   "commits": [
+    {
+     "sha": "146ecd076373a0a295d7f9649c144226ddfb0c2d",
+     "files": [
+      "src/index.ts",
+      "src/types.ts"
+     ],
+     "added": 28,
+     "tests_pass": true,
+     "seconds": 1.8
+    },
+    {
+     "sha": "d2c281f10e12b8e33a2ed6ef3630eeb54de7de7c",
+     "files": [
+      "src/index.ts",
+      "src/types.ts"
+     ],
+     "added": 45,
+     "tests_pass": true,
+     "seconds": 1.8
+    },
+    {
+     "sha": "3c71cca3fc93d1b463649e4b67c5b83643c6769a",
+     "files": [
+      "src/index.ts",
+      "src/types.ts"
+     ],
+     "added": 194,
+     "tests_pass": true,
+     "seconds": 1.5
+    },
+    {
+     "sha": "155ff34311e1575a58dd1e38fd9bf84f5a6b31c1",
+     "files": [
+      "src/index.ts",
+      "src/types.ts"
+     ],
+     "added": 124,
+     "tests_pass": true,
+     "seconds": 2.5
+    },
+    {
+     "sha": "236fae020482850b165bd93401729b83c1738460",
+     "files": [
+      "src/index.ts",
+      "src/types.ts"
+     ],
+     "added": 185,
+     "tests_pass": true,
+     "seconds": 2.6
+    },
+    {
+     "sha": "e32421a14e96fba492df17b12c1e0de4a08f7217",
+     "files": [
+      "src/index.ts",
+      "src/types.ts"
+     ],
+     "added": 44,
+     "tests_pass": true,
+     "seconds": 1.6
+    },
+    {
+     "sha": "bb942369b2548b995aefc306a0e0f3fbba923426",
+     "files": [
+      "src/index.ts"
+     ],
+     "added": 28,
+     "tests_pass": true,
+     "seconds": 3.1
+    },
+    {
+     "sha": "218961494d8dae0c9dbefbba7f0dcdddbc29be02",
+     "files": [
+      "jest.config.js",
+      "src/index.ts"
+     ],
+     "added": 78,
+     "tests_pass": false,
+     "seconds": 0,
+     "failure": "setup failed: yarn install --frozen-lockfile rejects yarn.lock, whose brace-expansion integrity hash is corrupted (contains the text 'scule', apparently from a repo-wide rename in this initial commit)"
+    }
+   ]
+  },
+  "jeremyevans_roda": {
+   "language": "Ruby",
+   "url": "https://github.com/jeremyevans/roda",
+   "setup": "mkdir -p \"$SP/gems/jeremyevans_roda\" && cp .ci.gemfile \"$SP/gems/jeremyevans_roda/Gemfile\" && BUNDLE_GEMFILE=\"$SP/gems/jeremyevans_roda/Gemfile\" BUNDLE_PATH=\"$SP/gems/jeremyevans_roda\" bundle install",
+   "test": "BUNDLE_GEMFILE=\"$SP/gems/jeremyevans_roda/Gemfile\" BUNDLE_PATH=\"$SP/gems/jeremyevans_roda\" bundle exec rake spec",
+   "notes": "Repo has no Gemfile; CI uses .ci.gemfile (standalone, no gemspec line). Setup copies the checkout's .ci.gemfile to $SP/gems/jeremyevans_roda/Gemfile so the generated Gemfile.lock lives outside the repo (.ci.gemfile.lock is not gitignored); gems installed under the same dir. `rake spec` runs `ruby -w spec/all.rb` (all core + plugin specs, minitest), ~5s; mail gem prints harmless 'statement not reached' warnings. Worktree stays clean.",
+   "commits": [
+    {
+     "sha": "33054425935327a05b29d6cda86d37acd9a365ab",
+     "files": [
+      "lib/roda/plugins/params_capturing.rb",
+      "lib/roda/plugins/params_capturing_restore.rb"
+     ],
+     "added": 86,
+     "tests_pass": true,
+     "seconds": 5.5
+    },
+    {
+     "sha": "24d8ac2f1d845c936c9d4d7b817d9069330ab211",
+     "files": [
+      "lib/roda/plugins/assets.rb"
+     ],
+     "added": 41,
+     "tests_pass": true,
+     "seconds": 5.0
+    },
+    {
+     "sha": "809b0b738d9be0ca7f1c48bd422d6298d1c6097b",
+     "files": [
+      "lib/roda/plugins/url_escape.rb"
+     ],
+     "added": 39,
+     "tests_pass": true,
+     "seconds": 3.8
+    },
+    {
+     "sha": "20e672c2c0b9c155fd330f556ce69398d02577f6",
+     "files": [
+      "lib/roda/plugins/hash_public.rb",
+      "lib/roda/plugins/hash_public_cache.rb"
+     ],
+     "added": 94,
+     "tests_pass": true,
+     "seconds": 3.3
+    },
+    {
+     "sha": "166b9dec82cdb80b7aec693e0f37a1b78a0eae2c",
+     "files": [
+      "lib/roda/plugins/hash_public.rb"
+     ],
+     "added": 101,
+     "tests_pass": true,
+     "seconds": 3.9
+    },
+    {
+     "sha": "f40733e1c22b994b2831fcbf7d5f6f52ee19d044",
+     "files": [
+      "lib/roda/plugins/ip_from_header.rb"
+     ],
+     "added": 34,
+     "tests_pass": true,
+     "seconds": 4.0
+    },
+    {
+     "sha": "df3d7dfb711a8cff9cd5e959438155461be4c7b8",
+     "files": [
+      "lib/roda/plugins/send_file.rb",
+      "lib/roda/plugins/sinatra_helpers.rb"
+     ],
+     "added": 133,
+     "tests_pass": true,
+     "seconds": 4.4
+    },
+    {
+     "sha": "dfd475a39d75c0c8833dc190f3067b8c40f666b9",
+     "files": [
+      "lib/roda/plugins/bearer_token.rb"
+     ],
+     "added": 28,
+     "tests_pass": true,
+     "seconds": 3.9
+    }
+   ]
+  },
+  "hanami_utils": {
+   "language": "Ruby",
+   "url": "https://github.com/hanami/utils",
+   "setup": "RV=3.2.6; grep -Eq 'required_ruby_version = \">= 3\\.[3-9]' hanami-utils.gemspec && RV=3.3.6; export PATH=\"/opt/rbenv/versions/$RV/bin:$PATH\" GEM_HOME=\"$SP/gems/hanami_utils-$RV\"; gem list -i bundler -v 2.7.2 >/dev/null || gem install --no-document bundler -v 2.7.2; CI=1 bundle _2.7.2_ install",
+   "test": "RV=3.2.6; grep -Eq 'required_ruby_version = \">= 3\\.[3-9]' hanami-utils.gemspec && RV=3.3.6; export PATH=\"/opt/rbenv/versions/$RV/bin:$PATH\" GEM_HOME=\"$SP/gems/hanami_utils-$RV\"; CI=1 bundle _2.7.2_ exec rake spec:unit",
+   "notes": "Ruby version is chosen per checkout: Ruby 3.3.6 if the gemspec requires >= 3.3 (2026 commits), otherwise rbenv's Ruby 3.2.6 (/opt/rbenv/versions; older code fails on 3.3: URI not auto-loaded, new NoMethodError message format). GEM_HOME=$SP/gems/hanami_utils-<ruby> holds bundler 2.7.2 (pre-2022 gemspecs require bundler < 3; system bundler is 4.0.18) and the bundle. CI=1 skips byebug/yard. bundle install generates Gemfile.lock in the repo root (gitignored; none committed, so gems resolve to latest compatible versions); tests also write gitignored coverage/ and tmp/. spec:unit = rspec over spec/**/*_spec.rb minus isolation/integration specs, random order, ~2-4s. 2019 commits fail on Ruby 3.2 too (newer rspec no longer loads StringIO; Ruby 3 behaviour changes in Kernel specs). Only 7 candidate commits exist.",
+   "commits": [
+    {
+     "sha": "e3b95315d482b298cf9c05561d5e8c652e993fd0",
+     "files": [
+      "lib/hanami/utils/callbacks.rb"
+     ],
+     "added": 41,
+     "tests_pass": true,
+     "seconds": 1.4
+    },
+    {
+     "sha": "a86941d5cf5ebdd2c56900eabf7ce01020a7d4ae",
+     "files": [
+      "lib/hanami/interactor.rb"
+     ],
+     "added": 34,
+     "tests_pass": true,
+     "seconds": 2.8
+    },
+    {
+     "sha": "c27f87f9fabb6c875f427985fb48ad43ff150f04",
+     "files": [
+      "lib/hanami/logger/filter.rb"
+     ],
+     "added": 58,
+     "tests_pass": false,
+     "seconds": 3.0,
+     "failure": "8 Hanami::Interactor args/kwargs specs fail on Ruby 3.x (upstream fixed this in a86941d5cf 'Ruby 3.0'); Ruby 2.7 is not available"
+    },
+    {
+     "sha": "d0396786c58682b4349980141fea0d5f4ea6032e",
+     "files": [
+      "lib/hanami/logger/filter.rb"
+     ],
+     "added": 29,
+     "tests_pass": false,
+     "seconds": 3.7,
+     "failure": "8 Hanami::Interactor args/kwargs specs fail on Ruby 3.x (upstream fixed this in a86941d5cf 'Ruby 3.0'); Ruby 2.7 is not available"
+    },
+    {
+     "sha": "d47e1ecb3a818908c564b1f83ca5c55747badbe5",
+     "files": [
+      "lib/hanami/utils/basic_object.rb"
+     ],
+     "added": 39,
+     "tests_pass": false,
+     "seconds": 1.0,
+     "failure": "spec_helper fails to load: uninitialized constant RSpec::Support::Stdout::StringIO (current rspec no longer loads stringio); with -rstringio 26 Kernel specs still fail on Ruby 3.2"
+    },
+    {
+     "sha": "5d8d7fd8ee5222d9f3fc5f5b606c8a1c94194b0b",
+     "files": [
+      "lib/hanami/utils/basic_object.rb"
+     ],
+     "added": 17,
+     "tests_pass": false,
+     "seconds": 1.0,
+     "failure": "spec_helper fails to load: uninitialized constant RSpec::Support::Stdout::StringIO (current rspec no longer loads stringio); with -rstringio 26 Kernel specs still fail on Ruby 3.2"
+    },
+    {
+     "sha": "4994146c4629ed6ef0660ebef6453d78c0f6211d",
+     "files": [
+      "lib/hanami/utils/inflector.rb"
+     ],
+     "added": 19,
+     "tests_pass": false,
+     "seconds": 1.0,
+     "failure": "spec_helper fails to load: uninitialized constant RSpec::Support::Stdout::StringIO (current rspec no longer loads stringio); 2019 code, same era as d47e1ecb3a"
+    }
+   ]
+  }
+ }
+}

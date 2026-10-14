@@ -1,0 +1,101 @@
+{
+ "source": "task notifications in the session transcript",
+ "total_tokens": 57444449,
+ "runs": [
+  {
+   "task": "a08eba3e71959df10",
+   "what": "Agent \"Set up fix-loop test environments\" finished",
+   "tokens": 150991
+  },
+  {
+   "task": "a5c98c6c2817d53fc",
+   "what": "Agent \"Set up Go/TS/Ruby fix-loop envs\" finished",
+   "tokens": 164225
+  },
+  {
+   "task": "ae9668ccbfd58ed26",
+   "what": "Agent \"Build candidate c-llm\" finished",
+   "tokens": 335426
+  },
+  {
+   "task": "w4c9yws29",
+   "what": "Dynamic workflow \"Inject one known smell into a real tested commit per item, keeping tests green\" completed",
+   "tokens": 452760
+  },
+  {
+   "task": "w9r3h1olr",
+   "what": "Dynamic workflow \"Phase 1: seven independent perspectives critique qualm and propose falsifiable candidate designs\" completed",
+   "tokens": 1106006
+  },
+  {
+   "task": "w9uc4wxc6",
+   "what": "Dynamic workflow \"Inject one known smell into a real tested commit per item, keeping tests green\" completed",
+   "tokens": 662196
+  },
+  {
+   "task": "wa27cuhx2",
+   "what": "Dynamic workflow \"Inject one known smell into a real tested commit per item, keeping tests green\" completed",
+   "tokens": 440751
+  },
+  {
+   "task": "wgv323dnd",
+   "what": "Dynamic workflow \"Dev only: one fresh agent per reviewer comment decides whether it asks for a simplification\" completed",
+   "tokens": 11037394
+  },
+  {
+   "task": "wh6lb08kf",
+   "what": "Dynamic workflow \"Inject one known smell into a real tested commit per item, keeping tests green\" completed",
+   "tokens": 603937
+  },
+  {
+   "task": "wimex0kkp",
+   "what": "Dynamic workflow \"Dev only: one fresh agent per reviewer comment decides whether it asks for a simplification\" completed",
+   "tokens": 11095404
+  },
+  {
+   "task": "wjk4ccj9y",
+   "what": "Dynamic workflow \"Dev only: one fresh agent per reviewer comment decides whether it asks for a simplification\" completed",
+   "tokens": 11071253
+  },
+  {
+   "task": "wl7knpmly",
+   "what": "Dynamic workflow \"Dev only: one fresh agent per reviewer comment decides whether it asks for a simplification\" completed",
+   "tokens": 11063908
+  },
+  {
+   "task": "wqmhhatn4",
+   "what": "Dynamic workflow \"Dev only: one fresh agent per reviewer comment decides whether it asks for a simplification\" completed",
+   "tokens": 3565721
+  },
+  {
+   "task": "wstsy4esd",
+   "what": "Dynamic workflow \"Inject one known smell into a real tested commit per item, keeping tests green\" completed",
+   "tokens": 282252
+  },
+  {
+   "task": "wtgtnlthc",
+   "what": "Dynamic workflow \"Probe: do two workflows run agents at the same time?\" completed",
+   "tokens": 187499
+  },
+  {
+   "task": "wu2dznyfl",
+   "what": "Dynamic workflow \"Dev only: one fresh agent per reviewer comment decides whether it asks for a simplification\" completed",
+   "tokens": 3566327
+  },
+  {
+   "task": "wvkmchqn6",
+   "what": "Dynamic workflow \"Inject one known smell into a real tested commit per item, keeping tests green\" completed",
+   "tokens": 557828
+  },
+  {
+   "task": "wwez7t718",
+   "what": "Dynamic workflow \"Inject one known smell into a real tested commit per item, keeping tests green\" completed",
+   "tokens": 662497
+  },
+  {
+   "task": "wxff3bpn6",
+   "what": "Dynamic workflow \"Inject one known smell into a real tested commit per item, keeping tests green\" completed",
+   "tokens": 438074
+  }
+ ]
+}
