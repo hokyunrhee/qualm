@@ -1,0 +1,2 @@
+qualm: 3 changed files, no qualms.
+Skipped 234 files: 224 prose or data, 10 test.

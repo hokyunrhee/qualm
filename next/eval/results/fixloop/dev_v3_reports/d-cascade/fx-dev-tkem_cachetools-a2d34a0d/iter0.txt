@@ -1,0 +1,14 @@
+FAIL: 1 of 3 changed code files should be simpler before merge.
+
+src/cachetools/_decorators.py  (score 0.91, gate 0.51)
+  - line 20 [debug_output, confidence 0.60]
+    What: The change adds debugger or print output at line 20 (in wrapper) that reads like debugging left in.
+    Fix: Delete the debugging statements. If the output is needed, send it through the logger the surrounding code already uses, at debug level. Done when no print or debugger call is left in the added lines.
+  - lines 187-194 [review.added_unused_flexibility, confidence 0.56]
+    What: Lines 187-194 (in _cached_wrapper) add an option, hook or layer of indirection that nothing here needs yet.
+    Fix: Inline the layer into its one caller, or drop the parameter or hook no caller sets. Keep options the change is meant to offer. Done when each new abstraction has a second real user or is gone.
+
+Advice (does not fail the gate):
+  - src/cachetools/_decorators.py:4-52 _cached_cond_info (lines 4-52) is a near copy of _cached_locked_info at lines 55-88 of this file: 66% of its token sequence is shared.
+
+Next: make the fixes above, then run the gate again. Keep every behaviour, option and test the change introduces, and keep documentation examples: simplify how the code is written, not what it does. Do not rename, reformat or add comments to get past it; it judges what the code does.

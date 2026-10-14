@@ -1,0 +1,17 @@
+qualm: 2 of 2 changed files drew a qualm.
+Skipped 3 files: 3 test.
+
+src/parse.ts  push back 0.78
+  harder 0.95
+  added impossible guards 0.58  lines 23-66
+
+src/utils.ts  push back 0.68
+  harder 0.97
+
+What to do
+  A reviewer would likely ask for these changes to be simplified before they merge.
+  The questions that fired:
+    added_impossible_guards: Did the change add checks or fallbacks for states the surrounding code shows can't happen?
+  Rework the change so they no longer apply, then run qualm again.
+  A qualm is an opinion. If the change is right as it stands, a person can keep it from the top of the repository:
+    qualm keep src/parse.ts src/utils.ts --reason "..."

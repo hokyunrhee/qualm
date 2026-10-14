@@ -1,0 +1,19 @@
+FAIL: 1 of 1 changed code file should be simpler before merge.
+
+builtin/lib.go  (score 0.77, gate 0.51)
+  - lines 418-426 [near_copy, confidence 0.87]
+    What: Lines 418-426 (in mean) repeat lines 455-463 of this file (mean) almost token for token.
+    Fix: Write the shared steps once: extract them into one function (or reuse mean) that takes what differs as a parameter, and call it from both places. Done when the repeated lines exist only once.
+    See: builtin/lib.go lines 455-463
+  - lines 380-440 [review.added_copies, confidence 0.84]
+    What: Lines 380-440 (in mean) repeat logic that already exists in this file.
+    Fix: Find the code these lines repeat, keep one copy and call it from both places with what differs as a parameter. Done when the repeated steps exist once.
+
+Advice (does not fail the gate):
+  - builtin/lib.go:278-292 Lines 278-292 (in minMax) repeat lines 264-278 of this file (minMax); the differences are float64 for int, any for float64.
+  - builtin/lib.go:318-323 Lines 318-323 (in minMax) repeat lines 307-312 of this file (minMax) almost token for token.
+  - builtin/lib.go:507-512 Lines 507-512 (in median) repeat lines 539-544 of this file (median) almost token for token.
+  - builtin/lib.go:514-519 Lines 514-519 (in median) repeat lines 498-503 of this file (median) almost token for token.
+  - builtin/lib.go:256-369 minMax (lines 256-369) has 108 lines of code, most of them added by this change.
+
+Next: make the fixes above, then run the gate again. Keep every behaviour, option and test the change introduces, and keep documentation examples: simplify how the code is written, not what it does. Do not rename, reformat or add comments to get past it; it judges what the code does.

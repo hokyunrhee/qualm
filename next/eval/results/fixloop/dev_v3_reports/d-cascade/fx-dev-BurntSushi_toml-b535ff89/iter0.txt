@@ -1,0 +1,6 @@
+PASS: none of the 1 changed code file needs simplifying before merge.
+
+Advice (does not fail the gate):
+  - lex.go:495-499 Lines 495-499 (in lexQuotedKeyName) repeat lines 439-443 of this file (lexQuotedName); the differences are c for r.
+
+Nothing to do.

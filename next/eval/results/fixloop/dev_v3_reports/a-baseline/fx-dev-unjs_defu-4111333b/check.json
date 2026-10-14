@@ -1,0 +1,21 @@
+{
+ "fix_id": "fx-dev-unjs_defu-4111333b",
+ "candidate": "a-baseline",
+ "iterations_used": 0,
+ "initially_failed": false,
+ "gate_passes": true,
+ "gate_exit": 0,
+ "tests_pass": true,
+ "tests_tail": "\n RUN  v0.34.6 /tmp/claude-0/-home-user-qualm/2ede26c6-6287-5d82-9ba2-8868fcdef917/scratchpad/bench3/fx/579d9b332c278982/ws\n\n \u2713 test/defu.test.ts  (19 tests | 2 skipped) 18ms\n\n Test Files  1 passed (1)\n      Tests  17 passed | 2 skipped (19)\n   Start at  03:37:39\n   Duration  803ms (transform 140ms, setup 1ms, collect 99ms, tests 18ms, environment 0ms, prepare 173ms)\n\n",
+ "files_changed_by_agent": [],
+ "definitions_lost": [],
+ "gaming": [],
+ "gamed": false,
+ "injected_lines": 3,
+ "injected_lines_remaining": 3,
+ "smell_removed": false,
+ "added_lines_injected": 18,
+ "added_lines_final": 18,
+ "not_larger": true,
+ "det_simpler": false
+}

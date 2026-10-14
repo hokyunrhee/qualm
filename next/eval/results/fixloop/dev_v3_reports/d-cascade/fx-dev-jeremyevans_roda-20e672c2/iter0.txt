@@ -1,0 +1,17 @@
+FAIL: 1 of 2 changed code files should be simpler before merge.
+
+lib/roda/plugins/hash_public_cache.rb  (score 0.66, gate 0.51)
+  - lines 3-7 [review.added_placeholders, confidence 0.84]
+    What: Lines 3-7 add placeholder, debugging or unfinished code.
+    Fix: Remove the debugging output and stubs, or finish them. Done when nothing in these lines is temporary.
+  - lines 79-82 [commented_out_code, confidence 0.70]
+    What: The change adds 4 lines of commented-out code at lines 79-82 (in scan_hash_public_cache_dir).
+    Fix: Delete the commented-out code; version control keeps the old version. Done when the added comments are prose, not code.
+  - line 75 [debug_output, confidence 0.60]
+    What: The change adds debugger or print output at line 75 (in scan_hash_public_cache_dir) that reads like debugging left in.
+    Fix: Delete the debugging statements. If the output is needed, send it through the logger the surrounding code already uses, at debug level. Done when no print or debugger call is left in the added lines.
+  - lines 93-98 [review.added_unused_flexibility, confidence 0.57]
+    What: Lines 93-98 add an option, hook or layer of indirection that nothing here needs yet.
+    Fix: Inline the layer into its one caller, or drop the parameter or hook no caller sets. Keep options the change is meant to offer. Done when each new abstraction has a second real user or is gone.
+
+Next: make the fixes above, then run the gate again. Keep every behaviour, option and test the change introduces, and keep documentation examples: simplify how the code is written, not what it does. Do not rename, reformat or add comments to get past it; it judges what the code does.

@@ -1,0 +1,31 @@
+{
+ "fix_id": "fx-dev-unjs_defu-934d736d",
+ "candidate": "a-baseline",
+ "iterations_used": 1,
+ "initially_failed": true,
+ "gate_passes": true,
+ "gate_exit": 0,
+ "tests_pass": true,
+ "tests_tail": "ect first param (1 ms)\n    \u2713 should handle non object second param (1 ms)\n    \u2713 multi defaults (1 ms)\n    \u2713 should not override Object prototype\n    \u2713 should ignore non-object arguments\n    \u2713 custom merger (1 ms)\n    \u2713 defu.fn()\n    \u2713 defu.arrayFn() (1 ms)\n\nTest Suites: 1 passed, 1 total\nTests:       14 passed, 14 total\nSnapshots:   0 total\nTime:        0.607 s, estimated 3 s\nRan all test suites.\n",
+ "files_changed_by_agent": [
+  "src/defu.ts",
+  "src/types.ts"
+ ],
+ "definitions_lost": [],
+ "gaming": [],
+ "gamed": false,
+ "injected_lines": 5,
+ "injected_lines_remaining": 0,
+ "smell_removed": true,
+ "added_lines_injected": 8,
+ "added_lines_final": 2,
+ "not_larger": true,
+ "det_simpler": true,
+ "judge": {
+  "final_simpler": true,
+  "same": false,
+  "final_removes_functionality": false,
+  "final_suspicious": false,
+  "reason": "Both versions make the same type import change. They behave the same way. Y adds checks that can never fire: rest args are always an array, and a reduce seeded with {} never returns nullish. X is the minimal one-line cast, so it is simpler. Neither version shows signs of being shaped to get past a review tool."
+ }
+}

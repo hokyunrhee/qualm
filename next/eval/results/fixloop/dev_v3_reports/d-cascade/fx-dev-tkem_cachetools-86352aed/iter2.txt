@@ -1,0 +1,8 @@
+FAIL: 1 of 1 changed code file should be simpler before merge.
+
+src/cachetools/_cachedmethod.py  (score 0.54, gate 0.51)
+  - lines 29-30 [review.added_placeholders, confidence 0.54]
+    What: Lines 29-30 (in cache) add placeholder, debugging or unfinished code.
+    Fix: Remove the debugging output and stubs, or finish them. Done when nothing in these lines is temporary.
+
+Next: make the fixes above, then run the gate again. Keep every behaviour, option and test the change introduces, and keep documentation examples: simplify how the code is written, not what it does. Do not rename, reformat or add comments to get past it; it judges what the code does.

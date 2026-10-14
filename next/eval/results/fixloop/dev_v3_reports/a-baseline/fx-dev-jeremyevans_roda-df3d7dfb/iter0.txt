@@ -1,0 +1,14 @@
+qualm: 1 of 4 changed files drew a qualm.
+Skipped 2 files: 2 test.
+
+lib/roda/plugins/send_file.rb  push back 0.76
+  harder 0.49
+  added unused flexibility 0.60  lines 1-127
+
+What to do
+  A reviewer would likely ask for this change to be simplified before it merges.
+  The questions that fired:
+    added_unused_flexibility: Did the change add options, hooks or indirection that the file uses in only one place?
+  Rework the change so they no longer apply, then run qualm again.
+  A qualm is an opinion. If the change is right as it stands, a person can keep it from the top of the repository:
+    qualm keep lib/roda/plugins/send_file.rb --reason "..."

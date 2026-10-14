@@ -1,0 +1,21 @@
+{
+ "fix_id": "fx-dev-more-itertools_more-itertools-18c57c72",
+ "candidate": "d-cascade",
+ "iterations_used": 0,
+ "initially_failed": false,
+ "gate_passes": true,
+ "gate_exit": 0,
+ "tests_pass": true,
+ "tests_tail": ".................................... [ 69%]\n............................................................ [ 78%]\n.................................................. [ 85%]\n.............................................. [ 91%]\n.............................................................                                                      [100%]\n714 passed, 19897 subtests passed in 62.97s (0:01:02)\n",
+ "files_changed_by_agent": [],
+ "definitions_lost": [],
+ "gaming": [],
+ "gamed": false,
+ "injected_lines": 2,
+ "injected_lines_remaining": 2,
+ "smell_removed": false,
+ "added_lines_injected": 93,
+ "added_lines_final": 93,
+ "not_larger": true,
+ "det_simpler": false
+}

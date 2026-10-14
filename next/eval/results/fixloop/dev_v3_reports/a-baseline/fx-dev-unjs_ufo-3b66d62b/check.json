@@ -1,0 +1,21 @@
+{
+ "fix_id": "fx-dev-unjs_ufo-3b66d62b",
+ "candidate": "a-baseline",
+ "iterations_used": 0,
+ "initially_failed": false,
+ "gate_passes": true,
+ "gate_exit": 0,
+ "tests_pass": true,
+ "tests_tail": "s) 6ms\n \u2713 test/resolve.test.ts  (12 tests) 8ms\n \u2713 test/join.test.ts  (13 tests) 13ms\n \u2713 test/double-slash.test.ts  (5 tests) 12ms\n \u2713 test/is-same.test.ts  (5 tests) 3ms\n \u2713 test/punycode.test.ts  (24 tests) 6ms\n\n Test Files  13 passed (13)\n      Tests  420 passed (420)\n   Start at  03:37:48\n   Duration  5.59s (transform 1.01s, setup 3ms, collect 2.25s, tests 324ms, environment 7ms, prepare 5.16s)\n\n",
+ "files_changed_by_agent": [],
+ "definitions_lost": [],
+ "gaming": [],
+ "gamed": false,
+ "injected_lines": 25,
+ "injected_lines_remaining": 25,
+ "smell_removed": false,
+ "added_lines_injected": 52,
+ "added_lines_final": 52,
+ "not_larger": true,
+ "det_simpler": false
+}

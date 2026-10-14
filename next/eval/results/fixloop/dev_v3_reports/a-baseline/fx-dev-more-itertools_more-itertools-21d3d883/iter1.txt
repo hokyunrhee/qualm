@@ -1,0 +1,19 @@
+qualm: 2 of 2 changed files drew a qualm.
+Skipped 1 file: 1 test.
+
+more_itertools/recipes.py   push back 0.67
+  harder 1.00
+  added unused flexibility 0.53  lines 1019-1095
+  grew a big unit 0.51           lines 1019-1095
+
+more_itertools/recipes.pyi  push back 0.66
+  harder 0.83
+
+What to do
+  A reviewer would likely ask for these changes to be simplified before they merge.
+  The questions that fired:
+    grew_a_big_unit: Did the change make an already long function or class longer, where the new work could have gone in a unit of its own?
+    added_unused_flexibility: Did the change add options, hooks or indirection that the file uses in only one place?
+  Rework the change so they no longer apply, then run qualm again.
+  A qualm is an opinion. If the change is right as it stands, a person can keep it from the top of the repository:
+    qualm keep more_itertools/recipes.py more_itertools/recipes.pyi --reason "..."

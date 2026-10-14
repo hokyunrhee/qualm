@@ -1,0 +1,21 @@
+{
+ "fix_id": "fx-dev-BurntSushi_toml-2c9d689c",
+ "candidate": "d-cascade",
+ "iterations_used": 0,
+ "initially_failed": false,
+ "gate_passes": true,
+ "gate_exit": 0,
+ "tests_pass": true,
+ "tests_tail": "ushi/toml\t0.053s\n?   \tgithub.com/BurntSushi/toml/cmd/toml-test-decoder\t[no test files]\n?   \tgithub.com/BurntSushi/toml/cmd/toml-test-encoder\t[no test files]\n?   \tgithub.com/BurntSushi/toml/cmd/tomlv\t[no test files]\n?   \tgithub.com/BurntSushi/toml/internal\t[no test files]\n?   \tgithub.com/BurntSushi/toml/internal/tag\t[no test files]\n?   \tgithub.com/BurntSushi/toml/internal/toml-test\t[no test files]\n",
+ "files_changed_by_agent": [],
+ "definitions_lost": [],
+ "gaming": [],
+ "gamed": false,
+ "injected_lines": 5,
+ "injected_lines_remaining": 5,
+ "smell_removed": false,
+ "added_lines_injected": 17,
+ "added_lines_final": 17,
+ "not_larger": true,
+ "det_simpler": false
+}

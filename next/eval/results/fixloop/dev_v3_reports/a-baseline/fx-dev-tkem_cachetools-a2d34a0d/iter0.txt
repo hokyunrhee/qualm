@@ -1,0 +1,20 @@
+qualm: 1 of 3 changed files drew a qualm.
+Skipped 1 file: 1 test.
+
+src/cachetools/_decorators.py  push back 0.86
+  harder 1.00
+  added placeholders 0.93        lines 1-62
+  added copies 0.78              lines 1-62
+  added unused flexibility 0.75  lines 179-202
+  grew a big unit 0.53           lines 1-62
+
+What to do
+  A reviewer would likely ask for this change to be simplified before it merges.
+  The questions that fired:
+    grew_a_big_unit: Did the change make an already long function or class longer, where the new work could have gone in a unit of its own?
+    added_copies: Did the change add logic that is a near-copy of logic already in the file?
+    added_placeholders: Did the change add placeholder implementations, debug output or unfinished scaffolding?
+    added_unused_flexibility: Did the change add options, hooks or indirection that the file uses in only one place?
+  Rework the change so they no longer apply, then run qualm again.
+  A qualm is an opinion. If the change is right as it stands, a person can keep it from the top of the repository:
+    qualm keep src/cachetools/_decorators.py --reason "..."

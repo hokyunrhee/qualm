@@ -14,7 +14,7 @@ and while it runs it stops starting cases once the ledger plus what this run has
 full per-case budget for every running job would pass it, so the cap holds whatever the cases
 cost. Each finished run appends one line to the ledger with what the reports say was spent.
 """
-import argparse, concurrent.futures, gzip, json, os, shutil, subprocess, sys, tempfile, time
+import argparse, concurrent.futures, fcntl, gzip, json, os, shutil, subprocess, sys, tempfile, time
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.dirname(os.path.dirname(HERE))
@@ -42,13 +42,20 @@ def load_cases(path):
 
 
 def case_repo(case):
+    """The case's repository, materialized once. A lock per case keeps two runs (or two jobs) from
+    building the same case at once, and a finished case is never replaced while another run reads it."""
     dest = os.path.join(WORK, 'cases', case['case_id'])
-    if not os.path.exists(os.path.join(dest, '.git', 'refs', 'heads', 'main')):
-        tmp = tempfile.mkdtemp(dir=os.path.join(WORK, 'cases'))
-        materialize(case, tmp)
-        if os.path.exists(dest):
-            shutil.rmtree(dest)
-        os.rename(tmp, dest)
+    with open(dest + '.lock', 'a') as lock:
+        fcntl.flock(lock, fcntl.LOCK_EX)
+        try:
+            if not os.path.exists(os.path.join(dest, '.git', 'refs', 'heads', 'main')):
+                tmp = tempfile.mkdtemp(dir=os.path.join(WORK, 'cases'))
+                materialize(case, tmp)
+                if os.path.exists(dest):
+                    shutil.rmtree(dest)
+                os.rename(tmp, dest)
+        finally:
+            fcntl.flock(lock, fcntl.LOCK_UN)
     return dest
 
 

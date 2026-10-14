@@ -1,0 +1,11 @@
+FAIL: 1 of 1 changed code file should be simpler before merge.
+
+src/defu.ts  (score 0.52, gate 0.51)
+  The change as a whole reads as more complicated than it needs to be, but no single spot stood out.
+  Fix: re-read the added code and remove what the feature does not need: duplicated steps, unused helpers, defensive checks for impossible states, leftover debugging.
+
+Advice (does not fail the gate):
+  - src/defu.ts:79-87 Lines 79-87 (in _defuFn) repeat lines 38-46 of this file (_defu); the differences are result for obj, value for val.
+  - src/defu.ts:59-66 Lines 59-66 (in _defuFn) repeat lines 16-23 of this file (_defu); the differences are result for obj.
+
+Next: make the fixes above, then run the gate again. Keep every behaviour, option and test the change introduces, and keep documentation examples: simplify how the code is written, not what it does. Do not rename, reformat or add comments to get past it; it judges what the code does.

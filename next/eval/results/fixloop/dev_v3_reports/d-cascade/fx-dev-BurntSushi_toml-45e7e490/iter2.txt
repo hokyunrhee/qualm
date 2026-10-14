@@ -1,0 +1,3 @@
+PASS: none of the 3 changed code files needs simplifying before merge.
+
+Nothing to do.

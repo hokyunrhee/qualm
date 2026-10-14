@@ -1,0 +1,6 @@
+PASS: none of the 2 changed code files needs simplifying before merge.
+
+Advice (does not fail the gate):
+  - src/types.ts:69-76 Lines 69-76 repeat lines 62-69 of this file; the differences are Defaults for Destination, Destination for Defaults, Input for Function.
+
+Nothing to do.

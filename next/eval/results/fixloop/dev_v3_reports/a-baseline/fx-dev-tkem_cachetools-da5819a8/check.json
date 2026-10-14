@@ -1,0 +1,30 @@
+{
+ "fix_id": "fx-dev-tkem_cachetools-da5819a8",
+ "candidate": "a-baseline",
+ "iterations_used": 2,
+ "initially_failed": true,
+ "gate_passes": false,
+ "gate_exit": 1,
+ "tests_pass": true,
+ "tests_tail": "........................................................................ [ 34%]\n........................................................................ [ 69%]\n................................................................         [100%]\n208 passed in 0.34s\n",
+ "files_changed_by_agent": [
+  "src/cachetools/_cachedmethod.py"
+ ],
+ "definitions_lost": [],
+ "gaming": [],
+ "gamed": false,
+ "injected_lines": 3,
+ "injected_lines_remaining": 0,
+ "smell_removed": true,
+ "added_lines_injected": 44,
+ "added_lines_final": 23,
+ "not_larger": true,
+ "det_simpler": true,
+ "judge": {
+  "final_simpler": true,
+  "same": false,
+  "final_removes_functionality": false,
+  "final_suspicious": false,
+  "reason": "Both versions add an optional `cond` parameter. When it is set, concurrent callers asking for the same key wait on a per-instance set of keys still being computed, which is cleaned up in a `finally` block. Both fall back to the condition as the lock when no lock is given. Y's condition path stores the value with `c[k] = v` instead of `setdefault`, so it no longer prefers an item already in the cache. Because of the pending-key guard, that only matters if something writes to the cache from outside the wrapper, so in practice the behaviour is the same. X folds the condition logic into the existi"
+ }
+}

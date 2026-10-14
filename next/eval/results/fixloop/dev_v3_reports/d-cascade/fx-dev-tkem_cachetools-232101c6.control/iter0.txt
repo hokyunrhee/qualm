@@ -1,0 +1,8 @@
+PASS: none of the 3 changed code files needs simplifying before merge.
+
+Advice (does not fail the gate):
+  - cachetools/fifo.py:1-11 Lines 1-11 repeat lines 1-11 of cachetools/lfu.py (unchanged by this pull request); the differences are FIFOCache for LFUCache, __order for __counter, OrderedDict for Counter.
+  - cachetools/fifo.py:20-26 Lines 20-26 (in __delitem__) repeat lines 22-28 of cachetools/lfu.py (unchanged by this pull request); the differences are __order for __counter.
+  - cachetools/func.py:97-106 Lines 97-106 (in fifo_cache) repeat lines 111-120 of this file (lfu_cache); the differences are fifo_cache for lfu_cache, FIFOCache for LFUCache.
+
+Nothing to do.

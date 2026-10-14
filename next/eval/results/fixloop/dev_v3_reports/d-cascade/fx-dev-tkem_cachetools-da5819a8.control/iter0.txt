@@ -1,0 +1,19 @@
+FAIL: 1 of 2 changed code files should be simpler before merge.
+
+src/cachetools/_cachedmethod.py  (score 0.51, gate 0.51)
+  - lines 35-40 [near_copy, confidence 0.78]
+    What: Lines 35-40 (in cache_clear) repeat lines 64-69 of this file (cache_clear) almost token for token.
+    Fix: Write the shared steps once: extract them into one function (or reuse cache_clear) that takes what differs as a parameter, and call it from both places. Done when the repeated lines exist only once.
+    See: src/cachetools/_cachedmethod.py lines 64-69
+  - lines 9-13 [near_copy, confidence 0.75]
+    What: Lines 9-13 (in wrapper) repeat lines 45-49 of this file (wrapper) almost token for token.
+    Fix: Write the shared steps once: extract them into one function (or reuse wrapper) that takes what differs as a parameter, and call it from both places. Done when the repeated lines exist only once.
+    See: src/cachetools/_cachedmethod.py lines 45-49
+  - lines 6-41 [review.added_impossible_guards, confidence 0.63]
+    What: Lines 6-41 (in _cachedmethod_condition) add checks or fallbacks for states the surrounding code already rules out.
+    Fix: Delete each check for a case its callers cannot produce. Keep checks for input that can really arrive. Done when every remaining check guards a state a caller can produce.
+
+Advice (does not fail the gate):
+  - src/cachetools/_cachedmethod.py:101-107 Lines 101-107 (in _cachedmethod_wrapper) repeat lines 229-235 of src/cachetools/_cached.py (unchanged by this pull request); the differences are _cachedmethod_condition for _cached_condition, _cachedmethod_locked for _cached_locked, _cachedmethod_unlocked for _cached_unlocked.
+
+Next: make the fixes above, then run the gate again. Keep every behaviour, option and test the change introduces, and keep documentation examples: simplify how the code is written, not what it does. Do not rename, reformat or add comments to get past it; it judges what the code does.

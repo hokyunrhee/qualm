@@ -1,0 +1,11 @@
+FAIL: 1 of 2 changed code files should be simpler before merge.
+
+lib/roda/plugins/send_file.rb  (score 0.70, gate 0.51)
+  - lines 3-11 [review.added_placeholders, confidence 0.65]
+    What: Lines 3-11 add placeholder, debugging or unfinished code.
+    Fix: Remove the debugging output and stubs, or finish them. Done when nothing in these lines is temporary.
+  - lines 71-121 [review.added_impossible_guards, confidence 0.57]
+    What: Lines 71-121 (in send_file) add checks or fallbacks for states the surrounding code already rules out.
+    Fix: Delete each check for a case its callers cannot produce. Keep checks for input that can really arrive. Done when every remaining check guards a state a caller can produce.
+
+Next: make the fixes above, then run the gate again. Keep every behaviour, option and test the change introduces, and keep documentation examples: simplify how the code is written, not what it does. Do not rename, reformat or add comments to get past it; it judges what the code does.

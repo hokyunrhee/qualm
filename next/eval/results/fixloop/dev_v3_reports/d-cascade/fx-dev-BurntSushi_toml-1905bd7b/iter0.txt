@@ -1,0 +1,14 @@
+FAIL: 1 of 1 changed code file should be simpler before merge.
+
+error.go  (score 0.88, gate 0.51)
+  - lines 118-134 [review.added_placeholders, confidence 0.88]
+    What: Lines 118-134 (in ErrorWithPosition) add placeholder, debugging or unfinished code.
+    Fix: Remove the debugging output and stubs, or finish them. Done when nothing in these lines is temporary.
+  - lines 202-217 [unused_code, confidence 0.70]
+    What: expandTabWidth (lines 202-217) is new and nothing in the repository calls it.
+    Fix: Delete expandTabWidth, or call it where it is needed. Done when every function the change adds is used.
+  - lines 204-209 [commented_out_code, confidence 0.70]
+    What: The change adds 6 lines of commented-out code at lines 204-209 (in expandTabWidth).
+    Fix: Delete the commented-out code; version control keeps the old version. Done when the added comments are prose, not code.
+
+Next: make the fixes above, then run the gate again. Keep every behaviour, option and test the change introduces, and keep documentation examples: simplify how the code is written, not what it does. Do not rename, reformat or add comments to get past it; it judges what the code does.

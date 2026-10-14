@@ -1,0 +1,8 @@
+FAIL: 1 of 1 changed code file should be simpler before merge.
+
+src/utils.ts  (score 0.57, gate 0.51)
+  - lines 330-372 [review.remove, confidence 0.79]
+    What: Lines 330-372 (in joinURL) hold steps that do not change the result (an unused value, a check repeated, a branch that cannot run, a needless conversion).
+    Fix: Delete the steps that do not change the result; keep everything a caller or test observes. Done when each remaining step changes the result.
+
+Next: make the fixes above, then run the gate again. Keep every behaviour, option and test the change introduces, and keep documentation examples: simplify how the code is written, not what it does. Do not rename, reformat or add comments to get past it; it judges what the code does.

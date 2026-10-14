@@ -1,0 +1,30 @@
+{
+ "fix_id": "fx-dev-BurntSushi_toml-1905bd7b",
+ "candidate": "d-cascade",
+ "iterations_used": 1,
+ "initially_failed": true,
+ "gate_passes": true,
+ "gate_exit": 0,
+ "tests_pass": true,
+ "tests_tail": "ushi/toml\t0.161s\n?   \tgithub.com/BurntSushi/toml/cmd/toml-test-decoder\t[no test files]\n?   \tgithub.com/BurntSushi/toml/cmd/toml-test-encoder\t[no test files]\n?   \tgithub.com/BurntSushi/toml/cmd/tomlv\t[no test files]\n?   \tgithub.com/BurntSushi/toml/internal\t[no test files]\n?   \tgithub.com/BurntSushi/toml/internal/tag\t[no test files]\n?   \tgithub.com/BurntSushi/toml/internal/toml-test\t[no test files]\n",
+ "files_changed_by_agent": [
+  "error.go"
+ ],
+ "definitions_lost": [],
+ "gaming": [],
+ "gamed": false,
+ "injected_lines": 19,
+ "injected_lines_remaining": 4,
+ "smell_removed": false,
+ "added_lines_injected": 37,
+ "added_lines_final": 24,
+ "not_larger": true,
+ "det_simpler": false,
+ "judge": {
+  "final_simpler": true,
+  "same": false,
+  "final_removes_functionality": false,
+  "final_suspicious": false,
+  "reason": "X and Y produce the same error output: both expand tabs to 8-column stops in the context lines and shift the caret by the expansion difference. Neither drops any behaviour. X has extra problems that Y does not. It leaves a debug log.Printf in library code, which writes to stderr on every positioned error and adds a \"log\" import. It also builds the padding with a hand-rolled fill closure that shadows the variable b, where Y uses strings.Repeat. And it adds an unused expandTabWidth function whose body is commented out. Y is the minimal, clean version of the same change. X's extras look like left"
+ }
+}

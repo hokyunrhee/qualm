@@ -1,0 +1,14 @@
+qualm: 1 of 4 changed files drew a qualm.
+Skipped 3 files: 2 prose or data, 1 test.
+
+src/defu.ts  push back 0.88
+  harder 0.71
+  added placeholders 0.97  lines 30-88
+
+What to do
+  A reviewer would likely ask for this change to be simplified before it merges.
+  The questions that fired:
+    added_placeholders: Did the change add placeholder implementations, debug output or unfinished scaffolding?
+  Rework the change so they no longer apply, then run qualm again.
+  A qualm is an opinion. If the change is right as it stands, a person can keep it from the top of the repository:
+    qualm keep src/defu.ts --reason "..."

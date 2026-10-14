@@ -1,0 +1,14 @@
+FAIL: 1 of 1 changed code file should be simpler before merge.
+
+src/cachetools/_cachedmethod.py  (score 0.71, gate 0.51)
+  - lines 45-46 [review.added_placeholders, confidence 0.52]
+    What: Lines 45-46 (in cache) add placeholder, debugging or unfinished code.
+    Fix: Remove the debugging output and stubs, or finish them. Done when nothing in these lines is temporary.
+  - lines 38-39 [review.added_placeholders, confidence 0.51]
+    What: Lines 38-39 (in __call__) add placeholder, debugging or unfinished code.
+    Fix: Remove the debugging output and stubs, or finish them. Done when nothing in these lines is temporary.
+
+Advice (does not fail the gate):
+  - src/cachetools/_cachedmethod.py:222-229 Lines 222-229 (in __call__) repeat lines 188-195 of this file (__call__) almost token for token.
+
+Next: make the fixes above, then run the gate again. Keep every behaviour, option and test the change introduces, and keep documentation examples: simplify how the code is written, not what it does. Do not rename, reformat or add comments to get past it; it judges what the code does.

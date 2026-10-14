@@ -1,0 +1,30 @@
+{
+ "fix_id": "fx-dev-expr-lang_expr-a9ac10fa",
+ "candidate": "a-baseline",
+ "iterations_used": 1,
+ "initially_failed": true,
+ "gate_passes": true,
+ "gate_exit": 0,
+ "tests_pass": true,
+ "tests_tail": "lang/expr/test/pipes\t0.010s\n?   \tgithub.com/expr-lang/expr/test/playground\t[no test files]\nok  \tgithub.com/expr-lang/expr/test/time\t0.010s\nok  \tgithub.com/expr-lang/expr/types\t0.010s\nok  \tgithub.com/expr-lang/expr/vm\t0.445s\n?   \tgithub.com/expr-lang/expr/vm/func_types\t[no test files]\nok  \tgithub.com/expr-lang/expr/vm/runtime\t0.008s\n?   \tgithub.com/expr-lang/expr/vm/runtime/helpers\t[no test files]\n",
+ "files_changed_by_agent": [
+  "builtin/lib.go"
+ ],
+ "definitions_lost": [],
+ "gaming": [],
+ "gamed": false,
+ "injected_lines": 3,
+ "injected_lines_remaining": 0,
+ "smell_removed": true,
+ "added_lines_injected": 168,
+ "added_lines_final": 65,
+ "not_larger": true,
+ "det_simpler": true,
+ "judge": {
+  "final_simpler": true,
+  "same": false,
+  "final_removes_functionality": false,
+  "final_suspicious": false,
+  "reason": "Both versions add reflection-free fast paths for []int and []float64 to minMax, mean and median. Anything else still goes through the existing reflection path, so the visible behaviour is the same in both. X also adds a large inline fast path for []any in each function. That code largely repeats the reflection logic already there, and it has dead code: `if e == nil` inside a numeric type case can never be true. It also adds a redundant check that nestedCount is negative. Y puts the typed handling into small helpers (minMaxTyped/extremeOf, sumTyped/sumOf, floatsTyped), using generics, and keeps"
+ }
+}

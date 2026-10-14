@@ -1,0 +1,20 @@
+qualm: 1 of 1 changed file drew a qualm.
+Skipped 1 file: 1 test.
+
+decode.go  push back 0.90
+  harder 0.91
+  added placeholders 0.95       lines 357-408
+  grew a big unit 0.68          lines 357-408
+  added impossible guards 0.60  lines 357-408
+  added copies 0.58             lines 357-408
+
+What to do
+  A reviewer would likely ask for this change to be simplified before it merges.
+  The questions that fired:
+    grew_a_big_unit: Did the change make an already long function or class longer, where the new work could have gone in a unit of its own?
+    added_copies: Did the change add logic that is a near-copy of logic already in the file?
+    added_impossible_guards: Did the change add checks or fallbacks for states the surrounding code shows can't happen?
+    added_placeholders: Did the change add placeholder implementations, debug output or unfinished scaffolding?
+  Rework the change so they no longer apply, then run qualm again.
+  A qualm is an opinion. If the change is right as it stands, a person can keep it from the top of the repository:
+    qualm keep decode.go --reason "..."

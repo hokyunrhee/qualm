@@ -1,0 +1,7 @@
+PASS: none of the 3 changed code files needs simplifying before merge.
+
+Advice (does not fail the gate):
+  - src/cachetools/_decorators.py:134-138 Lines 134-138 (in wrapper) repeat lines 10-14 of this file (wrapper) almost token for token.
+  - src/cachetools/_decorators.py:143-147 Lines 143-147 (in wrapper) repeat lines 21-25 of this file (wrapper) almost token for token.
+
+Nothing to do.

@@ -1,0 +1,30 @@
+{
+ "fix_id": "fx-dev-jeremyevans_roda-df3d7dfb",
+ "candidate": "a-baseline",
+ "iterations_used": 1,
+ "initially_failed": true,
+ "gate_passes": true,
+ "gate_exit": 0,
+ "tests_pass": true,
+ "tests_tail": "claude-0/-home-user-qualm/2ede26c6-6287-5d82-9ba2-8868fcdef917/scratchpad/gems/jeremyevans_roda/ruby/3.3.0/gems/mail-2.9.1/lib/mail/parsers/date_time_parser.rb:836: warning: statement not reached\n/tmp/claude-0/-home-user-qualm/2ede26c6-6287-5d82-9ba2-8868fcdef917/scratchpad/gems/jeremyevans_roda/ruby/3.3.0/gems/mail-2.9.1/lib/mail/parsers/message_ids_parser.rb:5111: warning: statement not reached\n",
+ "files_changed_by_agent": [
+  "lib/roda/plugins/send_file.rb"
+ ],
+ "definitions_lost": [],
+ "gaming": [],
+ "gamed": false,
+ "injected_lines": 2,
+ "injected_lines_remaining": 0,
+ "smell_removed": true,
+ "added_lines_injected": 62,
+ "added_lines_final": 57,
+ "not_larger": true,
+ "det_simpler": true,
+ "judge": {
+  "final_simpler": true,
+  "same": false,
+  "final_removes_functionality": false,
+  "final_suspicious": false,
+  "reason": "Both add the same send_file plugin with the same options, response_attachment dependency, Rack::Files handling and 404 on ENOENT. The behaviour differences are small edge cases. With an empty :type string, X falls back to the file extension and Y returns application/octet-stream. Y also leaves out the explicit require 'rack/mime', which is usually loaded transitively anyway. Neither version drops a meaningful feature. X is simpler: it resolves the content type in a compact branch using mime_type with a default value. Y has nested conditionals, a type_str temporary, `&&=`/`||=` juggling, a redu"
+ }
+}

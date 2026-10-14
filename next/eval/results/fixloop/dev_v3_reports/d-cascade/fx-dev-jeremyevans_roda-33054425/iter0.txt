@@ -1,0 +1,14 @@
+FAIL: 1 of 2 changed code files should be simpler before merge.
+
+lib/roda/plugins/params_capturing_restore.rb  (score 0.54, gate 0.51)
+  - lines 4-5 [review.added_placeholders, confidence 0.85]
+    What: Lines 4-5 add placeholder, debugging or unfinished code.
+    Fix: Remove the debugging output and stubs, or finish them. Done when nothing in these lines is temporary.
+  - lines 24-25 [review.added_placeholders, confidence 0.79]
+    What: Lines 24-25 add placeholder, debugging or unfinished code.
+    Fix: Remove the debugging output and stubs, or finish them. Done when nothing in these lines is temporary.
+  - lines 82-87 [review.reuse, confidence 0.58]
+    What: Lines 82-87 re-implement something the language, the standard library or nearby code already provides.
+    Fix: Replace the hand-written version with a call to the existing function or built-in. Done when the hand-written version is gone.
+
+Next: make the fixes above, then run the gate again. Keep every behaviour, option and test the change introduces, and keep documentation examples: simplify how the code is written, not what it does. Do not rename, reformat or add comments to get past it; it judges what the code does.

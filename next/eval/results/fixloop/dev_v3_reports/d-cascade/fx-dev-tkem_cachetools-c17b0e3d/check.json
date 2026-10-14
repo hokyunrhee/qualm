@@ -1,0 +1,21 @@
+{
+ "fix_id": "fx-dev-tkem_cachetools-c17b0e3d",
+ "candidate": "d-cascade",
+ "iterations_used": 0,
+ "initially_failed": false,
+ "gate_passes": true,
+ "gate_exit": 0,
+ "tests_pass": true,
+ "tests_tail": "........................................................................ [ 34%]\n........................................................................ [ 68%]\n...................................................................      [100%]\n211 passed in 0.36s\n",
+ "files_changed_by_agent": [],
+ "definitions_lost": [],
+ "gaming": [],
+ "gamed": false,
+ "injected_lines": 3,
+ "injected_lines_remaining": 3,
+ "smell_removed": false,
+ "added_lines_injected": 26,
+ "added_lines_final": 26,
+ "not_larger": true,
+ "det_simpler": false
+}

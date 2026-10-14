@@ -1,0 +1,20 @@
+FAIL: 1 of 1 changed code file should be simpler before merge.
+
+lib/roda/plugins/hash_public.rb  (score 0.81, gate 0.51)
+  - lines 3-6 [review.added_placeholders, confidence 0.81]
+    What: Lines 3-6 add placeholder, debugging or unfinished code.
+    Fix: Remove the debugging output and stubs, or finish them. Done when nothing in these lines is temporary.
+  - lines 66-68 [review.added_placeholders, confidence 0.71]
+    What: Lines 66-68 add placeholder, debugging or unfinished code.
+    Fix: Remove the debugging output and stubs, or finish them. Done when nothing in these lines is temporary.
+  - lines 85-87 [review.added_placeholders, confidence 0.61]
+    What: Lines 85-87 add placeholder, debugging or unfinished code.
+    Fix: Remove the debugging output and stubs, or finish them. Done when nothing in these lines is temporary.
+  - line 80 [debug_output, confidence 0.60]
+    What: The change adds debugger or print output at line 80 (in hash_path) that reads like debugging left in.
+    Fix: Delete the debugging statements. If the output is needed, send it through the logger the surrounding code already uses, at debug level. Done when no print or debugger call is left in the added lines.
+  - lines 98-103 [review.added_placeholders, confidence 0.58]
+    What: Lines 98-103 add placeholder, debugging or unfinished code.
+    Fix: Remove the debugging output and stubs, or finish them. Done when nothing in these lines is temporary.
+
+Next: make the fixes above, then run the gate again. Keep every behaviour, option and test the change introduces, and keep documentation examples: simplify how the code is written, not what it does. Do not rename, reformat or add comments to get past it; it judges what the code does.

@@ -1,0 +1,15 @@
+FAIL: 1 of 3 changed code files should be simpler before merge.
+
+src/cachetools/_decorators.py  (score 0.60, gate 0.51)
+  - lines 4-45 [near_copy, confidence 0.75]
+    What: _cached_cond_info (lines 4-45) is a near copy of _cached_locked_info at lines 48-81 of this file: 66% of its token sequence is shared.
+    Fix: Merge the two: keep one function, pass in what differs, and delete the other. Done when the logic is written once.
+    See: src/cachetools/_decorators.py lines 48-81
+  - lines 180-187 [review.added_unused_flexibility, confidence 0.57]
+    What: Lines 180-187 (in _cached_wrapper) add an option, hook or layer of indirection that nothing here needs yet.
+    Fix: Inline the layer into its one caller, or drop the parameter or hook no caller sets. Keep options the change is meant to offer. Done when each new abstraction has a second real user or is gone.
+  - lines 4-45 [review.added_impossible_guards, confidence 0.55]
+    What: Lines 4-45 (in _cached_cond_info) add checks or fallbacks for states the surrounding code already rules out.
+    Fix: Delete each check for a case its callers cannot produce. Keep checks for input that can really arrive. Done when every remaining check guards a state a caller can produce.
+
+Next: make the fixes above, then run the gate again. Keep every behaviour, option and test the change introduces, and keep documentation examples: simplify how the code is written, not what it does. Do not rename, reformat or add comments to get past it; it judges what the code does.

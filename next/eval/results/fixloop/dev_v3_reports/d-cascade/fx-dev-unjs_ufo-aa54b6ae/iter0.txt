@@ -1,0 +1,11 @@
+FAIL: 1 of 1 changed code file should be simpler before merge.
+
+src/utils.ts  (score 0.89, gate 0.51)
+  - lines 595-596 [commented_out_code, confidence 0.70]
+    What: The change adds 2 lines of commented-out code at lines 595-596 (in withoutHost).
+    Fix: Delete the commented-out code; version control keeps the old version. Done when the added comments are prose, not code.
+  - line 593 [debug_output, confidence 0.60]
+    What: The change adds debugger or print output at line 593 (in withoutHost) that reads like debugging left in.
+    Fix: Delete the debugging statements. If the output is needed, send it through the logger the surrounding code already uses, at debug level. Done when no print or debugger call is left in the added lines.
+
+Next: make the fixes above, then run the gate again. Keep every behaviour, option and test the change introduces, and keep documentation examples: simplify how the code is written, not what it does. Do not rename, reformat or add comments to get past it; it judges what the code does.

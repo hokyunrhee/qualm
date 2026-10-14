@@ -1,0 +1,21 @@
+{
+ "fix_id": "fx-dev-jeremyevans_roda-24d8ac2f",
+ "candidate": "d-cascade",
+ "iterations_used": 0,
+ "initially_failed": false,
+ "gate_passes": true,
+ "gate_exit": 0,
+ "tests_pass": true,
+ "tests_tail": "claude-0/-home-user-qualm/2ede26c6-6287-5d82-9ba2-8868fcdef917/scratchpad/gems/jeremyevans_roda/ruby/3.3.0/gems/mail-2.9.1/lib/mail/parsers/date_time_parser.rb:836: warning: statement not reached\n/tmp/claude-0/-home-user-qualm/2ede26c6-6287-5d82-9ba2-8868fcdef917/scratchpad/gems/jeremyevans_roda/ruby/3.3.0/gems/mail-2.9.1/lib/mail/parsers/message_ids_parser.rb:5111: warning: statement not reached\n",
+ "files_changed_by_agent": [],
+ "definitions_lost": [],
+ "gaming": [],
+ "gamed": false,
+ "injected_lines": 8,
+ "injected_lines_remaining": 8,
+ "smell_removed": false,
+ "added_lines_injected": 19,
+ "added_lines_final": 19,
+ "not_larger": true,
+ "det_simpler": false
+}

@@ -1,0 +1,30 @@
+{
+ "fix_id": "fx-dev-tkem_cachetools-da5819a8",
+ "candidate": "d-cascade",
+ "iterations_used": 1,
+ "initially_failed": true,
+ "gate_passes": true,
+ "gate_exit": 0,
+ "tests_pass": true,
+ "tests_tail": "........................................................................ [ 34%]\n........................................................................ [ 69%]\n................................................................         [100%]\n208 passed in 0.29s\n",
+ "files_changed_by_agent": [
+  "src/cachetools/_cachedmethod.py"
+ ],
+ "definitions_lost": [],
+ "gaming": [],
+ "gamed": false,
+ "injected_lines": 3,
+ "injected_lines_remaining": 1,
+ "smell_removed": false,
+ "added_lines_injected": 44,
+ "added_lines_final": 51,
+ "not_larger": false,
+ "det_simpler": false,
+ "judge": {
+  "final_simpler": false,
+  "same": false,
+  "final_removes_functionality": false,
+  "final_suspicious": false,
+  "reason": "X and Y add the same condition-based cachedmethod path. Both mark a key as pending, wait until no other call is computing it, store the result, then remove the key and call notify_all. Both fall back to using cond as the lock when no lock is given. The only behaviour difference is in the finally block: X checks that the key is still pending before removing it, and Y removes it directly. In Y, the key was always added on that path, so the results are the same. Y also rewrites the existing locked and unlocked wrappers around a shared _cachedmethod_with_cache helper that takes a lookup callback, "
+ }
+}

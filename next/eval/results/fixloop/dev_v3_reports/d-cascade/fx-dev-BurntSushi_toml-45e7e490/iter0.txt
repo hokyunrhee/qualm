@@ -1,0 +1,22 @@
+FAIL: 1 of 3 changed code files should be simpler before merge.
+
+internal/toml-test/runner.go  (score 0.72, gate 0.51)
+  - lines 167-292 [review.added_placeholders, confidence 0.86]
+    What: Lines 167-292 (in Run) add placeholder, debugging or unfinished code.
+    Fix: Remove the debugging output and stubs, or finish them. Done when nothing in these lines is temporary.
+  - lines 166-295 [long_function, confidence 0.68]
+    What: Run (lines 166-295) has 116 lines of code, most of them added by this change.
+    Fix: Split Run at its natural steps into smaller functions with clear names, or remove steps it does not need. Done when no added function is over 70 lines.
+  - lines 354-356 [review.added_copies, confidence 0.52]
+    What: Lines 354-356 (in Decode) repeat logic that already exists in this file.
+    Fix: Find the code these lines repeat, keep one copy and call it from both places with what differs as a parameter. Done when the repeated steps exist once.
+  - lines 18-19 [review.remove, confidence 0.50]
+    What: Lines 18-19 hold steps that do not change the result (an unused value, a check repeated, a branch that cannot run, a needless conversion).
+    Fix: Delete the steps that do not change the result; keep everything a caller or test observes. Done when each remaining step changes the result.
+
+Advice (does not fail the gate):
+  - internal/toml-test/json.go:45-51 Lines 45-51 (in cmpJSONMaps) repeat lines 60-66 of internal/toml-test/toml.go (cmpTOMLMap) almost token for token.
+  - internal/toml-test/runner.go:400-411 Lines 400-411 (in runValid) repeat lines 373-384 of this file (runInvalid) almost token for token.
+  - internal/toml-test/toml.go:60-66 Lines 60-66 (in cmpTOMLMap) repeat lines 45-51 of internal/toml-test/json.go (cmpJSONMaps) almost token for token.
+
+Next: make the fixes above, then run the gate again. Keep every behaviour, option and test the change introduces, and keep documentation examples: simplify how the code is written, not what it does. Do not rename, reformat or add comments to get past it; it judges what the code does.

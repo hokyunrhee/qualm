@@ -1,0 +1,21 @@
+{
+ "fix_id": "fx-dev-unjs_defu-49322327",
+ "candidate": "a-baseline",
+ "iterations_used": 0,
+ "initially_failed": false,
+ "gate_passes": true,
+ "gate_exit": 0,
+ "tests_pass": true,
+ "tests_tail": "lues by default (1 ms)\n    \u2713 should handle non object first param (1 ms)\n    \u2713 should handle non object second param (1 ms)\n    \u2713 multi defaults\n    \u2713 should not override Object prototype\n    \u2713 should ignore non-object arguments\n    \u2713 custom merger\n    \u2713 fn merger (1 ms)\n\nTest Suites: 1 passed, 1 total\nTests:       11 passed, 11 total\nSnapshots:   0 total\nTime:        2.284 s\nRan all test suites.\n",
+ "files_changed_by_agent": [],
+ "definitions_lost": [],
+ "gaming": [],
+ "gamed": false,
+ "injected_lines": 13,
+ "injected_lines_remaining": 13,
+ "smell_removed": false,
+ "added_lines_injected": 41,
+ "added_lines_final": 41,
+ "not_larger": true,
+ "det_simpler": false
+}

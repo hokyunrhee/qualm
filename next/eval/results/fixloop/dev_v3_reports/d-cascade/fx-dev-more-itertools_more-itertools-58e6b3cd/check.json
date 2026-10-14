@@ -1,0 +1,21 @@
+{
+ "fix_id": "fx-dev-more-itertools_more-itertools-58e6b3cd",
+ "candidate": "d-cascade",
+ "iterations_used": 0,
+ "initially_failed": false,
+ "gate_passes": true,
+ "gate_exit": 0,
+ "tests_pass": true,
+ "tests_tail": "re.py::CollateTests::test_reverse\n  /tmp/claude-0/-home-user-qualm/2ede26c6-6287-5d82-9ba2-8868fcdef917/scratchpad/bench3/fx/8bb94f1dd1f2156b/ws/more_itertools/more.py:424: DeprecationWarning: collate is no longer part of more_itertools, use heapq.merge\n    warnings.warn(\n\n-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html\n418 passed, 5 warnings, 2044 subtests passed in 1.48s\n",
+ "files_changed_by_agent": [],
+ "definitions_lost": [],
+ "gaming": [],
+ "gamed": false,
+ "injected_lines": 18,
+ "injected_lines_remaining": 18,
+ "smell_removed": false,
+ "added_lines_injected": 34,
+ "added_lines_final": 34,
+ "not_larger": true,
+ "det_simpler": false
+}

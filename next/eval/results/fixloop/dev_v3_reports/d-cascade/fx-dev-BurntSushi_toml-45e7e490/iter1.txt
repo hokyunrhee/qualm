@@ -1,0 +1,18 @@
+FAIL: 1 of 3 changed code files should be simpler before merge.
+
+internal/toml-test/runner.go  (score 0.56, gate 0.51)
+  - lines 171-227 [review.added_impossible_guards, confidence 0.55]
+    What: Lines 171-227 (in Run) add checks or fallbacks for states the surrounding code already rules out.
+    Fix: Delete each check for a case its callers cannot produce. Keep checks for input that can really arrive. Done when every remaining check guards a state a caller can produce.
+  - lines 330-339 [review.added_impossible_guards, confidence 0.50]
+    What: Lines 330-339 (in Encode) add checks or fallbacks for states the surrounding code already rules out.
+    Fix: Delete each check for a case its callers cannot produce. Keep checks for input that can really arrive. Done when every remaining check guards a state a caller can produce.
+  - lines 351-353 [review.added_copies, confidence 0.50]
+    What: Lines 351-353 (in Decode) repeat logic that already exists in this file.
+    Fix: Find the code these lines repeat, keep one copy and call it from both places with what differs as a parameter. Done when the repeated steps exist once.
+
+Advice (does not fail the gate):
+  - internal/toml-test/json.go:45-51 Lines 45-51 (in cmpJSONMaps) repeat lines 60-66 of internal/toml-test/toml.go (cmpTOMLMap) almost token for token.
+  - internal/toml-test/toml.go:60-66 Lines 60-66 (in cmpTOMLMap) repeat lines 45-51 of internal/toml-test/json.go (cmpJSONMaps) almost token for token.
+
+Next: make the fixes above, then run the gate again. Keep every behaviour, option and test the change introduces, and keep documentation examples: simplify how the code is written, not what it does. Do not rename, reformat or add comments to get past it; it judges what the code does.

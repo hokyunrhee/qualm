@@ -1,0 +1,32 @@
+{
+ "check": "held-out repositories against dev: by name (last path segment), and by root commit for every name that appears in both splits",
+ "heldout_repos": 196,
+ "dev_repos": 426,
+ "name_collisions": [
+  {
+   "heldout": "gitlab-org/cli",
+   "dev": [
+    "crossplane/cli",
+    "databricks/cli",
+    "planetscale/cli"
+   ]
+  }
+ ],
+ "root_commits": {
+  "https://gitlab.com/gitlab-org/cli.git": [
+   "5b2a725acc0d869285496d48004f06062e61314b",
+   "01ad54266eacb43138dd2b2f497970056dcdfa82"
+  ],
+  "https://github.com/crossplane/cli.git": [
+   "77af1a361c028eac90f8108c048c1bc3d6cbaf71"
+  ],
+  "https://github.com/databricks/cli.git": [
+   "24d4d157036fa8165833cd7f22d16fde3a2d6932"
+  ],
+  "https://github.com/planetscale/cli.git": [
+   "45a12e79703b3ec2adb5d2caf67cc346665a6971"
+  ]
+ },
+ "shared_root_commits": [],
+ "result": "no held-out repository shares a root commit with a dev repository among the name collisions; repositories with different names were not cloned"
+}

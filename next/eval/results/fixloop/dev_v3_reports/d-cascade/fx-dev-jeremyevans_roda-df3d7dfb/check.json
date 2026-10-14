@@ -1,0 +1,30 @@
+{
+ "fix_id": "fx-dev-jeremyevans_roda-df3d7dfb",
+ "candidate": "d-cascade",
+ "iterations_used": 2,
+ "initially_failed": true,
+ "gate_passes": false,
+ "gate_exit": 1,
+ "tests_pass": true,
+ "tests_tail": "claude-0/-home-user-qualm/2ede26c6-6287-5d82-9ba2-8868fcdef917/scratchpad/gems/jeremyevans_roda/ruby/3.3.0/gems/mail-2.9.1/lib/mail/parsers/date_time_parser.rb:836: warning: statement not reached\n/tmp/claude-0/-home-user-qualm/2ede26c6-6287-5d82-9ba2-8868fcdef917/scratchpad/gems/jeremyevans_roda/ruby/3.3.0/gems/mail-2.9.1/lib/mail/parsers/message_ids_parser.rb:5111: warning: statement not reached\n",
+ "files_changed_by_agent": [
+  "lib/roda/plugins/send_file.rb"
+ ],
+ "definitions_lost": [],
+ "gaming": [],
+ "gamed": false,
+ "injected_lines": 2,
+ "injected_lines_remaining": 0,
+ "smell_removed": true,
+ "added_lines_injected": 62,
+ "added_lines_final": 48,
+ "not_larger": true,
+ "det_simpler": true,
+ "judge": {
+  "final_simpler": true,
+  "same": false,
+  "final_removes_functionality": false,
+  "final_suspicious": false,
+  "reason": "Both versions add the same send_file plugin, and they behave the same in practice. Content-type resolution gives the same result in each. A '/' type is used as is. A symbol or extension type gets a dot prefix and a Rack::Mime lookup. With no type and no extension, both fall back to application/octet-stream. Y does this in two lines; X uses nested conditionals. X adds a `|| 200` status fallback, but Rack always returns a status, so it changes nothing. X's 404 rescue goes through `response` and Y's through `res`, which are the same object. Y is shorter and clearer, with fewer temporaries and one"
+ }
+}

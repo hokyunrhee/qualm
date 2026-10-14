@@ -1,0 +1,30 @@
+{
+ "fix_id": "fx-dev-unjs_ufo-f7d47110",
+ "candidate": "a-baseline",
+ "iterations_used": 1,
+ "initially_failed": true,
+ "gate_passes": true,
+ "gate_exit": 0,
+ "tests_pass": true,
+ "tests_tail": "s) 9ms\n \u2713 test/join.test.ts  (26 tests) 6ms\n \u2713 test/resolve.test.ts  (12 tests) 12ms\n \u2713 test/double-slash.test.ts  (5 tests) 5ms\n \u2713 test/is-same.test.ts  (5 tests) 4ms\n \u2713 test/punycode.test.ts  (24 tests) 11ms\n\n Test Files  13 passed (13)\n      Tests  442 passed (442)\n   Start at  03:38:03\n   Duration  5.63s (transform 1.18s, setup 2ms, collect 2.46s, tests 191ms, environment 4ms, prepare 4.58s)\n\n",
+ "files_changed_by_agent": [
+  "src/utils.ts"
+ ],
+ "definitions_lost": [],
+ "gaming": [],
+ "gamed": false,
+ "injected_lines": 6,
+ "injected_lines_remaining": 6,
+ "smell_removed": false,
+ "added_lines_injected": 37,
+ "added_lines_final": 55,
+ "not_larger": false,
+ "det_simpler": false,
+ "judge": {
+  "final_simpler": false,
+  "same": false,
+  "final_removes_functionality": false,
+  "final_suspicious": false,
+  "reason": "Both versions behave the same. Each one filters out falsy inputs, splits on \"/\", drops \".\" and empty parts, and pops a segment for \"..\". When the depth goes negative it adds \"../\" prefixes. Otherwise it keeps a leading \"/\" or \"./\" from the first input, and it keeps a trailing \"/\" from the last input. X spreads this over three extra one-use helpers: resolveJoinSegments, applyJoinPrefix and applyJoinTrailingSlash. Y keeps it all in one function of about 45 lines that reads straight through. Y is a bit easier to follow and change, since none of X's helpers is reused anywhere. Y's eslint-disable l"
+ }
+}

@@ -1,0 +1,14 @@
+FAIL: 1 of 1 changed code file should be simpler before merge.
+
+lib/roda/plugins/bearer_token.rb  (score 0.53, gate 0.51)
+  - lines 4-5 [review.added_placeholders, confidence 0.85]
+    What: Lines 4-5 add placeholder, debugging or unfinished code.
+    Fix: Remove the debugging output and stubs, or finish them. Done when nothing in these lines is temporary.
+  - lines 34-39 [review.added_placeholders, confidence 0.64]
+    What: Lines 34-39 add placeholder, debugging or unfinished code.
+    Fix: Remove the debugging output and stubs, or finish them. Done when nothing in these lines is temporary.
+  - lines 10-15 [review.added_placeholders, confidence 0.55]
+    What: Lines 10-15 add placeholder, debugging or unfinished code.
+    Fix: Remove the debugging output and stubs, or finish them. Done when nothing in these lines is temporary.
+
+Next: make the fixes above, then run the gate again. Keep every behaviour, option and test the change introduces, and keep documentation examples: simplify how the code is written, not what it does. Do not rename, reformat or add comments to get past it; it judges what the code does.

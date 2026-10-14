@@ -1,0 +1,18 @@
+PASS: none of the 2 changed code files needs simplifying before merge.
+
+Advice (does not fail the gate):
+  - more_itertools/more.py:1631-1656 Lines 1631-1656 (in split_before) repeat lines 1596-1620 of this file (split_at); the differences are split_after for split_before.
+  - more_itertools/more.py:1668-1692 Lines 1668-1692 (in split_after) repeat lines 1630-1652 of this file (split_before); the differences are split_when for split_after.
+  - more_itertools/more.py:3575-3603 Lines 3575-3603 (in only) repeat lines 615-662 of this file (one); the differences are only for one, default for too_short.
+  - more_itertools/more.py:4160-4182 Lines 4160-4182 (in all_unique) repeat lines 451-481 of more_itertools/recipes.py (unique_everseen); the differences are all_unique for unique_everseen.
+  - more_itertools/more.py:5503-5537 Lines 5503-5537 (in _windowed_running_max) repeat lines 5460-5494 of this file (_windowed_running_min); the differences are sds for sis, running_max for running_min, max for min.
+  - more_itertools/more.py:4435-4442 Lines 4435-4442 (in combination_with_replacement_index) repeat lines 4389-4395 of this file (combination_index); the differences are tuple for enumerate.
+  - more_itertools/more.py:5134-5155 idft (lines 5134-5155) is a near copy of dft at lines 5110-5131 of this file: 81% of its token sequence is shared.
+  - more_itertools/more.py:1705-1711 Lines 1705-1711 (in split_when) repeat lines 1624-1629 of this file (split_before); the differences are next_item for item.
+  - more_itertools/more.py:4218-4223 Lines 4218-4223 (in nth_product) repeat lines 669-674 of more_itertools/recipes.py (nth_combination) almost token for token.
+  - more_itertools/more.py:4249-4254 Lines 4249-4254 (in nth_permutation) repeat lines 667-672 of more_itertools/recipes.py (nth_combination); the differences are perm for comb.
+  - more_itertools/more.py:4290-4295 Lines 4290-4295 (in nth_combination_with_replacement) repeat lines 4218-4223 of this file (nth_product) almost token for token.
+  - more_itertools/more.py:4697-4702 Lines 4697-4702 (in duplicates_everseen) repeat lines 482-487 of more_itertools/recipes.py (unique_everseen); the differences are seen_set for seenset.
+  ... and 3 more in the JSON report.
+
+Nothing to do.

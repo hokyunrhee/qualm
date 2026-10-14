@@ -1,0 +1,11 @@
+FAIL: 1 of 1 changed code file should be simpler before merge.
+
+more_itertools/recipes.py  (score 0.74, gate 0.51)
+  - lines 1092-1094 [commented_out_code, confidence 0.70]
+    What: The change adds 3 lines of commented-out code at lines 1092-1094 (in reshape).
+    Fix: Delete the commented-out code; version control keeps the old version. Done when the added comments are prose, not code.
+  - lines 1030-1036 [review.added_copies, confidence 0.55]
+    What: Lines 1030-1036 (in _is_scalar) repeat logic that already exists in this file.
+    Fix: Find the code these lines repeat, keep one copy and call it from both places with what differs as a parameter. Done when the repeated steps exist once.
+
+Next: make the fixes above, then run the gate again. Keep every behaviour, option and test the change introduces, and keep documentation examples: simplify how the code is written, not what it does. Do not rename, reformat or add comments to get past it; it judges what the code does.

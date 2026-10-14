@@ -1,0 +1,14 @@
+qualm: 1 of 3 changed files drew a qualm.
+Skipped 3 files: 2 test, 1 prose or data.
+
+cachetools/func.py  push back 0.65
+  harder 0.53
+  added copies 0.83  lines 89-118
+
+What to do
+  A reviewer would likely ask for this change to be simplified before it merges.
+  The questions that fired:
+    added_copies: Did the change add logic that is a near-copy of logic already in the file?
+  Rework the change so they no longer apply, then run qualm again.
+  A qualm is an opinion. If the change is right as it stands, a person can keep it from the top of the repository:
+    qualm keep cachetools/func.py --reason "..."

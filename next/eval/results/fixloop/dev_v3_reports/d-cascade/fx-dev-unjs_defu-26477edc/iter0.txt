@@ -1,0 +1,17 @@
+FAIL: 1 of 2 changed code files should be simpler before merge.
+
+src/defu.ts  (score 0.73, gate 0.51)
+  - lines 74-75 [commented_out_code, confidence 0.70]
+    What: The change adds 2 lines of commented-out code at lines 74-75.
+    Fix: Delete the commented-out code; version control keeps the old version. Done when the added comments are prose, not code.
+  - line 70 [debug_output, confidence 0.60]
+    What: The change adds debugger or print output at line 70 that reads like debugging left in.
+    Fix: Delete the debugging statements. If the output is needed, send it through the logger the surrounding code already uses, at debug level. Done when no print or debugger call is left in the added lines.
+  - lines 53-56 [review.remove, confidence 0.56]
+    What: Lines 53-56 (in createDefu) hold steps that do not change the result (an unused value, a check repeated, a branch that cannot run, a needless conversion).
+    Fix: Delete the steps that do not change the result; keep everything a caller or test observes. Done when each remaining step changes the result.
+
+Advice (does not fail the gate):
+  - src/types.ts:100-107 Lines 100-107 repeat lines 92-100 of this file; the differences are Defaults for Destination, Destination for Defaults, Input for Function.
+
+Next: make the fixes above, then run the gate again. Keep every behaviour, option and test the change introduces, and keep documentation examples: simplify how the code is written, not what it does. Do not rename, reformat or add comments to get past it; it judges what the code does.

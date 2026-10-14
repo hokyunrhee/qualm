@@ -1,0 +1,30 @@
+{
+ "fix_id": "fx-dev-expr-lang_expr-bbcbc530",
+ "candidate": "a-baseline",
+ "iterations_used": 1,
+ "initially_failed": true,
+ "gate_passes": true,
+ "gate_exit": 0,
+ "tests_pass": true,
+ "tests_tail": "lang/expr/test/pipes\t0.011s\n?   \tgithub.com/expr-lang/expr/test/playground\t[no test files]\nok  \tgithub.com/expr-lang/expr/test/time\t0.024s\nok  \tgithub.com/expr-lang/expr/types\t0.010s\nok  \tgithub.com/expr-lang/expr/vm\t0.588s\n?   \tgithub.com/expr-lang/expr/vm/func_types\t[no test files]\nok  \tgithub.com/expr-lang/expr/vm/runtime\t0.009s\n?   \tgithub.com/expr-lang/expr/vm/runtime/helpers\t[no test files]\n",
+ "files_changed_by_agent": [
+  "parser/lexer/lexer.go"
+ ],
+ "definitions_lost": [],
+ "gaming": [],
+ "gamed": false,
+ "injected_lines": 4,
+ "injected_lines_remaining": 2,
+ "smell_removed": false,
+ "added_lines_injected": 38,
+ "added_lines_final": 35,
+ "not_larger": true,
+ "det_simpler": false,
+ "judge": {
+  "final_simpler": true,
+  "same": false,
+  "final_removes_functionality": false,
+  "final_suspicious": false,
+  "reason": "Both versions use the same scanning loop to handle doubled-quote escapes, the same empty-string guard and the same zero-escape shortcut that avoids allocating. The two unescape loops give the same output. The scanned string only ever holds quotes in adjacent pairs, so it does not matter that Y leaves `skipped` unchanged after a non-quote character. Y's `size > 0` guard around Grow is not needed, because len(str) is always at least 2*escapedQuotes. X is a little simpler: it moves the unescaping into a small documented helper, `unescapeRawQuotes`, with a flatter condition, and builds the string "
+ }
+}

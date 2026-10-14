@@ -1,0 +1,8 @@
+FAIL: 1 of 1 changed code file should be simpler before merge.
+
+src/utils.ts  (score 0.53, gate 0.51)
+  - lines 224-287 [review.reuse, confidence 0.71]
+    What: Lines 224-287 (in resolveURL) re-implement something the language, the standard library or nearby code already provides.
+    Fix: Replace the hand-written version with a call to the existing function or built-in. Done when the hand-written version is gone.
+
+Next: make the fixes above, then run the gate again. Keep every behaviour, option and test the change introduces, and keep documentation examples: simplify how the code is written, not what it does. Do not rename, reformat or add comments to get past it; it judges what the code does.

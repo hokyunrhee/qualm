@@ -1,0 +1,11 @@
+FAIL: 1 of 1 changed code file should be simpler before merge.
+
+lib/roda/plugins/url_escape.rb  (score 0.65, gate 0.51)
+  - lines 3-7 [review.added_placeholders, confidence 0.79]
+    What: Lines 3-7 add placeholder, debugging or unfinished code.
+    Fix: Remove the debugging output and stubs, or finish them. Done when nothing in these lines is temporary.
+  - lines 17-23 [review.shorten, confidence 0.77]
+    What: Lines 17-23 take a longer route than needed for what they compute.
+    Fix: Rewrite the steps with the direct construct (a built-in, one loop instead of two, an early return instead of nesting) and keep the behaviour. Done when the construct named here is replaced, not when lines are merged.
+
+Next: make the fixes above, then run the gate again. Keep every behaviour, option and test the change introduces, and keep documentation examples: simplify how the code is written, not what it does. Do not rename, reformat or add comments to get past it; it judges what the code does.

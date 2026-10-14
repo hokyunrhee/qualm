@@ -1,0 +1,17 @@
+FAIL: 1 of 1 changed code file should be simpler before merge.
+
+builtin/lib.go  (score 0.52, gate 0.51)
+  - lines 357-397 [review.added_copies, confidence 0.80]
+    What: Lines 357-397 (in mean) repeat logic that already exists in this file.
+    Fix: Find the code these lines repeat, keep one copy and call it from both places with what differs as a parameter. Done when the repeated steps exist once.
+  - lines 411-444 [review.added_impossible_guards, confidence 0.75]
+    What: Lines 411-444 (in median) add checks or fallbacks for states the surrounding code already rules out.
+    Fix: Delete each check for a case its callers cannot produce. Keep checks for input that can really arrive. Done when every remaining check guards a state a caller can produce.
+  - lines 302-328 [review.added_impossible_guards, confidence 0.71]
+    What: Lines 302-328 (in minMax) add checks or fallbacks for states the surrounding code already rules out.
+    Fix: Delete each check for a case its callers cannot produce. Keep checks for input that can really arrive. Done when every remaining check guards a state a caller can produce.
+  - lines 286-293 [review.reuse, confidence 0.61]
+    What: Lines 286-293 (in extremeOf) re-implement something the language, the standard library or nearby code already provides.
+    Fix: Replace the hand-written version with a call to the existing function or built-in. Done when the hand-written version is gone.
+
+Next: make the fixes above, then run the gate again. Keep every behaviour, option and test the change introduces, and keep documentation examples: simplify how the code is written, not what it does. Do not rename, reformat or add comments to get past it; it judges what the code does.

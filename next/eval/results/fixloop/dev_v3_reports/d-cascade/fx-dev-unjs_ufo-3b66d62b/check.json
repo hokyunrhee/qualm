@@ -1,0 +1,30 @@
+{
+ "fix_id": "fx-dev-unjs_ufo-3b66d62b",
+ "candidate": "d-cascade",
+ "iterations_used": 1,
+ "initially_failed": true,
+ "gate_passes": true,
+ "gate_exit": 0,
+ "tests_pass": true,
+ "tests_tail": "ts) 7ms\n \u2713 test/resolve.test.ts  (12 tests) 8ms\n \u2713 test/join.test.ts  (13 tests) 14ms\n \u2713 test/double-slash.test.ts  (5 tests) 4ms\n \u2713 test/is-same.test.ts  (5 tests) 5ms\n \u2713 test/punycode.test.ts  (24 tests) 8ms\n\n Test Files  13 passed (13)\n      Tests  420 passed (420)\n   Start at  03:40:38\n   Duration  2.67s (transform 403ms, setup 3ms, collect 978ms, tests 152ms, environment 5ms, prepare 2.10s)\n\n",
+ "files_changed_by_agent": [
+  "src/utils.ts"
+ ],
+ "definitions_lost": [],
+ "gaming": [],
+ "gamed": false,
+ "injected_lines": 25,
+ "injected_lines_remaining": 1,
+ "smell_removed": true,
+ "added_lines_injected": 52,
+ "added_lines_final": 31,
+ "not_larger": true,
+ "det_simpler": true,
+ "judge": {
+  "final_simpler": true,
+  "same": false,
+  "final_removes_functionality": false,
+  "final_suspicious": false,
+  "reason": "The two versions behave almost the same. Both filter out empty and \"/\" inputs: X does it in a manual loop, and Y uses isNonEmptyURL, which treats \"/\" the same way. Both join paths, replace the hash and merge query strings. The one difference is a segment whose path is just \"/\", such as \"/?q=1\" or \"/#x\". X strips the leading slash, gets an empty string and turns it back into \"/\". It then adds that to a base path that already ends in \"/\", which gives a double slash like \"/a//\". Y uses withTrailingSlash and withoutLeadingSlash, so the result stays \"/a/\". On this edge case X produces a broken path"
+ }
+}
