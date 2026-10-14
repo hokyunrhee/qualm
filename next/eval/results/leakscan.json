@@ -1,0 +1,256 @@
+{
+ "agents_scanned": 1976,
+ "agents_matching": 35,
+ "agents": [
+  {
+   "transcript": "agent-a32a37d2e97cd6708.jsonl",
+   "task": "You are the measurement scientist reviewing a research study before its one-shot held-out evaluation. The study builds candidates to replace a code-review gate ",
+   "matches": {
+    "adjudication_keymap": 3,
+    "heldout.key": 2,
+    "fx-held": 3,
+    "assembled_v1/heldout": 1,
+    "heldout_reserve.jsonl": 1,
+    "assembled_test/heldout": 1
+   }
+  },
+  {
+   "transcript": "workflows/wf_a2e1a2df-530/agent-a6cdddf61b9080687.jsonl",
+   "task": "You are preparing one controlled item for a code-review benchmark: a real commit with one known code smell added on purpose, so we can later test whether review",
+   "matches": {
+    "fx-held": 11
+   }
+  },
+  {
+   "transcript": "workflows/wf_a2e1a2df-530/agent-ad679beccac856f85.jsonl",
+   "task": "You are preparing one controlled item for a code-review benchmark: a real commit with one known code smell added on purpose, so we can later test whether review",
+   "matches": {
+    "fx-held": 14
+   }
+  },
+  {
+   "transcript": "workflows/wf_9ed1177d-5fc/agent-a21999c76165d3856.jsonl",
+   "task": "You are preparing one controlled item for a code-review benchmark: a real commit with one known code smell added on purpose, so we can later test whether review",
+   "matches": {
+    "fx-held": 9
+   }
+  },
+  {
+   "transcript": "workflows/wf_9ed1177d-5fc/agent-a2a99cc16c7f7d4c3.jsonl",
+   "task": "You are preparing one controlled item for a code-review benchmark: a real commit with one known code smell added on purpose, so we can later test whether review",
+   "matches": {
+    "fx-held": 8
+   }
+  },
+  {
+   "transcript": "workflows/wf_9ed1177d-5fc/agent-a3fc4ec1c4e233b14.jsonl",
+   "task": "You are preparing one controlled item for a code-review benchmark: a real commit with one known code smell added on purpose, so we can later test whether review",
+   "matches": {
+    "fx-held": 12
+   }
+  },
+  {
+   "transcript": "workflows/wf_9ed1177d-5fc/agent-a9eba6785ace09ef8.jsonl",
+   "task": "You are preparing one controlled item for a code-review benchmark: a real commit with one known code smell added on purpose, so we can later test whether review",
+   "matches": {
+    "fx-held": 11
+   }
+  },
+  {
+   "transcript": "workflows/wf_9ed1177d-5fc/agent-acf4ec6deb75d5a6b.jsonl",
+   "task": "You are preparing one controlled item for a code-review benchmark: a real commit with one known code smell added on purpose, so we can later test whether review",
+   "matches": {
+    "fx-held": 11
+   }
+  },
+  {
+   "transcript": "workflows/wf_9ed1177d-5fc/agent-ae06506e8cf8e6768.jsonl",
+   "task": "You are preparing one controlled item for a code-review benchmark: a real commit with one known code smell added on purpose, so we can later test whether review",
+   "matches": {
+    "fx-held": 8
+   }
+  },
+  {
+   "transcript": "workflows/wf_9ed1177d-5fc/agent-ae5d067f1f30372fe.jsonl",
+   "task": "You are preparing one controlled item for a code-review benchmark: a real commit with one known code smell added on purpose, so we can later test whether review",
+   "matches": {
+    "fx-held": 12
+   }
+  },
+  {
+   "transcript": "workflows/wf_9ed1177d-5fc/agent-af99465859fb8732e.jsonl",
+   "task": "You are preparing one controlled item for a code-review benchmark: a real commit with one known code smell added on purpose, so we can later test whether review",
+   "matches": {
+    "fx-held": 9
+   }
+  },
+  {
+   "transcript": "workflows/wf_f83545b2-855/agent-a1d3a4f66e7488a51.jsonl",
+   "task": "You are preparing one controlled item for a code-review benchmark: a real commit with one known code smell added on purpose, so we can later test whether review",
+   "matches": {
+    "fx-held": 7
+   }
+  },
+  {
+   "transcript": "workflows/wf_f83545b2-855/agent-a2c54242fd17a291e.jsonl",
+   "task": "You are preparing one controlled item for a code-review benchmark: a real commit with one known code smell added on purpose, so we can later test whether review",
+   "matches": {
+    "fx-held": 11
+   }
+  },
+  {
+   "transcript": "workflows/wf_f83545b2-855/agent-a499ff571b5c581d5.jsonl",
+   "task": "You are preparing one controlled item for a code-review benchmark: a real commit with one known code smell added on purpose, so we can later test whether review",
+   "matches": {
+    "fx-held": 6
+   }
+  },
+  {
+   "transcript": "workflows/wf_f83545b2-855/agent-a67a68816cb58f5b7.jsonl",
+   "task": "You are preparing one controlled item for a code-review benchmark: a real commit with one known code smell added on purpose, so we can later test whether review",
+   "matches": {
+    "fx-held": 10
+   }
+  },
+  {
+   "transcript": "workflows/wf_f83545b2-855/agent-a6c8eaf88149a609d.jsonl",
+   "task": "You are preparing one controlled item for a code-review benchmark: a real commit with one known code smell added on purpose, so we can later test whether review",
+   "matches": {
+    "fx-held": 6
+   }
+  },
+  {
+   "transcript": "workflows/wf_f83545b2-855/agent-a73c4a2b4f208563a.jsonl",
+   "task": "You are preparing one controlled item for a code-review benchmark: a real commit with one known code smell added on purpose, so we can later test whether review",
+   "matches": {
+    "fx-held": 10
+   }
+  },
+  {
+   "transcript": "workflows/wf_f83545b2-855/agent-a7af68f2a35c04178.jsonl",
+   "task": "You are preparing one controlled item for a code-review benchmark: a real commit with one known code smell added on purpose, so we can later test whether review",
+   "matches": {
+    "fx-held": 12
+   }
+  },
+  {
+   "transcript": "workflows/wf_f83545b2-855/agent-a9edc4877ce30115e.jsonl",
+   "task": "You are preparing one controlled item for a code-review benchmark: a real commit with one known code smell added on purpose, so we can later test whether review",
+   "matches": {
+    "fx-held": 8
+   }
+  },
+  {
+   "transcript": "workflows/wf_f83545b2-855/agent-aa24e6ed431adece3.jsonl",
+   "task": "You are preparing one controlled item for a code-review benchmark: a real commit with one known code smell added on purpose, so we can later test whether review",
+   "matches": {
+    "fx-held": 9
+   }
+  },
+  {
+   "transcript": "workflows/wf_f83545b2-855/agent-ad324722722f08577.jsonl",
+   "task": "You are preparing one controlled item for a code-review benchmark: a real commit with one known code smell added on purpose, so we can later test whether review",
+   "matches": {
+    "fx-held": 8
+   }
+  },
+  {
+   "transcript": "workflows/wf_f83545b2-855/agent-adafbae43229052cc.jsonl",
+   "task": "You are preparing one controlled item for a code-review benchmark: a real commit with one known code smell added on purpose, so we can later test whether review",
+   "matches": {
+    "fx-held": 6
+   }
+  },
+  {
+   "transcript": "workflows/wf_f83545b2-855/agent-adb0a08e53d03e067.jsonl",
+   "task": "You are preparing one controlled item for a code-review benchmark: a real commit with one known code smell added on purpose, so we can later test whether review",
+   "matches": {
+    "fx-held": 8
+   }
+  },
+  {
+   "transcript": "workflows/wf_527b1bf7-e46/agent-a0508f29c7eadbdab.jsonl",
+   "task": "You are preparing one controlled item for a code-review benchmark: a real commit with one known code smell added on purpose, so we can later test whether review",
+   "matches": {
+    "fx-held": 5
+   }
+  },
+  {
+   "transcript": "workflows/wf_527b1bf7-e46/agent-a1627b2fdca6a124f.jsonl",
+   "task": "You are preparing one controlled item for a code-review benchmark: a real commit with one known code smell added on purpose, so we can later test whether review",
+   "matches": {
+    "fx-held": 6
+   }
+  },
+  {
+   "transcript": "workflows/wf_527b1bf7-e46/agent-a1d8f6b7a14183b95.jsonl",
+   "task": "You are preparing one controlled item for a code-review benchmark: a real commit with one known code smell added on purpose, so we can later test whether review",
+   "matches": {
+    "fx-held": 10
+   }
+  },
+  {
+   "transcript": "workflows/wf_527b1bf7-e46/agent-a23811b79b395d507.jsonl",
+   "task": "You are preparing one controlled item for a code-review benchmark: a real commit with one known code smell added on purpose, so we can later test whether review",
+   "matches": {
+    "fx-held": 11
+   }
+  },
+  {
+   "transcript": "workflows/wf_527b1bf7-e46/agent-a49f8e8ffbe6c2298.jsonl",
+   "task": "You are preparing one controlled item for a code-review benchmark: a real commit with one known code smell added on purpose, so we can later test whether review",
+   "matches": {
+    "fx-held": 8
+   }
+  },
+  {
+   "transcript": "workflows/wf_527b1bf7-e46/agent-a60eb51fd75552ced.jsonl",
+   "task": "You are preparing one controlled item for a code-review benchmark: a real commit with one known code smell added on purpose, so we can later test whether review",
+   "matches": {
+    "fx-held": 8
+   }
+  },
+  {
+   "transcript": "workflows/wf_527b1bf7-e46/agent-a663ada1c2de8cb74.jsonl",
+   "task": "You are preparing one controlled item for a code-review benchmark: a real commit with one known code smell added on purpose, so we can later test whether review",
+   "matches": {
+    "fx-held": 10
+   }
+  },
+  {
+   "transcript": "workflows/wf_527b1bf7-e46/agent-acb67ae3279e6637d.jsonl",
+   "task": "You are preparing one controlled item for a code-review benchmark: a real commit with one known code smell added on purpose, so we can later test whether review",
+   "matches": {
+    "fx-held": 10
+   }
+  },
+  {
+   "transcript": "workflows/wf_527b1bf7-e46/agent-ad00f1a99858e11f1.jsonl",
+   "task": "You are preparing one controlled item for a code-review benchmark: a real commit with one known code smell added on purpose, so we can later test whether review",
+   "matches": {
+    "fx-held": 7
+   }
+  },
+  {
+   "transcript": "workflows/wf_527b1bf7-e46/agent-ad1c690580c8feb7c.jsonl",
+   "task": "You are preparing one controlled item for a code-review benchmark: a real commit with one known code smell added on purpose, so we can later test whether review",
+   "matches": {
+    "fx-held": 8
+   }
+  },
+  {
+   "transcript": "workflows/wf_527b1bf7-e46/agent-af1572b8ac9135fb0.jsonl",
+   "task": "You are preparing one controlled item for a code-review benchmark: a real commit with one known code smell added on purpose, so we can later test whether review",
+   "matches": {
+    "fx-held": 10
+   }
+  },
+  {
+   "transcript": "workflows/wf_527b1bf7-e46/agent-afa2845a371bb3c6d.jsonl",
+   "task": "You are preparing one controlled item for a code-review benchmark: a real commit with one known code smell added on purpose, so we can later test whether review",
+   "matches": {
+    "fx-held": 12
+   }
+  }
+ ]
+}
