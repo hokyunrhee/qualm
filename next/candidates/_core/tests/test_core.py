@@ -187,6 +187,12 @@ class LexerUnitTests(unittest.TestCase):
         src = 'def f():\n    """doc\n    more"""\n    return 1\n\ndef g():\n    pass\n'
         self.assertEqual([(u.name, u.start, u.end) for u in units.find_units(src, 'Python')], [('f', 1, 4), ('g', 6, 7)])
 
+    def test_long_signatures_and_ts_methods_are_units(self):
+        go = 'package a\n\nfunc F(\n\ta int,\n\tb int,\n\tc int,\n\td int,\n\te int,\n) error {\n\treturn nil\n}\n'
+        self.assertEqual([(u.name, u.start, u.end) for u in units.find_units(go, 'Go')], [('F', 3, 11)])
+        ts = 'class A {\n  async fetch(\n    url: string,\n  ): Promise<void> {\n    await go(url)\n  }\n}\n'
+        self.assertIn(('fetch', 2, 6), [(u.name, u.start, u.end) for u in units.find_units(ts, 'TypeScript')])
+
     def test_diff_marks_added_lines(self):
         d = units.FileDiff('a\nb\nc\n', 'a\nx\nb\nc\n')
         self.assertEqual(d.added, {2})

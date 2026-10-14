@@ -32,3 +32,20 @@
 {"when": "2026-10-14T01:52Z", "what": "run b-offline on dev.jsonl.gz (dev-full-insample) -> next/eval/results/runs/dev/b-offline.jsonl", "cases": 2845, "cost_usd": 0.0}
 {"when": "2026-10-14T01:52Z", "what": "run d-cascade on dev.jsonl.gz (det-r5) -> next/eval/results/runs/det/d-cascade.r5.jsonl", "cases": 100, "cost_usd": 0.080135}
 {"when": "2026-10-14T01:53Z", "what": "e-spot: unit asks on dev redone after the core unit fix and masking tidy-up (23% of requests changed; the rest from the signed cache)", "cases": 2831, "cost_usd": 0.20666}
+{"when": "2026-10-14T01:55Z", "what": "e-spot: end-to-end run on the dev150 subset (scored files mostly from the signed cache; new requests for unscored files and close calls)", "cases": 150, "cost_usd": 0.0258}
+{"when": "2026-10-14T01:57Z", "what": "run d-cascade on dev.jsonl.gz (dev150-cascade) -> next/eval/results/runs/dev/d-cascade-llm.jsonl", "cases": 150, "cost_usd": 0.011094}
+{"when": "2026-10-14T01:57Z", "what": "e-spot: two cold (--no-cache) runs of the det30 subset, for per-PR cost and verdict stability", "cases": 60, "cost_usd": 0.0286}
+{"when": "2026-10-14T02:00Z", "what": "e-spot: two cold (--no-cache) runs of the det100 subset, verdict stability after mean-of-five settling", "cases": 200, "cost_usd": 0.186999}
+{"when": "2026-10-14T02:01Z", "what": "run c-llm on dev.jsonl.gz (det-r2-pass1) -> ../../../tmp/claude-0/-home-user-qualm/2ede26c6-6287-5d82-9ba2-8868fcdef917/scratchpad/c_det_r2_pass1.jsonl", "cases": 30, "cost_usd": 0.0}
+{"when": "2026-10-14T02:01Z", "what": "run d-cascade on dev.jsonl.gz (det-r2-pass1) -> ../../../tmp/claude-0/-home-user-qualm/2ede26c6-6287-5d82-9ba2-8868fcdef917/scratchpad/dcas_det_r2_pass1.jsonl", "cases": 30, "cost_usd": 0.0}
+{"when": "2026-10-14T02:01Z", "what": "run c-llm on dev.jsonl.gz (det-r3-pass1) -> ../../../tmp/claude-0/-home-user-qualm/2ede26c6-6287-5d82-9ba2-8868fcdef917/scratchpad/c_det_r3_pass1.jsonl", "cases": 30, "cost_usd": 0.0}
+{"when": "2026-10-14T02:02Z", "what": "run d-cascade on dev.jsonl.gz (det-r3-pass1) -> ../../../tmp/claude-0/-home-user-qualm/2ede26c6-6287-5d82-9ba2-8868fcdef917/scratchpad/dcas_det_r3_pass1.jsonl", "cases": 30, "cost_usd": 0.0}
+{"when": "2026-10-14T02:02Z", "what": "run d-cascade on dev.jsonl.gz (det-r1-pass1) -> ../../../tmp/claude-0/-home-user-qualm/2ede26c6-6287-5d82-9ba2-8868fcdef917/scratchpad/dcas_det_r1_pass1.jsonl", "cases": 30, "cost_usd": 0.003358}
+{"when": "2026-10-14T02:03Z", "what": "run d-cascade on dev.jsonl.gz (det-r2-pass1) -> ../../../tmp/claude-0/-home-user-qualm/2ede26c6-6287-5d82-9ba2-8868fcdef917/scratchpad/dcas_det_r2_pass1.jsonl", "cases": 30, "cost_usd": 0.003358}
+{"when": "2026-10-14T02:03Z", "what": "e-spot: end-to-end dev150 run with the final findings rule (cached answers; new draws for close calls)", "cases": 150, "cost_usd": 0.026889}
+{"when": "2026-10-14T02:03Z", "what": "run d-cascade on dev.jsonl.gz (det-r3-pass1) -> ../../../tmp/claude-0/-home-user-qualm/2ede26c6-6287-5d82-9ba2-8868fcdef917/scratchpad/dcas_det_r3_pass1.jsonl", "cases": 30, "cost_usd": 0.003253}
+{"when": "2026-10-14T02:09Z", "what": "run c-llm on dev.jsonl.gz (det-r2) -> next/eval/results/runs/det/c-llm.r2.jsonl", "cases": 30, "cost_usd": 0.0}
+{"when": "2026-10-14T02:10Z", "what": "run c-llm on dev.jsonl.gz (det-r3) -> next/eval/results/runs/det/c-llm.r3.jsonl", "cases": 30, "cost_usd": 0.0}
+{"when": "2026-10-14T02:10Z", "what": "run d-cascade on dev.jsonl.gz (det-r1) -> next/eval/results/runs/det/d-cascade-llm.r1.jsonl", "cases": 30, "cost_usd": 0.000902}
+{"when": "2026-10-14T02:10Z", "what": "run d-cascade on dev.jsonl.gz (det-r2) -> next/eval/results/runs/det/d-cascade-llm.r2.jsonl", "cases": 30, "cost_usd": 0.001004}
+{"when": "2026-10-14T02:10Z", "what": "run d-cascade on dev.jsonl.gz (det-r3) -> next/eval/results/runs/det/d-cascade-llm.r3.jsonl", "cases": 30, "cost_usd": 0.000503}

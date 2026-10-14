@@ -14,7 +14,10 @@ JAVA_METHOD = re.compile(r'^\s*(?:@\w+(?:\([^)]*\))?\s+)*(?:(?:public|private|pr
 JS_FUNCS = [re.compile(r'^\s*(?:export\s+)?(?:default\s+)?(?:async\s+)?function\s*\*?\s*([A-Za-z_$][\w$]*)\s*[<(]'),
             re.compile(r'^\s*(?:export\s+)?(?:const|let|var)\s+([A-Za-z_$][\w$]*)\s*(?::[^=]+)?=\s*(?:async\s+)?(?:function\b|\([^)]*\)\s*(?::[^=]+)?=>|[A-Za-z_$][\w$]*\s*=>)'),
             re.compile(r'^\s*(?:(?:public|private|protected|static|readonly|async|override|abstract|get|set)\s+)*\*?([A-Za-z_$][\w$]*)\s*(?:<[^>]*>)?\s*\([^;]*\)\s*(?::\s*[^={;]+)?\s*\{\s*$'),
-            re.compile(r'^\s*([A-Za-z_$][\w$]*)\s*:\s*(?:async\s+)?(?:function\b|\([^)]*\)\s*=>)')]
+            re.compile(r'^\s*([A-Za-z_$][\w$]*)\s*:\s*(?:async\s+)?(?:function\b|\([^)]*\)\s*=>)'),
+            # a method whose parameter list opens at the end of the line; a modifier is required so a
+            # multi-line call is not taken for a definition
+            re.compile(r'^\s*(?:(?:public|private|protected|static|readonly|async|override|abstract)\s+)+\*?([A-Za-z_$][\w$]*)\s*(?:<[^>]*>)?\s*\(\s*$')]
 JS_NOT = {'if', 'for', 'while', 'switch', 'catch', 'return', 'function', 'else', 'with', 'constructor_'}
 JAVA_NOT = {'if', 'for', 'while', 'switch', 'catch', 'return', 'new', 'else', 'synchronized', 'try'}
 PY_DEF = re.compile(r'^(\s*)(?:async\s+)?def\s+([A-Za-z_]\w*)')
@@ -56,9 +59,13 @@ def _brace_end(masked, start_idx, limit=4000):
                 depth -= 1
                 if opened and depth == 0:
                     return k
-        if not opened and k > start_idx + 3:
+        # a signature may run over many lines while its parentheses are open; once they close,
+        # the body's brace must follow within a few lines or this was not a definition
+        if not opened and parens == 0 and k > start_idx + 3:
             return None
-        if not opened and masked[k].rstrip().endswith(';'):
+        if not opened and parens == 0 and masked[k].rstrip().endswith(';'):
+            return None
+        if not opened and k > start_idx + 40:
             return None
     return None
 

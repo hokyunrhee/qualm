@@ -1,0 +1,19 @@
+#!/usr/bin/env -S python3 -I
+"""e-spot: Jev asked about each changed unit (the five verbs reviewers use), folded into a
+calibrated model with the core's detectors. Needs OPENROUTER_API_KEY; without it, exits 2."""
+import os, sys
+
+HERE = os.path.dirname(os.path.realpath(__file__))
+sys.path.insert(0, os.path.join(HERE, '..', '_core'))
+sys.path.insert(0, HERE)
+
+from gatecore import cli  # noqa: E402
+import scorer  # noqa: E402
+
+if __name__ == '__main__':
+    try:
+        code = cli.run('e-spot', scorer.VERSION, scorer.Scorer)
+    except Exception as e:  # a crash is "could not judge", never a pass or a fail
+        print('e-spot: could not judge the change: internal error (%s)' % type(e).__name__, file=sys.stderr)
+        code = 2
+    sys.exit(code)
