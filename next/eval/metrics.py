@@ -35,6 +35,7 @@ def load_labels(path, subset=None):
                 natural = it['label_source'] in NATURAL_POS if it['label'] == 1 else it['label_source'] in NATURAL_NEG
                 items.append({'item_id': it['item_id'], 'case_id': c['case_id'], 'path': it['path'], 'label': it['label'],
                               'repo': c.get('repo_key') or c.get('repo'), 'origin_change': origin, 'natural': natural,
+                              'nit': bool(it.get('nit')), 'tier': it.get('tier') or '-',
                               'language': it['language'], 'source': it['label_source'], 'smell': it.get('smell') or '-',
                               'location': it.get('location'), 'agent_written': bool(c.get('agent_written')),
                               'origin': c['source'].split(':')[0]})
@@ -312,6 +313,7 @@ def main():
         m['by_smell'] = breakdown(rows, 'smell')
         m['by_agent_written'] = breakdown(rows, 'agent_written')
         m['by_origin'] = breakdown(rows, 'origin')
+        m['by_nit'] = breakdown(rows, 'nit')
         m['threshold_override'] = thr.get(name)
         m['pr_level'] = pr_level(rows)
         result['candidates'][name] = m

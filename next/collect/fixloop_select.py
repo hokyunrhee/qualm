@@ -33,7 +33,10 @@ def main():
     ap.add_argument('--seed', type=int, default=11)
     a = ap.parse_args()
     rng = random.Random(a.seed)
-    cfg = json.load(open(a.fixrepos))['repos']
+    cfg = {}
+    for path in a.fixrepos.split(','):
+        if os.path.exists(path):
+            cfg.update(json.load(open(path))['repos'])
     pools = {'dev': [], 'heldout': []}
     for key, r in sorted(cfg.items()):
         name = key.replace('_', '/', 1)
