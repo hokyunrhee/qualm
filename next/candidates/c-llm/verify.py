@@ -226,18 +226,17 @@ def check(f, raw_comments, taint, n_lines):
             row['why'] = 'over the limit of %d comments' % MAX_COMMENTS
             continue
         t_msg, t_fix = template(f, kind, lo, hi)
-        message = c.get('message') if isinstance(c.get('message'), str) else ''
-        fix = c.get('fix') if isinstance(c.get('fix'), str) else ''
+        message = one_line(c.get('message') if isinstance(c.get('message'), str) else '', MESSAGE_CHARS)
+        fix = one_line(c.get('fix') if isinstance(c.get('fix'), str) else '', FIX_CHARS)
         rewritten = []
-        if not message.strip() or taint.tainted(message):
+        if not message or taint.tainted(message):
             message = t_msg
             rewritten.append('message')
-        if not fix.strip() or taint.tainted(fix):
+        if not fix or taint.tainted(fix):
             fix = t_fix
             rewritten.append('fix')
         row['why'] = 'kept' + (' (%s rewritten)' % ' and '.join(rewritten) if rewritten else '')
-        kept.append({'id': 'llm_' + kind, 'lines': [lo, hi], 'message': one_line(message, MESSAGE_CHARS),
-                     'fix': one_line(fix, FIX_CHARS), 'related': []})
+        kept.append({'id': 'llm_' + kind, 'lines': [lo, hi], 'message': message, 'fix': fix, 'related': []})
     return kept, record
 
 

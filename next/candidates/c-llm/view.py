@@ -10,9 +10,11 @@ Blank, comment-only and moved lines count for little, and a piece that is mostly
 literals (a data table) is shown only when nothing else is, so a large table cannot push the
 code it hides out of the view.
 """
-import collections
+import collections, re
 
 from gatecore import lexer
+
+LINE_BREAKS = re.compile('[\r\x0b\x0c\x1c-\x1e\x85  ]')
 
 CONTEXT = 15        # unchanged lines shown around each change
 PIECE_LINES = 60    # a hunk over the cap is cut into pieces of at most this many lines
@@ -30,7 +32,9 @@ def head_len(f):
 
 
 def clip(line):
-    line = line.rstrip('\r')
+    """One line of the file as the view shows it: characters that would start a new line in the
+    reader's eyes become spaces, and a long line is cut."""
+    line = LINE_BREAKS.sub(' ', line.rstrip('\r'))
     if len(line) > LINE_CHARS:
         return '%s [... %d more characters]' % (line[:LINE_CHARS], len(line) - LINE_CHARS)
     return line
