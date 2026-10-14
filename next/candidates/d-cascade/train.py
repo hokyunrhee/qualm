@@ -8,7 +8,9 @@ Inputs: the detectors' features per scored dev file (b-offline's train.py --feat
 same gatecore code `run` uses), the raw view's answers (qualm 0.1.1's own dev run: its request is
 the raw view), and the masked view's answers (collect_dev.py).
 
-Folds are grouped by repository. Feature sets are compared on out-of-fold PR-AUC; the chosen set
+Folds are grouped by repository. Feature sets are compared on out-of-fold PR-AUC on the natural
+stratum (reviewer comments and follow-up cleanups against approved, post-fix and survived files,
+the pre-registered primary comparison; --select pooled uses all items instead); the chosen set
 is refitted on all of dev with a Platt step fitted on its out-of-fold logits. The threshold is the
 highest out-of-fold recall whose precision stays at or above the floor. The abstain band is chosen
 by Learn-then-Test (fixed-sequence binomial tests): the narrowest band around the threshold such
@@ -186,6 +188,8 @@ def main():
     ap.add_argument('--fail-precision', type=float, default=0.75)
     ap.add_argument('--miss-rate', type=float, default=0.10)
     ap.add_argument('--set', default=None, help='force a feature set')
+    ap.add_argument('--select', choices=('pooled', 'natural'), default='natural',
+                    help='choose the feature set by out-of-fold PR-AUC on all items or on the natural stratum (the pre-registered primary comparison)')
     ap.add_argument('--oof-all', default=None, help='write calibrated out-of-fold probabilities of every feature set')
     a = ap.parse_args()
     rows = load(a)
@@ -205,7 +209,8 @@ def main():
                 best = (C, m, metrics(y[nat], sig(z[nat])), z)
         results[name] = best
         print('%-24s C=%-6s all %s | natural PR-AUC %.4f ROC %.4f' % (name, best[0], best[1], best[2]['pr_auc'], best[2]['roc_auc']), flush=True)
-    name = a.set or max(results, key=lambda k: results[k][1]['pr_auc'])
+    pick = (lambda k: results[k][2]['pr_auc']) if a.select == 'natural' else (lambda k: results[k][1]['pr_auc'])
+    name = a.set or max(results, key=pick)
     if a.oof_all:
         json.dump({k: {r['item_id']: round(float(v), 5) for r, v in zip(rows, sig(platt_apply(results[k][3], y)))} for k in results}, open(a.oof_all, 'w'))
     C, m_all, m_nat, z = results[name]
@@ -218,7 +223,8 @@ def main():
     model = {'names': cols, 'mean': [float(v) for v in sc.mean_], 'scale': [float(v) if v else 1.0 for v in sc.scale_],
              'coef': [float(v) for v in lr.coef_[0]], 'intercept': float(lr.intercept_[0]), 'platt': [pa, pb], 'threshold': round(thr, 3),
              'meta': {'trained_on': 'dev split only', 'feature_set': name, 'C': C, 'items': len(rows), 'positives': int(y.sum()),
-                      'threshold_rule': 'highest out-of-fold recall with precision >= %.3f' % a.precision_floor}}
+                      'threshold_rule': 'highest out-of-fold recall with precision >= %.3f' % a.precision_floor,
+                      'selection': 'feature set with the best out-of-fold %s PR-AUC' % a.select}}
     json.dump(model, open(a.out, 'w'), indent=1)
     band = ltt_band(y, p, thr, a.fail_precision, a.miss_rate)
     band_doc = None
