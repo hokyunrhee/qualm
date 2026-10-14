@@ -1,0 +1,51 @@
+name: qualm-next
+description: Fail a pull request when an experienced reviewer would ask for the change to be simplified, and say what to fix.
+inputs:
+  base:
+    description: The branch to compare with (default: the pull request's base branch).
+    required: false
+    default: ''
+  budget:
+    description: Stop when this many dollars are spent on Jev requests.
+    required: false
+    default: '0.25'
+  include-tests:
+    description: Judge test files too.
+    required: false
+    default: 'false'
+  keeps-file:
+    description: >-
+      A JSON file outside the checkout with keeps a maintainer granted for this pull request
+      ({"keeps": [{"path", "hash", "reason"}]}). Leave empty for none.
+    required: false
+    default: ''
+runs:
+  using: composite
+  steps:
+    - name: Check the key
+      shell: bash
+      env:
+        OPENROUTER_API_KEY: ${{ env.OPENROUTER_API_KEY }}
+      run: |
+        if [ -z "$OPENROUTER_API_KEY" ]; then
+          echo "::error::OPENROUTER_API_KEY is not set, so the change cannot be judged. A pull request from a fork has no access to secrets; see the README's section on forks."
+          exit 2
+        fi
+    - name: Judge the change
+      shell: bash
+      env:
+        BASE: ${{ inputs.base || github.base_ref }}
+        BUDGET: ${{ inputs.budget }}
+        INCLUDE_TESTS: ${{ inputs.include-tests }}
+        GATE_KEEPS_FILE: ${{ inputs.keeps-file }}
+        GATE_CACHE_DIR: ${{ runner.temp }}/qualm-next-cache
+      run: |
+        set -o pipefail
+        args=(--base "origin/$BASE" --budget "$BUDGET" --format text --text-out "$RUNNER_TEMP/qualm-next.txt")
+        [ "$INCLUDE_TESTS" = "true" ] && args+=(--include-tests)
+        [ -z "$GATE_KEEPS_FILE" ] && unset GATE_KEEPS_FILE
+        git fetch --no-tags --quiet origin "$BASE"
+        python3 -I "${{ github.action_path }}/bin/qualm-next" "${args[@]}" > /dev/null || code=$?
+        cat "$RUNNER_TEMP/qualm-next.txt"
+        cat "$RUNNER_TEMP/qualm-next.txt" >> "$GITHUB_STEP_SUMMARY"
+        exit ${code:-0}

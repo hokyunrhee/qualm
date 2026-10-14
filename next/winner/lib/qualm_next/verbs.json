@@ -1,0 +1,37 @@
+{
+ "source": "per-function masked answers over the dev split (collect_pieces.py), 11090 functions",
+ "questions": {
+  "added_copies": {
+   "mean": -1.4534,
+   "sd": 1.0457
+  },
+  "added_impossible_guards": {
+   "mean": -1.8228,
+   "sd": 1.0984
+  },
+  "added_placeholders": {
+   "mean": -1.3269,
+   "sd": 1.1559
+  },
+  "added_unused_flexibility": {
+   "mean": -0.9731,
+   "sd": 0.782
+  },
+  "remove": {
+   "mean": -0.9392,
+   "sd": 0.7314
+  },
+  "reuse": {
+   "mean": -1.9537,
+   "sd": 0.579
+  },
+  "shorten": {
+   "mean": -0.4979,
+   "sd": 0.7884
+  },
+  "indirection": {
+   "mean": -1.3833,
+   "sd": 0.6727
+  }
+ }
+}

@@ -1,0 +1,12 @@
+#!/usr/bin/env -S python3 -I
+"""qualm-next: fail a change when an experienced reviewer would ask for it to be simpler."""
+import os, sys
+
+LIB = os.path.join(os.path.dirname(os.path.realpath(__file__)), '..', 'lib')
+sys.path.insert(0, LIB)
+sys.path.insert(0, os.path.join(LIB, 'qualm_next'))
+
+import main  # noqa: E402
+
+if __name__ == '__main__':
+    sys.exit(main.main())

@@ -1,0 +1,19 @@
+# .github/workflows/qualm-next.yml
+name: qualm-next
+on:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  simplify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0          # the merge base must be reachable; a shallow clone of a long-lived branch is not enough
+      - uses: tools4imps/qualm/next/winner@<commit-sha>   # pin a commit: the gate should not change without a commit of yours
+        env:
+          OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}

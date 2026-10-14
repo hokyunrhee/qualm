@@ -120,3 +120,6 @@
 {"when": "2026-10-14T04:26Z", "what": "run d-cascade on heldout.jsonl.gz (heldout-det-r4-retry) -> next/eval/results/runs/heldout_det/d-cascade.r4.jsonl", "cases": 0, "cost_usd": 0.0}
 {"when": "2026-10-14T04:32Z", "what": "run d-cascade on heldout.jsonl.gz (heldout-det-r5) -> next/eval/results/runs/heldout_det/d-cascade.r5.jsonl", "cases": 509, "cost_usd": 0.542602}
 {"when": "2026-10-14T04:32Z", "what": "run d-cascade on heldout.jsonl.gz (heldout-det-r5-retry) -> next/eval/results/runs/heldout_det/d-cascade.r5.jsonl", "cases": 0, "cost_usd": 0.0}
+{"when": "2026-10-14T04:35Z", "what": "run d-cascade on dev.jsonl.gz (equiv-frozen) -> ../../../tmp/claude-0/-home-user-qualm/2ede26c6-6287-5d82-9ba2-8868fcdef917/scratchpad/equiv/frozen.jsonl", "cases": 100, "cost_usd": 0.095796}
+{"when": "2026-10-14T04:35Z", "what": "run winner_cand on dev.jsonl.gz (equiv-winner) -> ../../../tmp/claude-0/-home-user-qualm/2ede26c6-6287-5d82-9ba2-8868fcdef917/scratchpad/equiv/winner.jsonl", "cases": 100, "cost_usd": 0.0}
+{"when": "2026-10-14T04:37Z", "what": "winner self-run on its own code (selfrun-1)", "cases": 1, "cost_usd": 0.009593}
