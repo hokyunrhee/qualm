@@ -66,7 +66,7 @@ def main():
             for i, (k, r, c) in enumerate(order[:quota[lang]]):
                 items.append({'fix_id': 'fx-%s-%s-%s' % (split[:4], k, c['sha'][:8]), 'split': split, 'repo_key': k,
                               'repo': k.replace('_', '/', 1), 'language': r['language'], 'sha': c['sha'], 'file': biggest(k, c),
-                              'all_files': c['files'], 'smell': SMELLS[i % len(SMELLS)], 'setup': r['setup'], 'test': r['test']})
+                              'all_files': c['files'], 'smell': SMELLS[i % len(SMELLS)], 'setup': r.get('setup_ws', r['setup']), 'test': r.get('test_ws', r['test'])})
     json.dump({'items': items}, open(a.out, 'w'), indent=1)
     for split in pools:
         print(split, sum(1 for it in items if it['split'] == split), 'items from', len({it['repo_key'] for it in items if it['split'] == split}), 'repositories',

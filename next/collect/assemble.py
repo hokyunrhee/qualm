@@ -108,7 +108,10 @@ def load_raw(raw):
             if '/test' in f:
                 continue
             for line in open(f):
-                yield json.loads(line)
+                try:
+                    yield json.loads(line)
+                except ValueError:
+                    continue  # a line cut short by a collector still writing
 
 
 def tier(item):

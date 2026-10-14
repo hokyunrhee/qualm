@@ -1,0 +1,366 @@
+{
+ "items": [
+  {
+   "fix_id": "fx-dev-more-itertools_more-itertools-1604bc36",
+   "split": "dev",
+   "repo_key": "more-itertools_more-itertools",
+   "repo": "more-itertools/more-itertools",
+   "language": "Python",
+   "sha": "1604bc368d3e5f7a8ead1f1ac3896c85da709f96",
+   "file": "more_itertools/more.py",
+   "all_files": [
+    "more_itertools/more.py"
+   ],
+   "smell": "near_copy",
+   "setup": "test -x $SP/venvs/more-itertools_more-itertools/bin/python",
+   "test": "env PYTHONPATH=$REPO/src:$REPO $SP/venvs/more-itertools_more-itertools/bin/python -m pytest -q -x -p no:cacheprovider tests"
+  },
+  {
+   "fix_id": "fx-dev-tkem_cachetools-da5819a8",
+   "split": "dev",
+   "repo_key": "tkem_cachetools",
+   "repo": "tkem/cachetools",
+   "language": "Python",
+   "sha": "da5819a863791ea6d272261d95743728e4f7a942",
+   "file": "src/cachetools/_cachedmethod.py",
+   "all_files": [
+    "src/cachetools/__init__.py",
+    "src/cachetools/_cachedmethod.py"
+   ],
+   "smell": "impossible_guard",
+   "setup": "test -x $SP/venvs/tkem_cachetools/bin/python",
+   "test": "env PYTHONPATH=$REPO/src:$REPO $SP/venvs/tkem_cachetools/bin/python -m pytest -q -x -p no:cacheprovider tests"
+  },
+  {
+   "fix_id": "fx-dev-more-itertools_more-itertools-21d3d883",
+   "split": "dev",
+   "repo_key": "more-itertools_more-itertools",
+   "repo": "more-itertools/more-itertools",
+   "language": "Python",
+   "sha": "21d3d88359437146a6d8882328df4bd73edd685c",
+   "file": "more_itertools/recipes.py",
+   "all_files": [
+    "more_itertools/recipes.py"
+   ],
+   "smell": "leftover",
+   "setup": "test -x $SP/venvs/more-itertools_more-itertools/bin/python",
+   "test": "env PYTHONPATH=$REPO/src:$REPO $SP/venvs/more-itertools_more-itertools/bin/python -m pytest -q -x -p no:cacheprovider tests"
+  },
+  {
+   "fix_id": "fx-dev-tkem_cachetools-e0b98aa4",
+   "split": "dev",
+   "repo_key": "tkem_cachetools",
+   "repo": "tkem/cachetools",
+   "language": "Python",
+   "sha": "e0b98aa418a0b933abbe8146a0b6f65ed3b207b7",
+   "file": "src/cachetools/_decorators.py",
+   "all_files": [
+    "src/cachetools/__init__.py",
+    "src/cachetools/_decorators.py",
+    "src/cachetools/func.py"
+   ],
+   "smell": "single_use_indirection",
+   "setup": "test -x $SP/venvs/tkem_cachetools/bin/python",
+   "test": "env PYTHONPATH=$REPO/src:$REPO $SP/venvs/tkem_cachetools/bin/python -m pytest -q -x -p no:cacheprovider tests"
+  },
+  {
+   "fix_id": "fx-dev-more-itertools_more-itertools-58e6b3cd",
+   "split": "dev",
+   "repo_key": "more-itertools_more-itertools",
+   "repo": "more-itertools/more-itertools",
+   "language": "Python",
+   "sha": "58e6b3cda2a8d5bc6ca1719042088b1e2ea1af27",
+   "file": "more_itertools/more.py",
+   "all_files": [
+    "more_itertools/more.py",
+    "more_itertools/recipes.py"
+   ],
+   "smell": "long_unit_growth",
+   "setup": "test -x $SP/venvs/more-itertools_more-itertools/bin/python",
+   "test": "env PYTHONPATH=$REPO/src:$REPO $SP/venvs/more-itertools_more-itertools/bin/python -m pytest -q -x -p no:cacheprovider tests"
+  },
+  {
+   "fix_id": "fx-dev-tkem_cachetools-86352aed",
+   "split": "dev",
+   "repo_key": "tkem_cachetools",
+   "repo": "tkem/cachetools",
+   "language": "Python",
+   "sha": "86352aed2bedb23aa0cc461a58e76bd667617eaa",
+   "file": "src/cachetools/_cachedmethod.py",
+   "all_files": [
+    "src/cachetools/_cachedmethod.py"
+   ],
+   "smell": "near_copy",
+   "setup": "test -x $SP/venvs/tkem_cachetools/bin/python",
+   "test": "env PYTHONPATH=$REPO/src:$REPO $SP/venvs/tkem_cachetools/bin/python -m pytest -q -x -p no:cacheprovider tests"
+  },
+  {
+   "fix_id": "fx-dev-more-itertools_more-itertools-18c57c72",
+   "split": "dev",
+   "repo_key": "more-itertools_more-itertools",
+   "repo": "more-itertools/more-itertools",
+   "language": "Python",
+   "sha": "18c57c720fc5a7672439ea45a5393a8c1ff40d1e",
+   "file": "more_itertools/more.py",
+   "all_files": [
+    "more_itertools/more.py",
+    "more_itertools/recipes.py"
+   ],
+   "smell": "impossible_guard",
+   "setup": "test -x $SP/venvs/more-itertools_more-itertools/bin/python",
+   "test": "env PYTHONPATH=$REPO/src:$REPO $SP/venvs/more-itertools_more-itertools/bin/python -m pytest -q -x -p no:cacheprovider tests"
+  },
+  {
+   "fix_id": "fx-dev-tkem_cachetools-a2d34a0d",
+   "split": "dev",
+   "repo_key": "tkem_cachetools",
+   "repo": "tkem/cachetools",
+   "language": "Python",
+   "sha": "a2d34a0d4d29e2fc40f514864a2e6ace0b272e3b",
+   "file": "src/cachetools/_decorators.py",
+   "all_files": [
+    "src/cachetools/__init__.py",
+    "src/cachetools/_decorators.py",
+    "src/cachetools/func.py"
+   ],
+   "smell": "leftover",
+   "setup": "test -x $SP/venvs/tkem_cachetools/bin/python",
+   "test": "env PYTHONPATH=$REPO/src:$REPO $SP/venvs/tkem_cachetools/bin/python -m pytest -q -x -p no:cacheprovider tests"
+  },
+  {
+   "fix_id": "fx-dev-tkem_cachetools-232101c6",
+   "split": "dev",
+   "repo_key": "tkem_cachetools",
+   "repo": "tkem/cachetools",
+   "language": "Python",
+   "sha": "232101c6a5cc482e8847b51416f92809ca6fd6d6",
+   "file": "cachetools/fifo.py",
+   "all_files": [
+    "cachetools/__init__.py",
+    "cachetools/fifo.py",
+    "cachetools/func.py"
+   ],
+   "smell": "long_unit_growth",
+   "setup": "test -x $SP/venvs/tkem_cachetools/bin/python",
+   "test": "env PYTHONPATH=$REPO/src:$REPO $SP/venvs/tkem_cachetools/bin/python -m pytest -q -x -p no:cacheprovider tests"
+  },
+  {
+   "fix_id": "fx-dev-more-itertools_more-itertools-9c8dabe6",
+   "split": "dev",
+   "repo_key": "more-itertools_more-itertools",
+   "repo": "more-itertools/more-itertools",
+   "language": "Python",
+   "sha": "9c8dabe6e27bcc992c245db9ca264f430020c8bb",
+   "file": "more_itertools/more.py",
+   "all_files": [
+    "more_itertools/more.py"
+   ],
+   "smell": "near_copy",
+   "setup": "test -x $SP/venvs/more-itertools_more-itertools/bin/python",
+   "test": "env PYTHONPATH=$REPO/src:$REPO $SP/venvs/more-itertools_more-itertools/bin/python -m pytest -q -x -p no:cacheprovider tests"
+  },
+  {
+   "fix_id": "fx-dev-tkem_cachetools-c17b0e3d",
+   "split": "dev",
+   "repo_key": "tkem_cachetools",
+   "repo": "tkem/cachetools",
+   "language": "Python",
+   "sha": "c17b0e3ded92347d82165cfa011e9ca1828ac285",
+   "file": "src/cachetools/_cachedmethod.py",
+   "all_files": [
+    "src/cachetools/__init__.py",
+    "src/cachetools/_cached.py",
+    "src/cachetools/_cachedmethod.py"
+   ],
+   "smell": "impossible_guard",
+   "setup": "test -x $SP/venvs/tkem_cachetools/bin/python",
+   "test": "env PYTHONPATH=$REPO/src:$REPO $SP/venvs/tkem_cachetools/bin/python -m pytest -q -x -p no:cacheprovider tests"
+  },
+  {
+   "fix_id": "fx-held-astanin_python-tabulate-cf45298f",
+   "split": "heldout",
+   "repo_key": "astanin_python-tabulate",
+   "repo": "astanin/python-tabulate",
+   "language": "Python",
+   "sha": "cf45298f3f01ad05264b9ab9a2ad4cbd2c32d9aa",
+   "file": "tabulate/__init__.py",
+   "all_files": [
+    "tabulate/__init__.py"
+   ],
+   "smell": "near_copy",
+   "setup": "test -x $SP/venvs/astanin_python-tabulate/bin/python",
+   "test": "timeout 300 env PYTHONPATH=$REPO/src:$REPO $SP/venvs/astanin_python-tabulate/bin/python -m pytest -q -x -p no:cacheprovider --doctest-modules --ignore=benchmark --ignore=benchmark.py --ignore=setup.py"
+  },
+  {
+   "fix_id": "fx-held-mahmoud_boltons-967864f8",
+   "split": "heldout",
+   "repo_key": "mahmoud_boltons",
+   "repo": "mahmoud/boltons",
+   "language": "Python",
+   "sha": "967864f89791509f9eb36b22b4579d36b72a6df2",
+   "file": "boltons/statsutils.py",
+   "all_files": [
+    "boltons/statsutils.py"
+   ],
+   "smell": "impossible_guard",
+   "setup": "test -x $SP/venvs/mahmoud_boltons/bin/python",
+   "test": "env PYTHONPATH=$REPO/src:$REPO $SP/venvs/mahmoud_boltons/bin/python -m pytest -q -x -p no:cacheprovider --doctest-modules boltons tests"
+  },
+  {
+   "fix_id": "fx-held-python-humanize_humanize-bada0f88",
+   "split": "heldout",
+   "repo_key": "python-humanize_humanize",
+   "repo": "python-humanize/humanize",
+   "language": "Python",
+   "sha": "bada0f88b4d115b96d94db1fe73b20579e84fc14",
+   "file": "src/humanize/number.py",
+   "all_files": [
+    "src/humanize/i18n.py",
+    "src/humanize/number.py"
+   ],
+   "smell": "leftover",
+   "setup": "test -x $SP/venvs/python-humanize_humanize/bin/python && $SP/venvs/python-humanize_humanize/bin/python -c \"import glob,polib; [polib.pofile(p).save_as_mofile(p[:-3]+'.mo') for p in glob.glob('src/humanize/locale/*/LC_MESSAGES/humanize.po')]\" && (test -f src/humanize/_version.py || echo '__version__ = \"0.0.0\"' > src/humanize/_version.py)",
+   "test": "env PYTHONPATH=$REPO/src:$REPO $SP/venvs/python-humanize_humanize/bin/python -m pytest -q -x -p no:cacheprovider"
+  },
+  {
+   "fix_id": "fx-held-astanin_python-tabulate-f0a5df6e",
+   "split": "heldout",
+   "repo_key": "astanin_python-tabulate",
+   "repo": "astanin/python-tabulate",
+   "language": "Python",
+   "sha": "f0a5df6ee72fa1bb27596e43b64ff2746fee284b",
+   "file": "tabulate/__init__.py",
+   "all_files": [
+    "tabulate/__init__.py"
+   ],
+   "smell": "single_use_indirection",
+   "setup": "test -x $SP/venvs/astanin_python-tabulate/bin/python",
+   "test": "timeout 300 env PYTHONPATH=$REPO/src:$REPO $SP/venvs/astanin_python-tabulate/bin/python -m pytest -q -x -p no:cacheprovider --doctest-modules --ignore=benchmark --ignore=benchmark.py --ignore=setup.py"
+  },
+  {
+   "fix_id": "fx-held-mahmoud_boltons-42586df3",
+   "split": "heldout",
+   "repo_key": "mahmoud_boltons",
+   "repo": "mahmoud/boltons",
+   "language": "Python",
+   "sha": "42586df3dd672c11f5376b8d9a42e26c05cf5543",
+   "file": "boltons/funcutils.py",
+   "all_files": [
+    "boltons/funcutils.py"
+   ],
+   "smell": "long_unit_growth",
+   "setup": "test -x $SP/venvs/mahmoud_boltons/bin/python",
+   "test": "env PYTHONPATH=$REPO/src:$REPO $SP/venvs/mahmoud_boltons/bin/python -m pytest -q -x -p no:cacheprovider --doctest-modules boltons tests"
+  },
+  {
+   "fix_id": "fx-held-python-humanize_humanize-a47a89ea",
+   "split": "heldout",
+   "repo_key": "python-humanize_humanize",
+   "repo": "python-humanize/humanize",
+   "language": "Python",
+   "sha": "a47a89ea9111a5eaba138c391e8a564134a15c60",
+   "file": "src/humanize/time.py",
+   "all_files": [
+    "src/humanize/time.py"
+   ],
+   "smell": "near_copy",
+   "setup": "test -x $SP/venvs/python-humanize_humanize/bin/python && $SP/venvs/python-humanize_humanize/bin/python -c \"import glob,polib; [polib.pofile(p).save_as_mofile(p[:-3]+'.mo') for p in glob.glob('src/humanize/locale/*/LC_MESSAGES/humanize.po')]\" && (test -f src/humanize/_version.py || echo '__version__ = \"0.0.0\"' > src/humanize/_version.py)",
+   "test": "env PYTHONPATH=$REPO/src:$REPO $SP/venvs/python-humanize_humanize/bin/python -m pytest -q -x -p no:cacheprovider"
+  },
+  {
+   "fix_id": "fx-held-astanin_python-tabulate-4a959744",
+   "split": "heldout",
+   "repo_key": "astanin_python-tabulate",
+   "repo": "astanin/python-tabulate",
+   "language": "Python",
+   "sha": "4a95974490cde56f81f97aa85dc94958ef309c60",
+   "file": "tabulate/__init__.py",
+   "all_files": [
+    "benchmark/benchmark.py",
+    "tabulate/__init__.py"
+   ],
+   "smell": "impossible_guard",
+   "setup": "test -x $SP/venvs/astanin_python-tabulate/bin/python",
+   "test": "timeout 300 env PYTHONPATH=$REPO/src:$REPO $SP/venvs/astanin_python-tabulate/bin/python -m pytest -q -x -p no:cacheprovider --doctest-modules --ignore=benchmark --ignore=benchmark.py --ignore=setup.py"
+  },
+  {
+   "fix_id": "fx-held-mahmoud_boltons-673e010d",
+   "split": "heldout",
+   "repo_key": "mahmoud_boltons",
+   "repo": "mahmoud/boltons",
+   "language": "Python",
+   "sha": "673e010d0afabc2f530e8d1f67f0a47c37afa7f4",
+   "file": "boltons/strutils.py",
+   "all_files": [
+    "boltons/strutils.py"
+   ],
+   "smell": "leftover",
+   "setup": "test -x $SP/venvs/mahmoud_boltons/bin/python",
+   "test": "env PYTHONPATH=$REPO/src:$REPO $SP/venvs/mahmoud_boltons/bin/python -m pytest -q -x -p no:cacheprovider --doctest-modules boltons tests"
+  },
+  {
+   "fix_id": "fx-held-python-humanize_humanize-38c99686",
+   "split": "heldout",
+   "repo_key": "python-humanize_humanize",
+   "repo": "python-humanize/humanize",
+   "language": "Python",
+   "sha": "38c99686b9c9e211a3e27c5e1ad99bfdc8e82f04",
+   "file": "src/humanize/number.py",
+   "all_files": [
+    "src/humanize/number.py"
+   ],
+   "smell": "single_use_indirection",
+   "setup": "test -x $SP/venvs/python-humanize_humanize/bin/python && $SP/venvs/python-humanize_humanize/bin/python -c \"import glob,polib; [polib.pofile(p).save_as_mofile(p[:-3]+'.mo') for p in glob.glob('src/humanize/locale/*/LC_MESSAGES/humanize.po')]\" && (test -f src/humanize/_version.py || echo '__version__ = \"0.0.0\"' > src/humanize/_version.py)",
+   "test": "env PYTHONPATH=$REPO/src:$REPO $SP/venvs/python-humanize_humanize/bin/python -m pytest -q -x -p no:cacheprovider"
+  },
+  {
+   "fix_id": "fx-held-mahmoud_boltons-49f381ee",
+   "split": "heldout",
+   "repo_key": "mahmoud_boltons",
+   "repo": "mahmoud/boltons",
+   "language": "Python",
+   "sha": "49f381eedbdcd695f7ed95110ebb1088582de7f3",
+   "file": "boltons/iterutils.py",
+   "all_files": [
+    "boltons/iterutils.py"
+   ],
+   "smell": "long_unit_growth",
+   "setup": "test -x $SP/venvs/mahmoud_boltons/bin/python",
+   "test": "env PYTHONPATH=$REPO/src:$REPO $SP/venvs/mahmoud_boltons/bin/python -m pytest -q -x -p no:cacheprovider --doctest-modules boltons tests"
+  },
+  {
+   "fix_id": "fx-held-python-humanize_humanize-b172d67e",
+   "split": "heldout",
+   "repo_key": "python-humanize_humanize",
+   "repo": "python-humanize/humanize",
+   "language": "Python",
+   "sha": "b172d67eac6a623db14020653cb311d29338d01f",
+   "file": "src/humanize/filesize.py",
+   "all_files": [
+    "src/humanize/filesize.py"
+   ],
+   "smell": "near_copy",
+   "setup": "test -x $SP/venvs/python-humanize_humanize/bin/python && $SP/venvs/python-humanize_humanize/bin/python -c \"import glob,polib; [polib.pofile(p).save_as_mofile(p[:-3]+'.mo') for p in glob.glob('src/humanize/locale/*/LC_MESSAGES/humanize.po')]\" && (test -f src/humanize/_version.py || echo '__version__ = \"0.0.0\"' > src/humanize/_version.py)",
+   "test": "env PYTHONPATH=$REPO/src:$REPO $SP/venvs/python-humanize_humanize/bin/python -m pytest -q -x -p no:cacheprovider"
+  },
+  {
+   "fix_id": "fx-held-mahmoud_boltons-e00c10a8",
+   "split": "heldout",
+   "repo_key": "mahmoud_boltons",
+   "repo": "mahmoud/boltons",
+   "language": "Python",
+   "sha": "e00c10a809525027b8167fbb7ac233cfc25a01f5",
+   "file": "boltons/setutils.py",
+   "all_files": [
+    "boltons/listutils.py",
+    "boltons/setutils.py"
+   ],
+   "smell": "impossible_guard",
+   "setup": "test -x $SP/venvs/mahmoud_boltons/bin/python",
+   "test": "env PYTHONPATH=$REPO/src:$REPO $SP/venvs/mahmoud_boltons/bin/python -m pytest -q -x -p no:cacheprovider --doctest-modules boltons tests"
+  }
+ ],
+ "dropped": [
+  "docs/ targets: not exercised by tests"
+ ]
+}
