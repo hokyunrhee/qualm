@@ -1,0 +1,86 @@
+{
+ "runs": 5,
+ "cases": 100,
+ "per_file": {
+  "files": 421,
+  "flipped": 5,
+  "rate": 0.011876484560570071,
+  "upper95": 0.02481
+ },
+ "per_pull_request": {
+  "cases": 100,
+  "flipped": 1,
+  "rate": 0.01,
+  "upper95": 0.04656
+ },
+ "pairwise_per_file": {
+  "pairs": 4210,
+  "differ": 28,
+  "rate": 0.00665083135391924
+ },
+ "scored_items": {
+  "items": 193,
+  "flipped": 1,
+  "rate": 0.0051813471502590676,
+  "upper95": 0.02434,
+  "max_score_spread": 0.1013,
+  "mean_score_spread": 0.015076683937823833
+ },
+ "flipped_files": [
+  [
+   "gerrit-chromium-review-7931059-ps4",
+   "milo/ui/src/fleet/pages/device_list_page/chromeos/chromeos_devices_table.tsx",
+   [
+    false,
+    false,
+    false,
+    true,
+    false
+   ]
+  ],
+  [
+   "gerrit-chromium-review-8354766-ps10",
+   "go/src/infra/cros/satlab/common/services/dut_wizard_service/readiness_check.go",
+   [
+    true,
+    true,
+    false,
+    false,
+    false
+   ]
+  ],
+  [
+   "gerrit-gerrit-review-143053-ps1",
+   "src/main/java/com/googlesource/gerrit/plugins/quota/RestApiRequestRateEnforcer.java",
+   [
+    true,
+    true,
+    false,
+    false,
+    false
+   ]
+  ],
+  [
+   "gerrit-review-988830-ps6",
+   "neutron/agent/ovn/extensions/bgp/bridge.py",
+   [
+    true,
+    true,
+    false,
+    true,
+    false
+   ]
+  ],
+  [
+   "history-expr-lang__expr-e4f3b41db0",
+   "vm/program.go",
+   [
+    true,
+    false,
+    false,
+    true,
+    true
+   ]
+  ]
+ ]
+}

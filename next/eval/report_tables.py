@@ -253,7 +253,7 @@ def main():
             hd = diff_cell(HO['vs_baseline']['d-cascade'], 'pr_auc')
         rows.append([name, '%.3f' % v['all']['pr_auc'], '%.3f' % v['natural']['pr_auc'], ho, hd])
     print(table(['inputs (logistic model)', 'PR-AUC dev', 'natural PR-AUC dev', 'PR-AUC held-out', 'vs a-baseline held-out'], rows))
-    print('\nraw: qualm\'s ten questions on the diff; masked: the comment-stripped view (eight of qualm\'s questions and four verbs); det: detector counts; shape: script and comment share; pieces: per-function answers.')
+    print('\nraw: nine of qualm\'s ten answers on the diff (all but direction); masked: the comment-stripped view (eight of qualm\'s questions and four verbs); det: detector counts; shape: script and comment share; pieces: per-function answers.')
 
 
 if __name__ == '__main__':

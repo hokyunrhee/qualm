@@ -198,4 +198,4 @@ held-out: d-cascade minus a-baseline success +0.118 [+0.000, +0.242] (repository
 | raw+masked+pieces | 0.598 | 0.474 |  |  |
 | raw+masked+det+pieces | 0.600 | 0.466 |  |  |
 
-raw: qualm's ten questions on the diff; masked: the comment-stripped view (eight of qualm's questions and four verbs); det: detector counts; shape: script and comment share; pieces: per-function answers.
+raw: nine of qualm's ten answers on the diff (all but direction); masked: the comment-stripped view (eight of qualm's questions and four verbs); det: detector counts; shape: script and comment share; pieces: per-function answers.

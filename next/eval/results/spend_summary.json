@@ -1,0 +1,97 @@
+{
+ "total_usd": 10.0511,
+ "entries": 128,
+ "budget_usd": 20,
+ "first_entry": "2026-10-13T23:12Z",
+ "parts": {
+  "held-out: accuracy and determinism runs": {
+   "cost_usd": 4.5409,
+   "entries": 34
+  },
+  "dev training data: Jev answers for the models": {
+   "cost_usd": 1.9469,
+   "entries": 8
+  },
+  "dev determinism": {
+   "cost_usd": 1.737,
+   "entries": 34
+  },
+  "dev accuracy runs and pilots": {
+   "cost_usd": 1.1793,
+   "entries": 14
+  },
+  "attacks": {
+   "cost_usd": 0.4174,
+   "entries": 30
+  },
+  "winner checks: equivalence and self-run": {
+   "cost_usd": 0.118,
+   "entries": 5
+  },
+  "fix loop (gate runs, recorded after the fact)": {
+   "cost_usd": 0.111,
+   "entries": 1
+  },
+  "smoke tests": {
+   "cost_usd": 0.0007,
+   "entries": 2
+  }
+ },
+ "rules": [
+  [
+   "fix loop (gate runs, recorded after the fact)",
+   [
+    "fix-loop gate runs"
+   ]
+  ],
+  [
+   "held-out: accuracy and determinism runs",
+   [
+    "heldout",
+    "held-out"
+   ]
+  ],
+  [
+   "attacks",
+   [
+    "attack suite"
+   ]
+  ],
+  [
+   "winner checks: equivalence and self-run",
+   [
+    "equiv-",
+    "self-run"
+   ]
+  ],
+  [
+   "dev determinism",
+   [
+    "(det-",
+    "det30 subset",
+    "det100 subset"
+   ]
+  ],
+  [
+   "dev training data: Jev answers for the models",
+   [
+    "masked-view",
+    "per-function",
+    "unit asks"
+   ]
+  ],
+  [
+   "smoke tests",
+   [
+    "smoke test"
+   ]
+  ],
+  [
+   "dev accuracy runs and pilots",
+   [
+    ""
+   ]
+  ]
+ ],
+ "note": "One entry is stamped 05:10Z but sits between 03:26Z and 03:47Z in the file: it records held-out runs stopped at about 03:30Z and was mis-stamped; its amount is unaffected."
+}

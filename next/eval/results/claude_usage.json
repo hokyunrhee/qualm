@@ -1,6 +1,6 @@
 {
  "source": "task notifications in the session transcript",
- "total_tokens": 230533646,
+ "total_tokens": 230745688,
  "runs": [
   {
    "task": "a08eba3e71959df10",
@@ -31,6 +31,11 @@
    "task": "aab8f7f6a62ba21bf",
    "what": "Agent \"Red-team round 2 attacks\" finished",
    "tokens": 237369
+  },
+  {
+   "task": "adb215e39d07e029d",
+   "what": "Agent \"Verify REPORT numbers trace\" finished",
+   "tokens": 212042
   },
   {
    "task": "ae9668ccbfd58ed26",

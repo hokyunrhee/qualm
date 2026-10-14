@@ -125,3 +125,4 @@
 {"when": "2026-10-14T04:37Z", "what": "winner self-run on its own code (selfrun-1)", "cases": 1, "cost_usd": 0.009593}
 {"when": "2026-10-14T04:39Z", "what": "winner self-run in the repository, base 4533932 (selfrun-2)", "cases": 1, "cost_usd": 0.005891}
 {"when": "2026-10-14T04:39Z", "what": "winner self-run with the keep, no cache (selfrun-4)", "cases": 1, "cost_usd": 0.006752}
+{"when": "2026-10-14T05:01Z", "what": "fix-loop gate runs (dev v1, v2, v3 and held-out; the harness passed --budget 0.05 per run but did not write to this ledger): summed after the fact from 657 gate reports kept under the fix-loop record directories", "cases": 657, "cost_usd": 0.111}
