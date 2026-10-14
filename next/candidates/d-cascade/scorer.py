@@ -191,13 +191,16 @@ def piece_state(f, lo, hi, name, masked):
 
 
 def verb_of(ans):
-    """The question whose answer stands out most against its usual level on dev."""
-    def z(q):
+    """The question whose answer stands out most against its usual level on dev: the largest gap
+    between its log-odds and that question's mean log-odds over dev functions. (Dividing by each
+    question's spread as well picked "reuse" too often; on dev's injected smells the plain gap named
+    the right kind for 112 of 164 against 100.)"""
+    def gap(q):
         st = VERB_STATS.get(q)
         if not st or q not in ans:
-            return -9.0
-        return (logit(ans[q]) - st['mean']) / (st['sd'] or 1.0)
-    return max(VERB_TEXT, key=z)
+            return -99.0
+        return logit(ans[q]) - st['mean']
+    return max(VERB_TEXT, key=gap)
 
 
 class Scorer:
@@ -296,14 +299,14 @@ class Scorer:
         if not chosen and asked and not precise:
             chosen = asked[:1]
         findings = []
-        for pb, lo, hi, name, ans, rows in chosen:
+        for pb, plo, phi, name, ans, rows in chosen:
             verb = verb_of(ans)
             what, fix = VERB_TEXT[verb]
             lo, hi = min(rows), max(rows)
             span = 'Line %d' % lo if lo == hi else 'Lines %d-%d' % (lo, hi)
             where = ' (in %s)' % name if name else ''
             findings.append({'id': 'review.' + verb, 'lines': [lo, hi], 'message': '%s%s %s.' % (span, where, what), 'fix': fix,
-                             'confidence': round(pb, 2), 'related': []})
+                             'confidence': round(pb, 2), 'related': [], 'place': [plo, phi]})
         return findings
 
     # ---------------------------------------------------------------- verdict
@@ -349,13 +352,15 @@ class Scorer:
             findings, advice = [], []
             if failed:
                 try:
+                    if not r['places'] or not r['places'][0]:
+                        r['places'] = self.ask_places(f, use_cache=not self.args.no_cache)
                     located = self.localize(f, r['places'], dets)
                 except jev.JevError as e:
                     located = []
                     self.warnings.append('%s: findings could not be localized (%s)' % (f.path, e))
                 # a detector finding is part of the verdict when it is an exact leftover or sits in a
                 # place the reviewer questions flagged; anything else is advice
-                spans = [d['lines'] for d in located]
+                spans = [d.get('place') or d['lines'] for d in located]
                 for d in dets:
                     lo, hi = d['lines']
                     if d['id'] in LEFTOVERS and hi - lo + 1 <= PRECISE * 3 or any(s[0] <= lo and hi <= s[1] for s in spans):
@@ -370,6 +375,8 @@ class Scorer:
                 advice = dets
             signals = {'p_model': round(p, 4), 'readings': [round(v, 4) for v in r['readings']],
                        'raw': r['raw'], 'masked': r['masked'], 'top_features': self.model.contributions(r['x'])}
+            if failed and r.get('places') and r['places'][0]:
+                signals['places'] = [{'lines': [lo, hi], 'name': name, 'answers': a} for (lo, hi, name, _), a in zip(*r['places'])]
             if abstained:
                 signals['llm'] = {k: r['llm'][k] for k in ('blocking', 'probability')}
             out[f.path] = {'score': score, 'threshold': self.threshold, 'failed': failed, 'abstained': abstained,

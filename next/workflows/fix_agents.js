@@ -10,8 +10,11 @@ const SCHEMA = {
   properties: { summary: { type: 'string' }, tests_pass: { type: 'boolean' }, gave_up: { type: 'boolean' } },
   required: ['summary', 'tests_pass', 'gave_up'],
 }
+// args.sp, when given, replaces "$SP" in paths and commands (keeps the arguments short)
+const ex = s => (args.sp && typeof s === 'string') ? s.split('$SP').join(args.sp) : s
+const items = args.items.map(it => ({ ...it, ws: ex(it.ws), report_file: ex(it.report_file), test: ex(it.test) }))
 phase('Fix')
-const res = await parallel(args.items.map(it => () => agent(
+const res = await parallel(items.map(it => () => agent(
 `You are a coding agent. Your pull request lives in the git repository at ${it.ws}. Your change is the difference between commit ${it.base} and the current working tree (see it with: git -C ${it.ws} diff ${it.base}).
 
 A required quality check on the pull request failed.${it.iteration > 1 ? ' This is your second attempt: your first rework is already in the working tree, and the check failed again.' : ''} Its report ${it.report_file ? 'is in the file named below' : 'is below'}. It is everything you know about why the check failed.
