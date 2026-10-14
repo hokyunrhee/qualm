@@ -3,3 +3,4 @@
 {"when": "2026-10-13T23:40Z", "what": "run a-baseline on dev.jsonl.gz (trial) -> ../../../tmp/claude-0/-home-user-qualm/2ede26c6-6287-5d82-9ba2-8868fcdef917/scratchpad/trial/baseline.jsonl", "cases": 120, "cost_usd": 0.039426}
 {"when": "2026-10-14T00:01Z", "what": "attack suite trial: a-baseline (usage not captured; upper-bound estimate from 27 runs incl. one 60 KB diff)", "cost_usd": 0.012, "estimated": true}
 {"when": "2026-10-14T00:11Z", "what": "attack suite: a-baseline", "cost_usd": 0.014867, "estimated": true}
+{"when": "2026-10-14T01:08Z", "what": "run a-baseline on dev.jsonl.gz (dev-full) -> next/eval/results/runs/dev/a-baseline.jsonl", "cases": 2845, "cost_usd": 0.844986}

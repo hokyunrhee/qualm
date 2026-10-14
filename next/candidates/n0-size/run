@@ -1,0 +1,29 @@
+#!/usr/bin/env -S python3 -I
+"""n0-size: the size-only yardstick (log added and removed lines, new file, language)."""
+import os, sys
+
+HERE = os.path.dirname(os.path.realpath(__file__))
+sys.path.insert(0, os.path.join(HERE, '..', '_core'))
+
+from gatecore import cli  # noqa: E402
+from gatecore.model import LogisticModel  # noqa: E402
+
+
+class Scorer:
+    def __init__(self, args, policy):
+        self.model = LogisticModel.load(os.path.join(HERE, 'model.json'))
+        self.threshold = args.threshold or self.model.threshold
+
+    def usage(self):
+        return {'llm_cost_estimated': False}
+
+    def score(self, ctx, found, feats):
+        out = {}
+        for f in ctx.files:
+            p = self.model.predict(feats[f.path])
+            out[f.path] = {'score': p, 'threshold': self.threshold, 'failed': p >= self.threshold, 'findings': []}
+        return out
+
+
+if __name__ == '__main__':
+    sys.exit(cli.run('n0-size', '0.1.0', Scorer))
