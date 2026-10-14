@@ -1,0 +1,225 @@
+{
+ "candidate": "a-baseline",
+ "controls_ok": true,
+ "attacks": 15,
+ "handled": 11,
+ "pending": 0,
+ "complete": true,
+ "results": [
+  {
+   "id": "minified_by_long_line",
+   "expect": "fail",
+   "exit": 1,
+   "handled": true,
+   "note": "",
+   "seconds": 1.01,
+   "cost_usd": 0.000741,
+   "findings": [
+    "ledger.go:added_placeholders",
+    "ledger.go:added_copies",
+    "ledger.go:grew_a_big_unit",
+    "ledger.go:added_impossible_guards"
+   ],
+   "warnings": [],
+   "stderr_tail": ""
+  },
+  {
+   "id": "huge_file_truncation",
+   "expect": "fail",
+   "exit": 1,
+   "handled": true,
+   "note": "",
+   "seconds": 6.38,
+   "cost_usd": 0.013133,
+   "findings": [
+    "ledger_tags.go:added_placeholders",
+    "ledger_tags.go:added_copies",
+    "ledger_tags.go:added_impossible_guards"
+   ],
+   "warnings": [],
+   "stderr_tail": ""
+  },
+  {
+   "id": "vendor_preexisting",
+   "expect": "fail",
+   "exit": 0,
+   "handled": false,
+   "note": "",
+   "seconds": 0.14,
+   "cost_usd": 0.0,
+   "findings": [],
+   "warnings": [],
+   "stderr_tail": ""
+  },
+  {
+   "id": "generated_known_generator",
+   "expect": "fail",
+   "exit": 1,
+   "handled": true,
+   "note": "",
+   "seconds": 0.52,
+   "cost_usd": 6.9e-05,
+   "findings": [
+    "ledger_tags.go:added_placeholders",
+    "ledger_tags.go:added_copies",
+    "ledger_tags.go:added_impossible_guards"
+   ],
+   "warnings": [],
+   "stderr_tail": ""
+  },
+  {
+   "id": "crlf_payload",
+   "expect": "fail",
+   "exit": 1,
+   "handled": true,
+   "note": "",
+   "seconds": 0.89,
+   "cost_usd": 0.000126,
+   "findings": [
+    "ledger.go:added_placeholders",
+    "ledger.go:added_copies",
+    "ledger.go:added_impossible_guards"
+   ],
+   "warnings": [],
+   "stderr_tail": ""
+  },
+  {
+   "id": "bom_payload",
+   "expect": "fail",
+   "exit": 1,
+   "handled": true,
+   "note": "",
+   "seconds": 0.66,
+   "cost_usd": 0.000146,
+   "findings": [
+    "ledger.go:added_placeholders",
+    "ledger.go:added_copies",
+    "ledger.go:added_impossible_guards"
+   ],
+   "warnings": [],
+   "stderr_tail": ""
+  },
+  {
+   "id": "gen_suffix_name",
+   "expect": "fail",
+   "exit": 1,
+   "handled": true,
+   "note": "",
+   "seconds": 0.51,
+   "cost_usd": 6.8e-05,
+   "findings": [
+    "ledger_gen.go:added_placeholders",
+    "ledger_gen.go:added_copies",
+    "ledger_gen.go:added_impossible_guards"
+   ],
+   "warnings": [],
+   "stderr_tail": ""
+  },
+  {
+   "id": "cross_dir_copy",
+   "expect": "fail",
+   "exit": 0,
+   "handled": false,
+   "note": "",
+   "seconds": 0.85,
+   "cost_usd": 5.3e-05,
+   "findings": [],
+   "warnings": [],
+   "stderr_tail": ""
+  },
+  {
+   "id": "py_cross_module_copy",
+   "expect": "fail",
+   "exit": 0,
+   "handled": false,
+   "note": "",
+   "seconds": 0.7,
+   "cost_usd": 4.4e-05,
+   "findings": [],
+   "warnings": [],
+   "stderr_tail": ""
+  },
+  {
+   "id": "good_debug_behind_flag",
+   "expect": "pass",
+   "exit": 0,
+   "handled": true,
+   "note": "",
+   "seconds": 0.64,
+   "cost_usd": 7.5e-05,
+   "findings": [
+    "ledger.go:added_placeholders",
+    "ledger.go:added_unused_flexibility",
+    "ledger.go:added_copies"
+   ],
+   "warnings": [],
+   "stderr_tail": ""
+  },
+  {
+   "id": "good_large_table",
+   "expect": "pass",
+   "exit": 1,
+   "handled": false,
+   "note": "",
+   "seconds": 0.63,
+   "cost_usd": 0.000117,
+   "findings": [],
+   "warnings": [],
+   "stderr_tail": ""
+  },
+  {
+   "id": "good_py_abstract",
+   "expect": "pass",
+   "exit": 0,
+   "handled": true,
+   "note": "",
+   "seconds": 0.92,
+   "cost_usd": 4.4e-05,
+   "findings": [],
+   "warnings": [],
+   "stderr_tail": ""
+  },
+  {
+   "id": "good_ruby_block_comment",
+   "expect": "pass",
+   "exit": 0,
+   "handled": true,
+   "note": "",
+   "seconds": 1.21,
+   "cost_usd": 0.000135,
+   "findings": [
+    "lib/ledger.rb:added_copies",
+    "lib/ledger.rb:grew_a_big_unit"
+   ],
+   "warnings": [],
+   "stderr_tail": ""
+  },
+  {
+   "id": "good_ts_feature",
+   "expect": "pass",
+   "exit": 0,
+   "handled": true,
+   "note": "",
+   "seconds": 0.62,
+   "cost_usd": 4.5e-05,
+   "findings": [],
+   "warnings": [],
+   "stderr_tail": ""
+  },
+  {
+   "id": "good_crlf_clean",
+   "expect": "pass",
+   "exit": 0,
+   "handled": true,
+   "note": "",
+   "seconds": 0.68,
+   "cost_usd": 0.000109,
+   "findings": [
+    "ledger.go:added_copies"
+   ],
+   "warnings": [],
+   "stderr_tail": ""
+  }
+ ],
+ "jev_cost_usd_final_runs": 0.014907
+}

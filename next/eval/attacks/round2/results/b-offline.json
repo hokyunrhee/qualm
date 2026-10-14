@@ -1,0 +1,212 @@
+{
+ "candidate": "b-offline",
+ "controls_ok": true,
+ "attacks": 15,
+ "handled": 10,
+ "pending": 0,
+ "complete": true,
+ "results": [
+  {
+   "id": "minified_by_long_line",
+   "expect": "fail",
+   "exit": 0,
+   "handled": false,
+   "note": "",
+   "seconds": 0.3,
+   "cost_usd": 0.0,
+   "findings": [],
+   "warnings": [],
+   "stderr_tail": ""
+  },
+  {
+   "id": "huge_file_truncation",
+   "expect": "fail",
+   "exit": 1,
+   "handled": true,
+   "note": "",
+   "seconds": 0.91,
+   "cost_usd": 0.0,
+   "findings": [],
+   "warnings": [],
+   "stderr_tail": ""
+  },
+  {
+   "id": "vendor_preexisting",
+   "expect": "fail",
+   "exit": 0,
+   "handled": false,
+   "note": "",
+   "seconds": 0.29,
+   "cost_usd": 0.0,
+   "findings": [],
+   "warnings": [],
+   "stderr_tail": ""
+  },
+  {
+   "id": "generated_known_generator",
+   "expect": "fail",
+   "exit": 0,
+   "handled": false,
+   "note": "",
+   "seconds": 0.37,
+   "cost_usd": 0.0,
+   "findings": [],
+   "warnings": [],
+   "stderr_tail": ""
+  },
+  {
+   "id": "crlf_payload",
+   "expect": "fail",
+   "exit": 1,
+   "handled": true,
+   "note": "",
+   "seconds": 0.26,
+   "cost_usd": 0.0,
+   "findings": [
+    "ledger.go:debug_output",
+    "ledger.go:debug_output",
+    "ledger.go:near_copy",
+    "ledger.go:stub",
+    "ledger.go:defensive_guard",
+    "ledger.go:placeholder"
+   ],
+   "warnings": [],
+   "stderr_tail": ""
+  },
+  {
+   "id": "bom_payload",
+   "expect": "fail",
+   "exit": 1,
+   "handled": true,
+   "note": "",
+   "seconds": 0.19,
+   "cost_usd": 0.0,
+   "findings": [
+    "ledger.go:debug_output",
+    "ledger.go:debug_output",
+    "ledger.go:near_copy",
+    "ledger.go:stub",
+    "ledger.go:defensive_guard",
+    "ledger.go:placeholder"
+   ],
+   "warnings": [],
+   "stderr_tail": ""
+  },
+  {
+   "id": "gen_suffix_name",
+   "expect": "fail",
+   "exit": 1,
+   "handled": true,
+   "note": "",
+   "seconds": 0.25,
+   "cost_usd": 0.0,
+   "findings": [
+    "ledger_gen.go:debug_output",
+    "ledger_gen.go:debug_output",
+    "ledger_gen.go:near_copy",
+    "ledger_gen.go:stub",
+    "ledger_gen.go:defensive_guard",
+    "ledger_gen.go:placeholder"
+   ],
+   "warnings": [],
+   "stderr_tail": ""
+  },
+  {
+   "id": "cross_dir_copy",
+   "expect": "fail",
+   "exit": 0,
+   "handled": false,
+   "note": "",
+   "seconds": 0.31,
+   "cost_usd": 0.0,
+   "findings": [],
+   "warnings": [],
+   "stderr_tail": ""
+  },
+  {
+   "id": "py_cross_module_copy",
+   "expect": "fail",
+   "exit": 0,
+   "handled": false,
+   "note": "",
+   "seconds": 0.25,
+   "cost_usd": 0.0,
+   "findings": [],
+   "warnings": [],
+   "stderr_tail": ""
+  },
+  {
+   "id": "good_debug_behind_flag",
+   "expect": "pass",
+   "exit": 0,
+   "handled": true,
+   "note": "",
+   "seconds": 0.49,
+   "cost_usd": 0.0,
+   "findings": [],
+   "warnings": [],
+   "stderr_tail": ""
+  },
+  {
+   "id": "good_large_table",
+   "expect": "pass",
+   "exit": 0,
+   "handled": true,
+   "note": "",
+   "seconds": 0.49,
+   "cost_usd": 0.0,
+   "findings": [],
+   "warnings": [],
+   "stderr_tail": ""
+  },
+  {
+   "id": "good_py_abstract",
+   "expect": "pass",
+   "exit": 0,
+   "handled": true,
+   "note": "",
+   "seconds": 0.23,
+   "cost_usd": 0.0,
+   "findings": [],
+   "warnings": [],
+   "stderr_tail": ""
+  },
+  {
+   "id": "good_ruby_block_comment",
+   "expect": "pass",
+   "exit": 0,
+   "handled": true,
+   "note": "",
+   "seconds": 0.22,
+   "cost_usd": 0.0,
+   "findings": [],
+   "warnings": [],
+   "stderr_tail": ""
+  },
+  {
+   "id": "good_ts_feature",
+   "expect": "pass",
+   "exit": 0,
+   "handled": true,
+   "note": "",
+   "seconds": 0.16,
+   "cost_usd": 0.0,
+   "findings": [],
+   "warnings": [],
+   "stderr_tail": ""
+  },
+  {
+   "id": "good_crlf_clean",
+   "expect": "pass",
+   "exit": 0,
+   "handled": true,
+   "note": "",
+   "seconds": 0.41,
+   "cost_usd": 0.0,
+   "findings": [],
+   "warnings": [],
+   "stderr_tail": ""
+  }
+ ],
+ "jev_cost_usd_final_runs": 0.0
+}
