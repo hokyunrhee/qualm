@@ -1,0 +1,343 @@
+{
+ "items": [
+  {
+   "fix_id": "fx-dev-BurntSushi_toml-b535ff89",
+   "split": "dev",
+   "repo_key": "BurntSushi_toml",
+   "repo": "BurntSushi/toml",
+   "language": "Go",
+   "sha": "b535ff89e48996de98ace1301decf94a3a480aa8",
+   "file": "lex.go",
+   "all_files": [
+    "lex.go"
+   ],
+   "smell": "near_copy",
+   "setup": "go mod download",
+   "test": "go test -count=1 ./..."
+  },
+  {
+   "fix_id": "fx-dev-expr-lang_expr-a9ac10fa",
+   "split": "dev",
+   "repo_key": "expr-lang_expr",
+   "repo": "expr-lang/expr",
+   "language": "Go",
+   "sha": "a9ac10fa699b624c7f503e7dcaed40fbcafcf053",
+   "file": "builtin/lib.go",
+   "all_files": [
+    "builtin/lib.go"
+   ],
+   "smell": "impossible_guard",
+   "setup": "go mod download",
+   "test": "go test -count=1 ./..."
+  },
+  {
+   "fix_id": "fx-dev-BurntSushi_toml-1905bd7b",
+   "split": "dev",
+   "repo_key": "BurntSushi_toml",
+   "repo": "BurntSushi/toml",
+   "language": "Go",
+   "sha": "1905bd7b6af5c74f1cbc141d9c27a55ef571a2d6",
+   "file": "error.go",
+   "all_files": [
+    "error.go"
+   ],
+   "smell": "leftover",
+   "setup": "go mod download",
+   "test": "go test -count=1 ./..."
+  },
+  {
+   "fix_id": "fx-dev-expr-lang_expr-2010a112",
+   "split": "dev",
+   "repo_key": "expr-lang_expr",
+   "repo": "expr-lang/expr",
+   "language": "Go",
+   "sha": "2010a1126f132431fcab47478928e4a0ea182443",
+   "file": "vm/runtime/runtime.go",
+   "all_files": [
+    "checker/checker.go",
+    "vm/runtime/runtime.go"
+   ],
+   "smell": "single_use_indirection",
+   "setup": "go mod download",
+   "test": "go test -count=1 ./..."
+  },
+  {
+   "fix_id": "fx-dev-BurntSushi_toml-663cca61",
+   "split": "dev",
+   "repo_key": "BurntSushi_toml",
+   "repo": "BurntSushi/toml",
+   "language": "Go",
+   "sha": "663cca61aec1dc828b8c67280072d04e45b2c4d9",
+   "file": "error.go",
+   "all_files": [
+    "decode.go",
+    "error.go"
+   ],
+   "smell": "long_unit_growth",
+   "setup": "go mod download",
+   "test": "go test -count=1 ./..."
+  },
+  {
+   "fix_id": "fx-dev-BurntSushi_toml-2c9d689c",
+   "split": "dev",
+   "repo_key": "BurntSushi_toml",
+   "repo": "BurntSushi/toml",
+   "language": "Go",
+   "sha": "2c9d689ce191604842d9697080c38664f51b7181",
+   "file": "encode.go",
+   "all_files": [
+    "decode.go",
+    "encode.go"
+   ],
+   "smell": "near_copy",
+   "setup": "go mod download",
+   "test": "go test -count=1 ./..."
+  },
+  {
+   "fix_id": "fx-dev-BurntSushi_toml-46192570",
+   "split": "dev",
+   "repo_key": "BurntSushi_toml",
+   "repo": "BurntSushi/toml",
+   "language": "Go",
+   "sha": "461925704ed4d72ccc1fd51fe69bb3ac47091330",
+   "file": "decode.go",
+   "all_files": [
+    "decode.go"
+   ],
+   "smell": "impossible_guard",
+   "setup": "go mod download",
+   "test": "go test -count=1 ./..."
+  },
+  {
+   "fix_id": "fx-dev-BurntSushi_toml-9be4ccf5",
+   "split": "dev",
+   "repo_key": "BurntSushi_toml",
+   "repo": "BurntSushi/toml",
+   "language": "Go",
+   "sha": "9be4ccf5153f55ef1032bdf52d01e65ea480380b",
+   "file": "decode.go",
+   "all_files": [
+    "decode.go"
+   ],
+   "smell": "leftover",
+   "setup": "go mod download",
+   "test": "go test -count=1 ./..."
+  },
+  {
+   "fix_id": "fx-dev-BurntSushi_toml-1e2c053f",
+   "split": "dev",
+   "repo_key": "BurntSushi_toml",
+   "repo": "BurntSushi/toml",
+   "language": "Go",
+   "sha": "1e2c053f442c0ac99df1f5b56bae3feab98caa4f",
+   "file": "decode.go",
+   "all_files": [
+    "decode.go",
+    "deprecated.go"
+   ],
+   "smell": "single_use_indirection",
+   "setup": "go mod download",
+   "test": "go test -count=1 ./..."
+  },
+  {
+   "fix_id": "fx-dev-BurntSushi_toml-45e7e490",
+   "split": "dev",
+   "repo_key": "BurntSushi_toml",
+   "repo": "BurntSushi/toml",
+   "language": "Go",
+   "sha": "45e7e490beef5f26441bd594860a2d760b1c38ad",
+   "file": "internal/toml-test/runner.go",
+   "all_files": [
+    "internal/toml-test/json.go",
+    "internal/toml-test/runner.go",
+    "internal/toml-test/toml.go"
+   ],
+   "smell": "long_unit_growth",
+   "setup": "go mod download",
+   "test": "go test -count=1 ./..."
+  },
+  {
+   "fix_id": "fx-held-google_go-cmp-dc6435e4",
+   "split": "heldout",
+   "repo_key": "google_go-cmp",
+   "repo": "google/go-cmp",
+   "language": "Go",
+   "sha": "dc6435e426906757e7c944f74758028d3d2edc3c",
+   "file": "cmp/report_slices.go",
+   "all_files": [
+    "cmp/report_slices.go"
+   ],
+   "smell": "near_copy",
+   "setup": "go mod download",
+   "test": "go test -count=1 ./..."
+  },
+  {
+   "fix_id": "fx-held-tidwall_gjson-6b6af2ad",
+   "split": "heldout",
+   "repo_key": "tidwall_gjson",
+   "repo": "tidwall/gjson",
+   "language": "Go",
+   "sha": "6b6af2ad5e5c06e6cc3968ca7a2c0f9c20da8924",
+   "file": "gjson.go",
+   "all_files": [
+    "gjson.go"
+   ],
+   "smell": "impossible_guard",
+   "setup": "go mod download",
+   "test": "go test -count=1 ./..."
+  },
+  {
+   "fix_id": "fx-held-google_go-cmp-449e17c6",
+   "split": "heldout",
+   "repo_key": "google_go-cmp",
+   "repo": "google/go-cmp",
+   "language": "Go",
+   "sha": "449e17c6c9daf9b0c84a35fef7d79321b9535763",
+   "file": "cmp/internal/diff/diff.go",
+   "all_files": [
+    "cmp/internal/diff/diff.go"
+   ],
+   "smell": "leftover",
+   "setup": "go mod download",
+   "test": "go test -count=1 ./..."
+  },
+  {
+   "fix_id": "fx-held-tidwall_gjson-0fac2c9a",
+   "split": "heldout",
+   "repo_key": "tidwall_gjson",
+   "repo": "tidwall/gjson",
+   "language": "Go",
+   "sha": "0fac2c9aa6eb5d5564bfaaaad513ce0d5d2314de",
+   "file": "gjson.go",
+   "all_files": [
+    "gjson.go"
+   ],
+   "smell": "single_use_indirection",
+   "setup": "go mod download",
+   "test": "go test -count=1 ./..."
+  },
+  {
+   "fix_id": "fx-held-google_go-cmp-c5c3378d",
+   "split": "heldout",
+   "repo_key": "google_go-cmp",
+   "repo": "google/go-cmp",
+   "language": "Go",
+   "sha": "c5c3378d8544789f76de8a338a95307b0854e816",
+   "file": "cmp/report_slices.go",
+   "all_files": [
+    "cmp/report_slices.go"
+   ],
+   "smell": "long_unit_growth",
+   "setup": "go mod download",
+   "test": "go test -count=1 ./..."
+  },
+  {
+   "fix_id": "fx-held-tidwall_gjson-690362d6",
+   "split": "heldout",
+   "repo_key": "tidwall_gjson",
+   "repo": "tidwall/gjson",
+   "language": "Go",
+   "sha": "690362d6edf4bcbde1e9f54d552d3814f1cd5bcb",
+   "file": "gjson.go",
+   "all_files": [
+    "gjson.go"
+   ],
+   "smell": "near_copy",
+   "setup": "go mod download",
+   "test": "go test -count=1 ./..."
+  },
+  {
+   "fix_id": "fx-held-google_go-cmp-ab46b8bd",
+   "split": "heldout",
+   "repo_key": "google_go-cmp",
+   "repo": "google/go-cmp",
+   "language": "Go",
+   "sha": "ab46b8bd0abd4c4557cc4709ad7ae12d47570603",
+   "file": "cmp/internal/value/iface.go",
+   "all_files": [
+    "cmp/cmpopts/ignore.go",
+    "cmp/internal/value/iface.go",
+    "cmp/options.go"
+   ],
+   "smell": "impossible_guard",
+   "setup": "go mod download",
+   "test": "go test -count=1 ./..."
+  },
+  {
+   "fix_id": "fx-held-tidwall_gjson-8d89927e",
+   "split": "heldout",
+   "repo_key": "tidwall_gjson",
+   "repo": "tidwall/gjson",
+   "language": "Go",
+   "sha": "8d89927eff414537088a6092d53fecf6711c1e75",
+   "file": "gjson.go",
+   "all_files": [
+    "gjson.go"
+   ],
+   "smell": "leftover",
+   "setup": "go mod download",
+   "test": "go test -count=1 ./..."
+  },
+  {
+   "fix_id": "fx-held-google_go-cmp-d1036556",
+   "split": "heldout",
+   "repo_key": "google_go-cmp",
+   "repo": "google/go-cmp",
+   "language": "Go",
+   "sha": "d103655696d8ae43c4125ee61454dbf03d8e8324",
+   "file": "cmp/report_slices.go",
+   "all_files": [
+    "cmp/report_slices.go"
+   ],
+   "smell": "single_use_indirection",
+   "setup": "go mod download",
+   "test": "go test -count=1 ./..."
+  },
+  {
+   "fix_id": "fx-held-tidwall_gjson-e4fc67c9",
+   "split": "heldout",
+   "repo_key": "tidwall_gjson",
+   "repo": "tidwall/gjson",
+   "language": "Go",
+   "sha": "e4fc67c92aeebf2089fabc7872f010e340d105db",
+   "file": "gjson.go",
+   "all_files": [
+    "gjson.go"
+   ],
+   "smell": "long_unit_growth",
+   "setup": "go mod download",
+   "test": "go test -count=1 ./..."
+  },
+  {
+   "fix_id": "fx-held-google_go-cmp-c3ad8435",
+   "split": "heldout",
+   "repo_key": "google_go-cmp",
+   "repo": "google/go-cmp",
+   "language": "Go",
+   "sha": "c3ad8435e7bef96af35732bc0789e5a2278c6d5f",
+   "file": "cmp/cmpopts/equate.go",
+   "all_files": [
+    "cmp/cmpopts/equate.go",
+    "cmp/options.go"
+   ],
+   "smell": "near_copy",
+   "setup": "go mod download",
+   "test": "go test -count=1 ./..."
+  },
+  {
+   "fix_id": "fx-held-tidwall_gjson-0cbc0f40",
+   "split": "heldout",
+   "repo_key": "tidwall_gjson",
+   "repo": "tidwall/gjson",
+   "language": "Go",
+   "sha": "0cbc0f402f9f91228a22d414f7caf4863edd6bed",
+   "file": "gjson.go",
+   "all_files": [
+    "gjson.go"
+   ],
+   "smell": "impossible_guard",
+   "setup": "go mod download",
+   "test": "go test -count=1 ./..."
+  }
+ ]
+}
