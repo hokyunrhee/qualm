@@ -12,3 +12,23 @@
 {"when": "2026-10-14T01:33Z", "what": "e-spot: unit asks on dev: retry of 2 files that got HTTP 499", "cases": 2831, "cost_usd": 0.000213}
 {"when": "2026-10-14T01:34Z", "what": "run c-llm on dev.jsonl.gz (pass1) -> ../../../tmp/claude-0/-home-user-qualm/2ede26c6-6287-5d82-9ba2-8868fcdef917/scratchpad/c_dev150_pass1.jsonl", "cases": 150, "cost_usd": 0.0}
 {"when": "2026-10-14T01:37Z", "what": "d-cascade on dev150+det100, stopped early (unit bug found; results discarded); cost of finished cases x1.5 for the ones in flight", "cases": 209, "cost_usd": 0.185462, "estimated": true}
+{"when": "2026-10-14T01:42Z", "what": "run c-llm on dev.jsonl.gz (pass1) -> ../../../tmp/claude-0/-home-user-qualm/2ede26c6-6287-5d82-9ba2-8868fcdef917/scratchpad/c_dev150_pass1.jsonl", "cases": 150, "cost_usd": 0.0}
+{"when": "2026-10-14T01:42Z", "what": "run d-cascade on dev.jsonl.gz (dev150+det100-insample) -> next/eval/results/runs/dev/d-cascade.jsonl", "cases": 249, "cost_usd": 0.045079}
+{"when": "2026-10-14T01:45Z", "what": "run a-baseline on dev.jsonl.gz (det-r1) -> next/eval/results/runs/det/a-baseline.r1.jsonl", "cases": 100, "cost_usd": 0.044362}
+{"when": "2026-10-14T01:45Z", "what": "attack suite: b-offline", "cost_usd": 0.002, "estimated": true}
+{"when": "2026-10-14T01:46Z", "what": "attack suite: c-llm", "cost_usd": 0.002, "estimated": true}
+{"when": "2026-10-14T01:46Z", "what": "run d-cascade on dev.jsonl.gz (det-r1) -> next/eval/results/runs/det/d-cascade.r1.jsonl", "cases": 100, "cost_usd": 0.079781}
+{"when": "2026-10-14T01:47Z", "what": "run a-baseline on dev.jsonl.gz (det-r2) -> next/eval/results/runs/det/a-baseline.r2.jsonl", "cases": 100, "cost_usd": 0.044849}
+{"when": "2026-10-14T01:48Z", "what": "run d-cascade on dev.jsonl.gz (cascade-pass1) -> ../../../tmp/claude-0/-home-user-qualm/2ede26c6-6287-5d82-9ba2-8868fcdef917/scratchpad/dcas_dev150_pass1.jsonl", "cases": 150, "cost_usd": 0.0}
+{"when": "2026-10-14T01:48Z", "what": "run d-cascade on dev.jsonl.gz (det-r2) -> next/eval/results/runs/det/d-cascade.r2.jsonl", "cases": 100, "cost_usd": 0.080269}
+{"when": "2026-10-14T01:49Z", "what": "run a-baseline on dev.jsonl.gz (det-r3) -> next/eval/results/runs/det/a-baseline.r3.jsonl", "cases": 100, "cost_usd": 0.045469}
+{"when": "2026-10-14T01:49Z", "what": "run d-cascade on dev.jsonl.gz (cascade-pass1) -> ../../../tmp/claude-0/-home-user-qualm/2ede26c6-6287-5d82-9ba2-8868fcdef917/scratchpad/dcas_dev150_pass1.jsonl", "cases": 150, "cost_usd": 0.0}
+{"when": "2026-10-14T01:49Z", "what": "run d-cascade on dev.jsonl.gz (det-r3) -> next/eval/results/runs/det/d-cascade.r3.jsonl", "cases": 100, "cost_usd": 0.079532}
+{"when": "2026-10-14T01:50Z", "what": "run c-llm on dev.jsonl.gz (dev150-pass2) -> next/eval/results/runs/dev/c-llm.jsonl", "cases": 150, "cost_usd": 0.0}
+{"when": "2026-10-14T01:50Z", "what": "run a-baseline on dev.jsonl.gz (det-r4) -> next/eval/results/runs/det/a-baseline.r4.jsonl", "cases": 100, "cost_usd": 0.044536}
+{"when": "2026-10-14T01:51Z", "what": "run d-cascade on dev.jsonl.gz (det-r4) -> next/eval/results/runs/det/d-cascade.r4.jsonl", "cases": 100, "cost_usd": 0.080926}
+{"when": "2026-10-14T01:51Z", "what": "attack suite: c-llm", "cost_usd": 0.002, "estimated": true}
+{"when": "2026-10-14T01:51Z", "what": "run a-baseline on dev.jsonl.gz (det-r5) -> next/eval/results/runs/det/a-baseline.r5.jsonl", "cases": 100, "cost_usd": 0.044595}
+{"when": "2026-10-14T01:52Z", "what": "run b-offline on dev.jsonl.gz (dev-full-insample) -> next/eval/results/runs/dev/b-offline.jsonl", "cases": 2845, "cost_usd": 0.0}
+{"when": "2026-10-14T01:52Z", "what": "run d-cascade on dev.jsonl.gz (det-r5) -> next/eval/results/runs/det/d-cascade.r5.jsonl", "cases": 100, "cost_usd": 0.080135}
+{"when": "2026-10-14T01:53Z", "what": "e-spot: unit asks on dev redone after the core unit fix and masking tidy-up (23% of requests changed; the rest from the signed cache)", "cases": 2831, "cost_usd": 0.20666}
