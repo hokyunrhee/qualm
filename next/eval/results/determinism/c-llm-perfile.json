@@ -1,0 +1,85 @@
+{
+ "runs": 3,
+ "cases": 30,
+ "per_file": {
+  "files": 59,
+  "flipped": 6,
+  "rate": 0.1016949152542373,
+  "upper95": 0.19088
+ },
+ "per_pull_request": {
+  "cases": 30,
+  "flipped": 6,
+  "rate": 0.2,
+  "upper95": 0.35701
+ },
+ "pairwise_per_file": {
+  "pairs": 177,
+  "differ": 12,
+  "rate": 0.06779661016949153
+ },
+ "scored_items": {
+  "items": 47,
+  "flipped": 6,
+  "rate": 0.1276595744680851,
+  "upper95": 0.2365,
+  "max_score_spread": 0.6499999999999999,
+  "mean_score_spread": 0.08553191489361701
+ },
+ "flipped_files": [
+  [
+   "fx-dev-BurntSushi_toml-46192570",
+   "decode.go",
+   [
+    true,
+    false,
+    true
+   ]
+  ],
+  [
+   "fx-dev-unjs_ufo-3b66d62b",
+   "src/utils.ts",
+   [
+    false,
+    true,
+    false
+   ]
+  ],
+  [
+   "github-rome-os__rome-502-7ff25e57",
+   "packages/web/src/shell/ChatSearchDialog.tsx",
+   [
+    false,
+    true,
+    false
+   ]
+  ],
+  [
+   "history-un33k__python-slugify-5c766dd99d",
+   "slugify/slugify.py",
+   [
+    false,
+    true,
+    false
+   ]
+  ],
+  [
+   "hn-comments_only-history-tkem__cachetools-c7da0e13c9-f2e803",
+   "cachetools/decorators.py",
+   [
+    false,
+    true,
+    true
+   ]
+  ],
+  [
+   "inj-impossible_guard-history-davidteren__mutineer-f297d719bc",
+   "lib/mutineer/isolation.rb",
+   [
+    true,
+    true,
+    false
+   ]
+  ]
+ ]
+}

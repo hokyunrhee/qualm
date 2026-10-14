@@ -1,0 +1,108 @@
+{
+ "runs": 5,
+ "cases": 100,
+ "per_file": {
+  "files": 419,
+  "flipped": 7,
+  "rate": 0.016706443914081145,
+  "upper95": 0.03115
+ },
+ "per_pull_request": {
+  "cases": 100,
+  "flipped": 3,
+  "rate": 0.03,
+  "upper95": 0.07571
+ },
+ "pairwise_per_file": {
+  "pairs": 4190,
+  "differ": 28,
+  "rate": 0.006682577565632458
+ },
+ "scored_items": {
+  "items": 192,
+  "flipped": 3,
+  "rate": 0.015625,
+  "upper95": 0.03989,
+  "max_score_spread": 0.07,
+  "mean_score_spread": 0.021770833333333333
+ },
+ "flipped_files": [
+  [
+   "gerrit-chromium-review-8261181-ps7",
+   "milo/ui/src/fleet/pages/chromeos/repairs/use_claim_repair_task.ts",
+   [
+    true,
+    true,
+    true,
+    true,
+    false
+   ]
+  ],
+  [
+   "gerrit-chromium-review-8354766-ps10",
+   "go/src/infra/cros/satlab/common/dut/add.go",
+   [
+    true,
+    false,
+    false,
+    false,
+    false
+   ]
+  ],
+  [
+   "gerrit-gerrit-review-413963-ps25",
+   "operator/src/main/java/com/google/gerrit/k8s/operator/gerrit/config/GerritConfigBuilder.java",
+   [
+    true,
+    true,
+    true,
+    false,
+    true
+   ]
+  ],
+  [
+   "gerrit-review-1005083-ps1",
+   "ironic/drivers/modules/redfish/inspect.py",
+   [
+    false,
+    true,
+    false,
+    false,
+    false
+   ]
+  ],
+  [
+   "github-dwavesystems__dwave-gate-88-d8244e4d",
+   "examples/rus_simple.py",
+   [
+    true,
+    false,
+    true,
+    true,
+    true
+   ]
+  ],
+  [
+   "history-expr-lang__expr-e4f3b41db0",
+   "checker/env.go",
+   [
+    false,
+    true,
+    false,
+    false,
+    false
+   ]
+  ],
+  [
+   "history-expr-lang__expr-e4f3b41db0",
+   "compiler/compiler.go",
+   [
+    false,
+    false,
+    true,
+    false,
+    false
+   ]
+  ]
+ ]
+}

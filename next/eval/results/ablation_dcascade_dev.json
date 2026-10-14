@@ -1,0 +1,228 @@
+{
+ "what": "d-cascade feature-set ablation on dev, repository-grouped out-of-fold (train.py, the v3 training inputs); held-out not used. Reproduces the frozen model exactly (same names, coefficients, threshold 0.506).",
+ "baseline_push_back_alone_dev_pr_auc": 0.5243,
+ "feature_sets": {
+  "raw": {
+   "C": 0.01,
+   "all": {
+    "pr_auc": 0.5895,
+    "roc_auc": 0.8284,
+    "brier": 0.1277,
+    "n": 5139,
+    "positives": 1133
+   },
+   "natural": {
+    "pr_auc": 0.4767,
+    "roc_auc": 0.8008,
+    "brier": 0.1281,
+    "n": 4859,
+    "positives": 949
+   }
+  },
+  "masked": {
+   "C": 0.003,
+   "all": {
+    "pr_auc": 0.5619,
+    "roc_auc": 0.8224,
+    "brier": 0.1312,
+    "n": 5139,
+    "positives": 1133
+   },
+   "natural": {
+    "pr_auc": 0.4414,
+    "roc_auc": 0.7928,
+    "brier": 0.1308,
+    "n": 4859,
+    "positives": 949
+   }
+  },
+  "raw+masked": {
+   "C": 0.01,
+   "all": {
+    "pr_auc": 0.5996,
+    "roc_auc": 0.8321,
+    "brier": 0.1265,
+    "n": 5139,
+    "positives": 1133
+   },
+   "natural": {
+    "pr_auc": 0.4766,
+    "roc_auc": 0.8023,
+    "brier": 0.1282,
+    "n": 4859,
+    "positives": 949
+   }
+  },
+  "raw+masked+det": {
+   "C": 0.003,
+   "all": {
+    "pr_auc": 0.6006,
+    "roc_auc": 0.8316,
+    "brier": 0.1266,
+    "n": 5139,
+    "positives": 1133
+   },
+   "natural": {
+    "pr_auc": 0.4658,
+    "roc_auc": 0.8009,
+    "brier": 0.1287,
+    "n": 4859,
+    "positives": 949
+   }
+  },
+  "raw+masked+det+shape": {
+   "C": 0.003,
+   "all": {
+    "pr_auc": 0.6007,
+    "roc_auc": 0.8318,
+    "brier": 0.1266,
+    "n": 5139,
+    "positives": 1133
+   },
+   "natural": {
+    "pr_auc": 0.466,
+    "roc_auc": 0.801,
+    "brier": 0.1287,
+    "n": 4859,
+    "positives": 949
+   }
+  },
+  "raw+masked+pieces": {
+   "C": 0.01,
+   "all": {
+    "pr_auc": 0.5977,
+    "roc_auc": 0.8335,
+    "brier": 0.1264,
+    "n": 5139,
+    "positives": 1133
+   },
+   "natural": {
+    "pr_auc": 0.4744,
+    "roc_auc": 0.8041,
+    "brier": 0.1282,
+    "n": 4859,
+    "positives": 949
+   }
+  },
+  "raw+masked+det+pieces": {
+   "C": 0.003,
+   "all": {
+    "pr_auc": 0.5999,
+    "roc_auc": 0.8331,
+    "brier": 0.1264,
+    "n": 5139,
+    "positives": 1133
+   },
+   "natural": {
+    "pr_auc": 0.4657,
+    "roc_auc": 0.8028,
+    "brier": 0.1286,
+    "n": 4859,
+    "positives": 949
+   }
+  }
+ },
+ "chosen": "raw+masked",
+ "weights": [
+  [
+   "masked_remove",
+   0.228
+  ],
+  [
+   "raw_added_placeholders",
+   0.193
+  ],
+  [
+   "raw_push_back",
+   0.179
+  ],
+  [
+   "masked_new_behaviour",
+   0.176
+  ],
+  [
+   "masked_shorten",
+   0.163
+  ],
+  [
+   "masked_added_impossible_guards",
+   0.139
+  ],
+  [
+   "raw_grew_a_big_unit",
+   0.133
+  ],
+  [
+   "push_back_mean",
+   0.133
+  ],
+  [
+   "raw_added_unused_flexibility",
+   0.123
+  ],
+  [
+   "masked_missing",
+   -0.122
+  ],
+  [
+   "raw_comments_only",
+   -0.116
+  ],
+  [
+   "raw_new_behaviour",
+   0.115
+  ],
+  [
+   "raw_added_impossible_guards",
+   0.112
+  ],
+  [
+   "raw_missing",
+   -0.111
+  ],
+  [
+   "push_back_gap",
+   0.108
+  ],
+  [
+   "masked_reuse",
+   0.106
+  ],
+  [
+   "masked_grew_a_big_unit",
+   0.094
+  ],
+  [
+   "masked_push_back",
+   0.089
+  ],
+  [
+   "masked_added_unused_flexibility",
+   0.077
+  ],
+  [
+   "raw_added_copies",
+   0.045
+  ],
+  [
+   "masked_simplified",
+   0.041
+  ],
+  [
+   "raw_simplified",
+   0.03
+  ],
+  [
+   "masked_added_placeholders",
+   -0.03
+  ],
+  [
+   "masked_added_copies",
+   0.014
+  ],
+  [
+   "masked_indirection",
+   0.011
+  ]
+ ]
+}
