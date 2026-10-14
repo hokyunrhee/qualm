@@ -8,9 +8,11 @@ Each case is materialized once (cached under $BENCH_WORK/cases/<case_id>) and th
 run with --repo <case> --base base --format json. One JSON line per case is appended to OUT:
 {case_id, exit, seconds, report, stderr_tail}. Cases already in OUT are skipped, so a run resumes.
 
-Money: before starting, the ledger (results/spend.jsonl) is summed; the run refuses to start when
-the total plus the worst case for this run would pass BUDGET_USD (20). Each finished run appends
-one line to the ledger with what the reports say was spent.
+Money: before starting, the ledger (results/spend.jsonl) is summed. The run refuses to start when
+the total plus the expected cost (--expected-per-case for each case) would pass BUDGET_USD (20),
+and while it runs it stops starting cases once the ledger plus what this run has spent plus one
+full per-case budget for every running job would pass it, so the cap holds whatever the cases
+cost. Each finished run appends one line to the ledger with what the reports say was spent.
 """
 import argparse, concurrent.futures, gzip, json, os, shutil, subprocess, sys, tempfile, time
 
@@ -50,7 +52,12 @@ def case_repo(case):
     return dest
 
 
+RUNNING = {'spent': 0.0, 'already': 0.0}
+
+
 def run_one(cand_dir, case, args):
+    if RUNNING['already'] + RUNNING['spent'] + args.budget_per_case * args.jobs > BUDGET_USD:
+        return {'case_id': case['case_id'], 'exit': 3, 'seconds': 0, 'report': None, 'stderr_tail': 'not run: the study budget guard stopped the run'}
     repo = case_repo(case)
     cmd = [os.path.join(cand_dir, 'run'), '--repo', repo, '--base', 'base', '--format', 'json',
            '--budget', str(args.budget_per_case)]
@@ -88,6 +95,7 @@ def main():
     ap.add_argument('--jobs', type=int, default=6)
     ap.add_argument('--no-cache', action='store_true')
     ap.add_argument('--budget-per-case', type=float, default=0.05)
+    ap.add_argument('--expected-per-case', type=float, default=None, help='for the start check; defaults to --budget-per-case')
     ap.add_argument('--timeout', type=int, default=600)
     ap.add_argument('--tag', default='')
     ap.add_argument('--llm-dir')
@@ -108,10 +116,11 @@ def main():
             if rec.get('exit') in (0, 1):
                 done.add(rec['case_id'])
     todo = [c for c in cases if c['case_id'] not in done]
-    worst = len(todo) * a.budget_per_case
+    worst = len(todo) * (a.expected_per_case if a.expected_per_case is not None else a.budget_per_case)
     already = spent()
+    RUNNING['already'] = already
     if already + worst > BUDGET_USD:
-        sys.exit('refusing: %.4f already spent, this run could add %.2f, budget %.2f' % (already, worst, BUDGET_USD))
+        sys.exit('refusing: %.4f already spent, this run is expected to add %.2f, budget %.2f' % (already, worst, BUDGET_USD))
     os.makedirs(os.path.join(WORK, 'cases'), exist_ok=True)
     os.makedirs(os.path.dirname(os.path.abspath(a.out)), exist_ok=True)
     total, n, failures = 0.0, 0, 0
@@ -124,6 +133,7 @@ def main():
             fh.write(json.dumps(rec) + '\n')
             fh.flush()
             total += cost_of(rec)
+            RUNNING['spent'] = total
             n += 1
             failures += rec['exit'] not in (0, 1)
             if n % 100 == 0:
