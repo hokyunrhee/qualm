@@ -1,0 +1,74 @@
+{
+ "a-baseline": {
+  "pull_requests": 509,
+  "cost_mean": 0.000454,
+  "cost_median": 0.000219,
+  "cost_p95": 0.00176,
+  "cost_max": 0.004464,
+  "seconds_mean": 2.0,
+  "seconds_median": 1.86,
+  "seconds_p95": 3.87,
+  "seconds_max": 5.66,
+  "llm_cost_estimated": false
+ },
+ "d-cascade": {
+  "pull_requests": 509,
+  "cost_mean": 0.001067,
+  "cost_median": 0.000409,
+  "cost_p95": 0.004179,
+  "cost_max": 0.01566,
+  "seconds_mean": 7.0,
+  "seconds_median": 4.04,
+  "seconds_p95": 23.58,
+  "seconds_max": 60.76,
+  "llm_cost_estimated": false
+ },
+ "c-llm": {
+  "pull_requests": 509,
+  "cost_mean": 0.001365,
+  "cost_median": 0.000641,
+  "cost_p95": 0.005903,
+  "cost_max": 0.017092,
+  "seconds_mean": 1.07,
+  "seconds_median": 0.78,
+  "seconds_p95": 2.58,
+  "seconds_max": 8.04,
+  "llm_cost_estimated": true
+ },
+ "e-spot": {
+  "pull_requests": 509,
+  "cost_mean": 0.001237,
+  "cost_median": 0.000365,
+  "cost_p95": 0.004575,
+  "cost_max": 0.027096,
+  "seconds_mean": 4.82,
+  "seconds_median": 3.04,
+  "seconds_p95": 13.56,
+  "seconds_max": 54.6,
+  "llm_cost_estimated": false
+ },
+ "b-offline": {
+  "pull_requests": 509,
+  "cost_mean": 0.0,
+  "cost_median": 0.0,
+  "cost_p95": 0.0,
+  "cost_max": 0.0,
+  "seconds_mean": 2.32,
+  "seconds_median": 1.68,
+  "seconds_p95": 6.84,
+  "seconds_max": 20.25,
+  "llm_cost_estimated": false
+ },
+ "n0-size": {
+  "pull_requests": 509,
+  "cost_mean": 0.0,
+  "cost_median": 0.0,
+  "cost_p95": 0.0,
+  "cost_max": 0.0,
+  "seconds_mean": 1.47,
+  "seconds_median": 1.07,
+  "seconds_p95": 3.66,
+  "seconds_max": 13.7,
+  "llm_cost_estimated": false
+ }
+}

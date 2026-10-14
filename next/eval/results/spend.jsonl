@@ -49,3 +49,74 @@
 {"when": "2026-10-14T02:10Z", "what": "run d-cascade on dev.jsonl.gz (det-r1) -> next/eval/results/runs/det/d-cascade-llm.r1.jsonl", "cases": 30, "cost_usd": 0.000902}
 {"when": "2026-10-14T02:10Z", "what": "run d-cascade on dev.jsonl.gz (det-r2) -> next/eval/results/runs/det/d-cascade-llm.r2.jsonl", "cases": 30, "cost_usd": 0.001004}
 {"when": "2026-10-14T02:10Z", "what": "run d-cascade on dev.jsonl.gz (det-r3) -> next/eval/results/runs/det/d-cascade-llm.r3.jsonl", "cases": 30, "cost_usd": 0.000503}
+{"when": "2026-10-14T02:25Z", "what": "d-cascade: per-function Jev answers for dev scored files", "cases": 5139, "cost_usd": 0.511805}
+{"when": "2026-10-14T02:29Z", "what": "d-cascade: per-function Jev answers for dev scored files", "cases": 5139, "cost_usd": 0.019664}
+{"when": "2026-10-14T02:33Z", "what": "attack suite: d-cascade", "cost_usd": 0.037362, "estimated": true}
+{"when": "2026-10-14T02:33Z", "what": "attack suite: b-offline", "cost_usd": 0.002, "estimated": true}
+{"when": "2026-10-14T02:34Z", "what": "run d-cascade on dev.jsonl.gz (det-v2-r1) -> ../../../../../../../home/user/qualm/next/eval/results/runs/det/d-cascade-v2.r1.jsonl", "cases": 100, "cost_usd": 0.084626}
+{"when": "2026-10-14T02:35Z", "what": "run d-cascade on dev.jsonl.gz (det-v2-r2) -> ../../../../../../../home/user/qualm/next/eval/results/runs/det/d-cascade-v2.r2.jsonl", "cases": 100, "cost_usd": 0.084642}
+{"when": "2026-10-14T02:37Z", "what": "attack suite: d-cascade", "cost_usd": 0.021026, "estimated": true}
+{"when": "2026-10-14T02:37Z", "what": "run d-cascade on dev.jsonl.gz (det-v2-r3) -> ../../../../../../../home/user/qualm/next/eval/results/runs/det/d-cascade-v2.r3.jsonl", "cases": 100, "cost_usd": 0.084952}
+{"when": "2026-10-14T02:37Z", "what": "attack suite: a-baseline", "cost_usd": 0.019143, "estimated": true}
+{"when": "2026-10-14T02:38Z", "what": "run d-cascade on dev.jsonl.gz (det-v2-r4) -> ../../../../../../../home/user/qualm/next/eval/results/runs/det/d-cascade-v2.r4.jsonl", "cases": 100, "cost_usd": 0.083538}
+{"when": "2026-10-14T02:40Z", "what": "run d-cascade on dev.jsonl.gz (det-v2-r5) -> ../../../../../../../home/user/qualm/next/eval/results/runs/det/d-cascade-v2.r5.jsonl", "cases": 100, "cost_usd": 0.081768}
+{"when": "2026-10-14T03:00Z", "what": "d-cascade: masked-view Jev answers for dev scored files", "cases": 112, "cost_usd": 0.010225}
+{"when": "2026-10-14T03:06Z", "what": "attack suite: d-cascade", "cost_usd": 0.037114, "estimated": true}
+{"when": "2026-10-14T03:07Z", "what": "attack suite: d-cascade", "cost_usd": 0.006731, "estimated": true}
+{"when": "2026-10-14T03:20Z", "what": "run d-cascade on dev.jsonl.gz (det-v3-r1) -> next/eval/results/runs/det/d-cascade-v3.r1.jsonl", "cases": 100, "cost_usd": 0.093048}
+{"when": "2026-10-14T03:22Z", "what": "run d-cascade on dev.jsonl.gz (det-v3-r2) -> next/eval/results/runs/det/d-cascade-v3.r2.jsonl", "cases": 100, "cost_usd": 0.091113}
+{"when": "2026-10-14T03:23Z", "what": "run d-cascade on dev.jsonl.gz (det-v3-r3) -> next/eval/results/runs/det/d-cascade-v3.r3.jsonl", "cases": 100, "cost_usd": 0.09323}
+{"when": "2026-10-14T03:24Z", "what": "run d-cascade on dev.jsonl.gz (det-v3-r4) -> next/eval/results/runs/det/d-cascade-v3.r4.jsonl", "cases": 100, "cost_usd": 0.092849}
+{"when": "2026-10-14T03:26Z", "what": "run d-cascade on dev.jsonl.gz (det-v3-r5) -> next/eval/results/runs/det/d-cascade-v3.r5.jsonl", "cases": 100, "cost_usd": 0.094814}
+{"when": "2026-10-14T05:10Z", "what": "held-out runs started and stopped to fix a case-materialization race (partial records discarded unread); Jev cost from their reports $0.0381, padded for runs still finishing", "cases": 179, "cost_usd": 0.045}
+{"when": "2026-10-14T03:47Z", "what": "attack suite: d-cascade", "cost_usd": 0.037602, "estimated": true}
+{"when": "2026-10-14T03:47Z", "what": "attack suite: d-cascade", "cost_usd": 0.006616, "estimated": true}
+{"when": "2026-10-14T03:48Z", "what": "attack suite: a-baseline", "cost_usd": 0.014822, "estimated": true}
+{"when": "2026-10-14T03:49Z", "what": "attack suite: a-baseline", "cost_usd": 0.019245, "estimated": true}
+{"when": "2026-10-14T03:50Z", "what": "attack suite: a-recal", "cost_usd": 0.014797, "estimated": true}
+{"when": "2026-10-14T03:50Z", "what": "attack suite: a-recal", "cost_usd": 0.019317, "estimated": true}
+{"when": "2026-10-14T03:51Z", "what": "attack suite: b-offline", "cost_usd": 0.002, "estimated": true}
+{"when": "2026-10-14T03:51Z", "what": "attack suite: b-offline", "cost_usd": 0.002, "estimated": true}
+{"when": "2026-10-14T03:51Z", "what": "run a-baseline on heldout.jsonl.gz (heldout-r1) -> next/eval/results/runs/heldout/a-baseline.jsonl", "cases": 509, "cost_usd": 0.231309}
+{"when": "2026-10-14T03:52Z", "what": "run a-baseline on heldout.jsonl.gz (heldout-r1-retry) -> next/eval/results/runs/heldout/a-baseline.jsonl", "cases": 0, "cost_usd": 0.0}
+{"when": "2026-10-14T03:52Z", "what": "run c-llm on heldout.jsonl.gz (heldout-pass1) -> ../../../tmp/claude-0/-home-user-qualm/2ede26c6-6287-5d82-9ba2-8868fcdef917/scratchpad/ho_cllm_pass1.jsonl", "cases": 509, "cost_usd": 0.0}
+{"when": "2026-10-14T03:52Z", "what": "run b-offline on heldout.jsonl.gz (heldout) -> next/eval/results/runs/heldout/b-offline.jsonl", "cases": 509, "cost_usd": 0.0}
+{"when": "2026-10-14T03:52Z", "what": "run b-offline on heldout.jsonl.gz (heldout-retry) -> next/eval/results/runs/heldout/b-offline.jsonl", "cases": 0, "cost_usd": 0.0}
+{"when": "2026-10-14T03:52Z", "what": "attack suite: e-spot", "cost_usd": 0.030009, "estimated": true}
+{"when": "2026-10-14T03:53Z", "what": "attack suite: e-spot", "cost_usd": 0.004401, "estimated": true}
+{"when": "2026-10-14T03:53Z", "what": "attack suite: n0-size", "cost_usd": 0.002, "estimated": true}
+{"when": "2026-10-14T03:53Z", "what": "attack suite: n0-size", "cost_usd": 0.002, "estimated": true}
+{"when": "2026-10-14T03:54Z", "what": "attack suite: c-llm", "cost_usd": 0.002, "estimated": true}
+{"when": "2026-10-14T03:54Z", "what": "attack suite: c-llm", "cost_usd": 0.002, "estimated": true}
+{"when": "2026-10-14T03:56Z", "what": "run n0-size on heldout.jsonl.gz (heldout) -> next/eval/results/runs/heldout/n0-size.jsonl", "cases": 509, "cost_usd": 0.0}
+{"when": "2026-10-14T03:56Z", "what": "run n0-size on heldout.jsonl.gz (heldout-retry) -> next/eval/results/runs/heldout/n0-size.jsonl", "cases": 0, "cost_usd": 0.0}
+{"when": "2026-10-14T03:57Z", "what": "run a-baseline on heldout.jsonl.gz (heldout-det-r2) -> next/eval/results/runs/heldout_det/a-baseline.r2.jsonl", "cases": 509, "cost_usd": 0.229639}
+{"when": "2026-10-14T03:57Z", "what": "run a-baseline on heldout.jsonl.gz (heldout-det-r2-retry) -> next/eval/results/runs/heldout_det/a-baseline.r2.jsonl", "cases": 1, "cost_usd": 0.00092}
+{"when": "2026-10-14T03:58Z", "what": "run e-spot on heldout.jsonl.gz (heldout) -> next/eval/results/runs/heldout/e-spot.jsonl", "cases": 509, "cost_usd": 0.62947}
+{"when": "2026-10-14T03:58Z", "what": "run e-spot on heldout.jsonl.gz (heldout-retry) -> next/eval/results/runs/heldout/e-spot.jsonl", "cases": 0, "cost_usd": 0.0}
+{"when": "2026-10-14T04:00Z", "what": "run a-baseline on heldout.jsonl.gz (heldout-det-r3) -> next/eval/results/runs/heldout_det/a-baseline.r3.jsonl", "cases": 509, "cost_usd": 0.232007}
+{"when": "2026-10-14T04:00Z", "what": "run a-baseline on heldout.jsonl.gz (heldout-det-r3-retry) -> next/eval/results/runs/heldout_det/a-baseline.r3.jsonl", "cases": 1, "cost_usd": 0.000103}
+{"when": "2026-10-14T04:02Z", "what": "run d-cascade on heldout.jsonl.gz (heldout-r1) -> next/eval/results/runs/heldout/d-cascade.jsonl", "cases": 509, "cost_usd": 0.542951}
+{"when": "2026-10-14T04:02Z", "what": "run d-cascade on heldout.jsonl.gz (heldout-r1-retry) -> next/eval/results/runs/heldout/d-cascade.jsonl", "cases": 0, "cost_usd": 0.0}
+{"when": "2026-10-14T04:02Z", "what": "run a-baseline on heldout.jsonl.gz (heldout-det-r4) -> next/eval/results/runs/heldout_det/a-baseline.r4.jsonl", "cases": 509, "cost_usd": 0.229723}
+{"when": "2026-10-14T04:02Z", "what": "run a-baseline on heldout.jsonl.gz (heldout-det-r4-retry) -> next/eval/results/runs/heldout_det/a-baseline.r4.jsonl", "cases": 0, "cost_usd": 0.0}
+{"when": "2026-10-14T04:05Z", "what": "run a-baseline on heldout.jsonl.gz (heldout-det-r5) -> next/eval/results/runs/heldout_det/a-baseline.r5.jsonl", "cases": 509, "cost_usd": 0.23134}
+{"when": "2026-10-14T04:05Z", "what": "run a-baseline on heldout.jsonl.gz (heldout-det-r5-retry) -> next/eval/results/runs/heldout_det/a-baseline.r5.jsonl", "cases": 0, "cost_usd": 0.0}
+{"when": "2026-10-14T04:11Z", "what": "run d-cascade on heldout.jsonl.gz (heldout-det-r2) -> next/eval/results/runs/heldout_det/d-cascade.r2.jsonl", "cases": 509, "cost_usd": 0.532156}
+{"when": "2026-10-14T04:11Z", "what": "run d-cascade on heldout.jsonl.gz (heldout-det-r2-retry) -> next/eval/results/runs/heldout_det/d-cascade.r2.jsonl", "cases": 0, "cost_usd": 0.0}
+{"when": "2026-10-14T04:14Z", "what": "run c-llm on heldout.jsonl.gz (heldout-det-r2-pass1) -> ../../../tmp/claude-0/-home-user-qualm/2ede26c6-6287-5d82-9ba2-8868fcdef917/scratchpad/ho_cllm_det_r2.pass1.jsonl", "cases": 30, "cost_usd": 0.0}
+{"when": "2026-10-14T04:14Z", "what": "run c-llm on heldout.jsonl.gz (heldout-det-r3-pass1) -> ../../../tmp/claude-0/-home-user-qualm/2ede26c6-6287-5d82-9ba2-8868fcdef917/scratchpad/ho_cllm_det_r3.pass1.jsonl", "cases": 30, "cost_usd": 0.0}
+{"when": "2026-10-14T04:14Z", "what": "run c-llm on heldout.jsonl.gz (heldout) -> next/eval/results/runs/heldout/c-llm.jsonl", "cases": 509, "cost_usd": 0.0}
+{"when": "2026-10-14T04:14Z", "what": "run c-llm on heldout.jsonl.gz (heldout-retry) -> next/eval/results/runs/heldout/c-llm.jsonl", "cases": 0, "cost_usd": 0.0}
+{"when": "2026-10-14T04:18Z", "what": "run d-cascade on heldout.jsonl.gz (heldout-det-r3) -> next/eval/results/runs/heldout_det/d-cascade.r3.jsonl", "cases": 509, "cost_usd": 0.547416}
+{"when": "2026-10-14T04:18Z", "what": "run d-cascade on heldout.jsonl.gz (heldout-det-r3-retry) -> next/eval/results/runs/heldout_det/d-cascade.r3.jsonl", "cases": 0, "cost_usd": 0.0}
+{"when": "2026-10-14T04:20Z", "what": "attack suite: c-llm", "cost_usd": 0.002, "estimated": true}
+{"when": "2026-10-14T04:21Z", "what": "attack suite: c-llm", "cost_usd": 0.002, "estimated": true}
+{"when": "2026-10-14T04:23Z", "what": "attack suite: d-cascade", "cost_usd": 0.037559, "estimated": true}
+{"when": "2026-10-14T04:23Z", "what": "run c-llm on heldout.jsonl.gz (heldout-det-r2) -> next/eval/results/runs/heldout_det/c-llm.r2.jsonl", "cases": 30, "cost_usd": 0.0}
+{"when": "2026-10-14T04:24Z", "what": "run c-llm on heldout.jsonl.gz (heldout-det-r3) -> next/eval/results/runs/heldout_det/c-llm.r3.jsonl", "cases": 30, "cost_usd": 0.0}
+{"when": "2026-10-14T04:24Z", "what": "attack suite: d-cascade", "cost_usd": 0.006616, "estimated": true}
+{"when": "2026-10-14T04:26Z", "what": "run d-cascade on heldout.jsonl.gz (heldout-det-r4) -> next/eval/results/runs/heldout_det/d-cascade.r4.jsonl", "cases": 509, "cost_usd": 0.546261}
+{"when": "2026-10-14T04:26Z", "what": "run d-cascade on heldout.jsonl.gz (heldout-det-r4-retry) -> next/eval/results/runs/heldout_det/d-cascade.r4.jsonl", "cases": 0, "cost_usd": 0.0}
+{"when": "2026-10-14T04:32Z", "what": "run d-cascade on heldout.jsonl.gz (heldout-det-r5) -> next/eval/results/runs/heldout_det/d-cascade.r5.jsonl", "cases": 509, "cost_usd": 0.542602}
+{"when": "2026-10-14T04:32Z", "what": "run d-cascade on heldout.jsonl.gz (heldout-det-r5-retry) -> next/eval/results/runs/heldout_det/d-cascade.r5.jsonl", "cases": 0, "cost_usd": 0.0}

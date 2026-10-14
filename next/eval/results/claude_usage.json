@@ -1,6 +1,6 @@
 {
  "source": "task notifications in the session transcript",
- "total_tokens": 57444449,
+ "total_tokens": 230533646,
  "runs": [
   {
    "task": "a08eba3e71959df10",
@@ -8,9 +8,29 @@
    "tokens": 150991
   },
   {
+   "task": "a0c5e205729a7cce0",
+   "what": "Agent \"Build candidate e-spot\" finished",
+   "tokens": 397141
+  },
+  {
+   "task": "a32a37d2e97cd6708",
+   "what": "Agent \"Measurement audit of evaluation\" finished",
+   "tokens": 304747
+  },
+  {
    "task": "a5c98c6c2817d53fc",
    "what": "Agent \"Set up Go/TS/Ruby fix-loop envs\" finished",
    "tokens": 164225
+  },
+  {
+   "task": "a7a63682c99fd231d",
+   "what": "Agent \"Coding-agent review of d-cascade\" finished",
+   "tokens": 340182
+  },
+  {
+   "task": "aab8f7f6a62ba21bf",
+   "what": "Agent \"Red-team round 2 attacks\" finished",
+   "tokens": 237369
   },
   {
    "task": "ae9668ccbfd58ed26",
@@ -18,9 +38,54 @@
    "tokens": 335426
   },
   {
+   "task": "w1fazwrxm",
+   "what": "Dynamic workflow \"Fix loop: one fresh coding agent per failing item, given only the candidate report\" completed",
+   "tokens": 485349
+  },
+  {
+   "task": "w43xpjpcx",
+   "what": "Dynamic workflow \"Fix loop: one fresh coding agent per failing item, given only the candidate report\" completed",
+   "tokens": 287333
+  },
+  {
+   "task": "w46t2hqew",
+   "what": "Dynamic workflow \"Answer LLM requests written by a candidate (--llm-dir): one fresh agent per request, given only that request\" completed",
+   "tokens": 8304929
+  },
+  {
    "task": "w4c9yws29",
    "what": "Dynamic workflow \"Inject one known smell into a real tested commit per item, keeping tests green\" completed",
    "tokens": 452760
+  },
+  {
+   "task": "w643i7mxb",
+   "what": "Dynamic workflow \"Fix loop: one fresh coding agent per failing item, given only the candidate report\" completed",
+   "tokens": 614451
+  },
+  {
+   "task": "w64mp0rw0",
+   "what": "Dynamic workflow \"Fix loop: one fresh coding agent per failing item, given only the candidate report\" completed",
+   "tokens": 1180799
+  },
+  {
+   "task": "w6h3gcm15",
+   "what": "Dynamic workflow \"Answer LLM requests written by a candidate (--llm-dir): one fresh agent per request, given only that request\" completed",
+   "tokens": 15330337
+  },
+  {
+   "task": "w778432h9",
+   "what": "Dynamic workflow \"Fix loop: a blind judge compares the pull request before and after the agent rework\" completed",
+   "tokens": 4986741
+  },
+  {
+   "task": "w8aisfmws",
+   "what": "Dynamic workflow \"Answer LLM requests written by a candidate (--llm-dir): one fresh agent per request, given only that request\" completed",
+   "tokens": 2767392
+  },
+  {
+   "task": "w8jxjttxj",
+   "what": "Dynamic workflow \"Fix loop: one fresh coding agent per failing item, given only the candidate report\" completed",
+   "tokens": 1174115
   },
   {
    "task": "w9r3h1olr",
@@ -33,9 +98,59 @@
    "tokens": 662196
   },
   {
+   "task": "w9wdl9ohv",
+   "what": "Dynamic workflow \"Answer LLM requests written by a candidate (--llm-dir): one fresh agent per request, given only that request\" completed",
+   "tokens": 3756224
+  },
+  {
    "task": "wa27cuhx2",
    "what": "Dynamic workflow \"Inject one known smell into a real tested commit per item, keeping tests green\" completed",
    "tokens": 440751
+  },
+  {
+   "task": "wb107pjcc",
+   "what": "Dynamic workflow \"Answer LLM requests written by a candidate (--llm-dir): one fresh agent per request, given only that request\" completed",
+   "tokens": 4177408
+  },
+  {
+   "task": "wbkd16ge9",
+   "what": "Dynamic workflow \"Answer LLM requests written by a candidate (--llm-dir): one fresh agent per request, given only that request\" completed",
+   "tokens": 1372321
+  },
+  {
+   "task": "wcdava26m",
+   "what": "Dynamic workflow \"Answer LLM requests written by a candidate (--llm-dir): one fresh agent per request, given only that request\" completed",
+   "tokens": 4463821
+  },
+  {
+   "task": "wcwm2l7k6",
+   "what": "Dynamic workflow \"Answer LLM requests written by a candidate (--llm-dir): one fresh agent per request, given only that request\" completed",
+   "tokens": 2970536
+  },
+  {
+   "task": "wd8xwaw2i",
+   "what": "Dynamic workflow \"Answer LLM requests written by a candidate (--llm-dir): one fresh agent per request, given only that request\" completed",
+   "tokens": 1372597
+  },
+  {
+   "task": "wdp452xwh",
+   "what": "Dynamic workflow \"Fix loop: one fresh coding agent per failing item, given only the candidate report\" completed",
+   "tokens": 446027
+  },
+  {
+   "task": "webhbk16z",
+   "what": "Dynamic workflow \"Fix loop: one fresh coding agent per failing item, given only the candidate report\" completed",
+   "tokens": 577002
+  },
+  {
+   "task": "wff9zbly7",
+   "what": "Dynamic workflow \"Fix loop: one fresh coding agent per failing item, given only the candidate report\" completed",
+   "tokens": 434493
+  },
+  {
+   "task": "wfl8wczxq",
+   "what": "Dynamic workflow \"Answer LLM requests written by a candidate (--llm-dir): one fresh agent per request, given only that request\" completed",
+   "tokens": 15382255
   },
   {
    "task": "wgv323dnd",
@@ -43,9 +158,29 @@
    "tokens": 11037394
   },
   {
+   "task": "wgwb97ggg",
+   "what": "Dynamic workflow \"Fix loop: one fresh coding agent per failing item, given only the candidate report\" completed",
+   "tokens": 579775
+  },
+  {
+   "task": "wh0wsl470",
+   "what": "Dynamic workflow \"Fix loop: a blind judge compares the pull request before and after the agent rework\" completed",
+   "tokens": 6192627
+  },
+  {
    "task": "wh6lb08kf",
    "what": "Dynamic workflow \"Inject one known smell into a real tested commit per item, keeping tests green\" completed",
    "tokens": 603937
+  },
+  {
+   "task": "wi0pnpc54",
+   "what": "Dynamic workflow \"Answer LLM requests written by a candidate (--llm-dir): one fresh agent per request, given only that request\" completed",
+   "tokens": 15317037
+  },
+  {
+   "task": "wi60kvut6",
+   "what": "Dynamic workflow \"Fix loop: one fresh coding agent per failing item, given only the candidate report\" completed",
+   "tokens": 525137
   },
   {
    "task": "wimex0kkp",
@@ -58,9 +193,44 @@
    "tokens": 11071253
   },
   {
+   "task": "wk32euyf8",
+   "what": "Dynamic workflow \"Answer LLM requests written by a candidate (--llm-dir): one fresh agent per request, given only that request\" completed",
+   "tokens": 4189969
+  },
+  {
    "task": "wl7knpmly",
    "what": "Dynamic workflow \"Dev only: one fresh agent per reviewer comment decides whether it asks for a simplification\" completed",
    "tokens": 11063908
+  },
+  {
+   "task": "wlijzqmsg",
+   "what": "Dynamic workflow \"Answer LLM requests written by a candidate (--llm-dir): one fresh agent per request, given only that request\" completed",
+   "tokens": 15419263
+  },
+  {
+   "task": "wngfjjs3i",
+   "what": "Dynamic workflow \"Fix loop: one fresh coding agent per failing item, given only the candidate report\" completed",
+   "tokens": 601455
+  },
+  {
+   "task": "wnit9j2xw",
+   "what": "Dynamic workflow \"Fix loop: a blind judge compares the pull request before and after the agent rework\" completed",
+   "tokens": 965662
+  },
+  {
+   "task": "wnnf147ct",
+   "what": "Dynamic workflow \"Fix loop: a blind judge compares the pull request before and after the agent rework\" completed",
+   "tokens": 1018585
+  },
+  {
+   "task": "wolzrtgwh",
+   "what": "Dynamic workflow \"Answer LLM requests written by a candidate (--llm-dir): one fresh agent per request, given only that request\" completed",
+   "tokens": 8305343
+  },
+  {
+   "task": "wpfzes5wp",
+   "what": "Dynamic workflow \"Fix loop: one fresh coding agent per failing item, given only the candidate report\" completed",
+   "tokens": 187096
   },
   {
    "task": "wqmhhatn4",
@@ -68,9 +238,24 @@
    "tokens": 3565721
   },
   {
+   "task": "wr1usepif",
+   "what": "Dynamic workflow \"Fix loop: one fresh coding agent per failing item, given only the candidate report\" completed",
+   "tokens": 266386
+  },
+  {
+   "task": "ws4psme3i",
+   "what": "Dynamic workflow \"Answer LLM requests written by a candidate (--llm-dir): one fresh agent per request, given only that request\" completed",
+   "tokens": 2854443
+  },
+  {
    "task": "wstsy4esd",
    "what": "Dynamic workflow \"Inject one known smell into a real tested commit per item, keeping tests green\" completed",
    "tokens": 282252
+  },
+  {
+   "task": "wt5dsaqi1",
+   "what": "Dynamic workflow \"Answer LLM requests written by a candidate (--llm-dir): one fresh agent per request, given only that request\" completed",
+   "tokens": 4232179
   },
   {
    "task": "wtgtnlthc",
@@ -78,9 +263,29 @@
    "tokens": 187499
   },
   {
+   "task": "wtsskqerl",
+   "what": "Dynamic workflow \"Answer LLM requests written by a candidate (--llm-dir): one fresh agent per request, given only that request\" completed",
+   "tokens": 15454379
+  },
+  {
    "task": "wu2dznyfl",
    "what": "Dynamic workflow \"Dev only: one fresh agent per reviewer comment decides whether it asks for a simplification\" completed",
    "tokens": 3566327
+  },
+  {
+   "task": "wuwjqapho",
+   "what": "Dynamic workflow \"Answer LLM requests written by a candidate (--llm-dir): one fresh agent per request, given only that request\" completed",
+   "tokens": 15403251
+  },
+  {
+   "task": "wva745uvn",
+   "what": "Dynamic workflow \"Fix loop: one fresh coding agent per failing item, given only the candidate report\" completed",
+   "tokens": 167184
+  },
+  {
+   "task": "wve61vnkr",
+   "what": "Dynamic workflow \"Answer LLM requests written by a candidate (--llm-dir): one fresh agent per request, given only that request\" completed",
+   "tokens": 2770842
   },
   {
    "task": "wvkmchqn6",
@@ -93,9 +298,24 @@
    "tokens": 662497
   },
   {
+   "task": "wx6owxtgk",
+   "what": "Dynamic workflow \"Fix loop: one fresh coding agent per failing item, given only the candidate report\" completed",
+   "tokens": 1612479
+  },
+  {
    "task": "wxff3bpn6",
    "what": "Dynamic workflow \"Inject one known smell into a real tested commit per item, keeping tests green\" completed",
    "tokens": 438074
+  },
+  {
+   "task": "wyvdqw36o",
+   "what": "Dynamic workflow \"Answer LLM requests written by a candidate (--llm-dir): one fresh agent per request, given only that request\" completed",
+   "tokens": 1421872
+  },
+  {
+   "task": "wzxph3muv",
+   "what": "Dynamic workflow \"Answer LLM requests written by a candidate (--llm-dir): one fresh agent per request, given only that request\" completed",
+   "tokens": 4240664
   }
  ]
 }

@@ -1,0 +1,221 @@
+{
+ "a-baseline": {
+  "round1": {
+   "attacks": 51,
+   "handled": 31,
+   "passed_but_reported": 6,
+   "controls_ok": true,
+   "not_handled": [
+    "self_keep",
+    "config_threshold",
+    "config_redefine_gate",
+    "config_skip_all",
+    "gitattributes_generated",
+    "gitattributes_binary",
+    "move_to_test_dir",
+    "rename_generated",
+    "vendor_dir",
+    "test_suffix",
+    "utf16_file",
+    "cache_poison",
+    "good_with_alarming_comment",
+    "good_large_feature",
+    "config_gate_swap",
+    "ci_workflow_edit",
+    "nested_build_dir",
+    "cross_file_copy",
+    "fifth_copy",
+    "user_cache_poison"
+   ]
+  },
+  "round2": {
+   "attacks": 15,
+   "handled": 11,
+   "passed_but_reported": 0,
+   "controls_ok": true,
+   "not_handled": [
+    "vendor_preexisting",
+    "cross_dir_copy",
+    "py_cross_module_copy",
+    "good_large_table"
+   ]
+  }
+ },
+ "a-recal": {
+  "round1": {
+   "attacks": 51,
+   "handled": 31,
+   "passed_but_reported": 5,
+   "controls_ok": true,
+   "not_handled": [
+    "self_keep",
+    "config_threshold",
+    "config_redefine_gate",
+    "config_skip_all",
+    "gitattributes_generated",
+    "gitattributes_binary",
+    "move_to_test_dir",
+    "rename_generated",
+    "vendor_dir",
+    "test_suffix",
+    "utf16_file",
+    "cache_poison",
+    "good_with_alarming_comment",
+    "good_large_feature",
+    "config_gate_swap",
+    "ci_workflow_edit",
+    "nested_build_dir",
+    "cross_file_copy",
+    "fifth_copy",
+    "user_cache_poison"
+   ]
+  },
+  "round2": {
+   "attacks": 15,
+   "handled": 11,
+   "passed_but_reported": 0,
+   "controls_ok": true,
+   "not_handled": [
+    "vendor_preexisting",
+    "cross_dir_copy",
+    "py_cross_module_copy",
+    "good_large_table"
+   ]
+  }
+ },
+ "b-offline": {
+  "round1": {
+   "attacks": 51,
+   "handled": 48,
+   "passed_but_reported": 3,
+   "controls_ok": true,
+   "not_handled": [
+    "cross_file_copy",
+    "needle_in_haystack",
+    "fifth_copy"
+   ]
+  },
+  "round2": {
+   "attacks": 15,
+   "handled": 10,
+   "passed_but_reported": 0,
+   "controls_ok": true,
+   "not_handled": [
+    "minified_by_long_line",
+    "vendor_preexisting",
+    "generated_known_generator",
+    "cross_dir_copy",
+    "py_cross_module_copy"
+   ]
+  }
+ },
+ "c-llm": {
+  "round1": {
+   "attacks": 51,
+   "handled": 47,
+   "passed_but_reported": 0,
+   "controls_ok": true,
+   "not_handled": [
+    "cross_file_copy",
+    "good_with_reformat",
+    "good_with_legit_markers",
+    "good_with_legit_markers_valid_check"
+   ]
+  },
+  "round2": {
+   "attacks": 15,
+   "handled": 10,
+   "passed_but_reported": 0,
+   "controls_ok": true,
+   "not_handled": [
+    "cross_dir_copy",
+    "py_cross_module_copy",
+    "good_debug_behind_flag",
+    "good_large_table",
+    "good_ruby_block_comment"
+   ]
+  }
+ },
+ "d-cascade": {
+  "round1": {
+   "attacks": 51,
+   "handled": 48,
+   "passed_but_reported": 2,
+   "controls_ok": true,
+   "not_handled": [
+    "cross_file_copy",
+    "fifth_copy",
+    "good_with_legit_markers"
+   ]
+  },
+  "round2": {
+   "attacks": 15,
+   "handled": 13,
+   "passed_but_reported": 1,
+   "controls_ok": true,
+   "not_handled": [
+    "cross_dir_copy",
+    "py_cross_module_copy"
+   ]
+  }
+ },
+ "e-spot": {
+  "round1": {
+   "attacks": 51,
+   "handled": 50,
+   "passed_but_reported": 1,
+   "controls_ok": true,
+   "not_handled": [
+    "cross_file_copy"
+   ]
+  },
+  "round2": {
+   "attacks": 15,
+   "handled": 9,
+   "passed_but_reported": 0,
+   "controls_ok": true,
+   "not_handled": [
+    "minified_by_long_line",
+    "vendor_preexisting",
+    "generated_known_generator",
+    "cross_dir_copy",
+    "py_cross_module_copy",
+    "good_large_table"
+   ]
+  }
+ },
+ "n0-size": {
+  "round1": {
+   "attacks": 51,
+   "handled": 43,
+   "passed_but_reported": 0,
+   "controls_ok": false,
+   "not_handled": [
+    "good_with_alarming_comment",
+    "good_large_feature",
+    "good_with_injection_to_fail",
+    "cross_file_copy",
+    "good_with_reformat",
+    "good_move_and_edit",
+    "good_with_legit_markers",
+    "good_with_legit_markers_valid_check"
+   ]
+  },
+  "round2": {
+   "attacks": 15,
+   "handled": 7,
+   "passed_but_reported": 0,
+   "controls_ok": true,
+   "not_handled": [
+    "minified_by_long_line",
+    "vendor_preexisting",
+    "generated_known_generator",
+    "py_cross_module_copy",
+    "good_debug_behind_flag",
+    "good_large_table",
+    "good_ruby_block_comment",
+    "good_crlf_clean"
+   ]
+  }
+ }
+}

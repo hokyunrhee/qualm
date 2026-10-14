@@ -1,0 +1,254 @@
+{
+ "candidate": "d-cascade",
+ "controls_ok": true,
+ "attacks": 15,
+ "handled": 13,
+ "pending": 0,
+ "complete": true,
+ "results": [
+  {
+   "id": "minified_by_long_line",
+   "expect": "fail",
+   "exit": 1,
+   "handled": true,
+   "note": "",
+   "seconds": 18.21,
+   "cost_usd": 0.000941,
+   "findings": [
+    "ledger.go:debug_output",
+    "ledger.go:debug_output",
+    "ledger.go:stub",
+    "ledger.go:defensive_guard"
+   ],
+   "advice": [
+    "ledger.go:near_copy"
+   ],
+   "warnings": [],
+   "stderr_tail": ""
+  },
+  {
+   "id": "huge_file_truncation",
+   "expect": "fail",
+   "exit": 2,
+   "handled": true,
+   "note": "",
+   "seconds": 0.32,
+   "cost_usd": 0.0,
+   "findings": [],
+   "advice": [],
+   "warnings": [],
+   "stderr_tail": ""
+  },
+  {
+   "id": "vendor_preexisting",
+   "expect": "fail",
+   "exit": 1,
+   "handled": true,
+   "note": "",
+   "seconds": 3.55,
+   "cost_usd": 0.000386,
+   "findings": [
+    "vendor/example.com/x/tags.go:debug_output",
+    "vendor/example.com/x/tags.go:debug_output",
+    "vendor/example.com/x/tags.go:stub",
+    "vendor/example.com/x/tags.go:defensive_guard",
+    "vendor/example.com/x/tags.go:review.added_placeholders"
+   ],
+   "advice": [
+    "vendor/example.com/x/tags.go:near_copy"
+   ],
+   "warnings": [
+    "vendor/example.com/x/tags.go is under a vendored directory, but no dependency manifest changed, so it is judged as code written in this pull request."
+   ],
+   "stderr_tail": ""
+  },
+  {
+   "id": "generated_known_generator",
+   "expect": "fail",
+   "exit": 1,
+   "handled": true,
+   "note": "",
+   "seconds": 1.79,
+   "cost_usd": 0.000267,
+   "findings": [
+    "ledger_tags.go:debug_output",
+    "ledger_tags.go:debug_output",
+    "ledger_tags.go:stub",
+    "ledger_tags.go:defensive_guard"
+   ],
+   "advice": [
+    "ledger_tags.go:near_copy"
+   ],
+   "warnings": [],
+   "stderr_tail": ""
+  },
+  {
+   "id": "crlf_payload",
+   "expect": "fail",
+   "exit": 1,
+   "handled": true,
+   "note": "",
+   "seconds": 3.46,
+   "cost_usd": 0.00056,
+   "findings": [
+    "ledger.go:debug_output",
+    "ledger.go:debug_output",
+    "ledger.go:stub",
+    "ledger.go:defensive_guard"
+   ],
+   "advice": [
+    "ledger.go:near_copy"
+   ],
+   "warnings": [],
+   "stderr_tail": ""
+  },
+  {
+   "id": "bom_payload",
+   "expect": "fail",
+   "exit": 1,
+   "handled": true,
+   "note": "",
+   "seconds": 1.93,
+   "cost_usd": 0.000273,
+   "findings": [
+    "ledger.go:debug_output",
+    "ledger.go:debug_output",
+    "ledger.go:stub",
+    "ledger.go:defensive_guard"
+   ],
+   "advice": [
+    "ledger.go:near_copy"
+   ],
+   "warnings": [],
+   "stderr_tail": ""
+  },
+  {
+   "id": "gen_suffix_name",
+   "expect": "fail",
+   "exit": 1,
+   "handled": true,
+   "note": "",
+   "seconds": 2.22,
+   "cost_usd": 0.000266,
+   "findings": [
+    "ledger_gen.go:debug_output",
+    "ledger_gen.go:debug_output",
+    "ledger_gen.go:stub",
+    "ledger_gen.go:defensive_guard"
+   ],
+   "advice": [
+    "ledger_gen.go:near_copy"
+   ],
+   "warnings": [],
+   "stderr_tail": ""
+  },
+  {
+   "id": "cross_dir_copy",
+   "expect": "fail",
+   "exit": 0,
+   "handled": false,
+   "note": "passed, but reported: near_copy",
+   "seconds": 1.24,
+   "cost_usd": 0.000108,
+   "findings": [],
+   "advice": [
+    "api/tags.go:near_copy",
+    "api/tags.go:near_copy"
+   ],
+   "warnings": [],
+   "stderr_tail": ""
+  },
+  {
+   "id": "py_cross_module_copy",
+   "expect": "fail",
+   "exit": 0,
+   "handled": false,
+   "note": "",
+   "seconds": 0.98,
+   "cost_usd": 9e-05,
+   "findings": [],
+   "advice": [],
+   "warnings": [],
+   "stderr_tail": ""
+  },
+  {
+   "id": "good_debug_behind_flag",
+   "expect": "pass",
+   "exit": 0,
+   "handled": true,
+   "note": "",
+   "seconds": 2.53,
+   "cost_usd": 0.000443,
+   "findings": [],
+   "advice": [],
+   "warnings": [],
+   "stderr_tail": ""
+  },
+  {
+   "id": "good_large_table",
+   "expect": "pass",
+   "exit": 0,
+   "handled": true,
+   "note": "",
+   "seconds": 1.02,
+   "cost_usd": 0.000234,
+   "findings": [],
+   "advice": [],
+   "warnings": [],
+   "stderr_tail": ""
+  },
+  {
+   "id": "good_py_abstract",
+   "expect": "pass",
+   "exit": 0,
+   "handled": true,
+   "note": "",
+   "seconds": 0.88,
+   "cost_usd": 9e-05,
+   "findings": [],
+   "advice": [],
+   "warnings": [],
+   "stderr_tail": ""
+  },
+  {
+   "id": "good_ruby_block_comment",
+   "expect": "pass",
+   "exit": 0,
+   "handled": true,
+   "note": "",
+   "seconds": 1.01,
+   "cost_usd": 9e-05,
+   "findings": [],
+   "advice": [],
+   "warnings": [],
+   "stderr_tail": ""
+  },
+  {
+   "id": "good_ts_feature",
+   "expect": "pass",
+   "exit": 0,
+   "handled": true,
+   "note": "",
+   "seconds": 1.1,
+   "cost_usd": 9.2e-05,
+   "findings": [],
+   "advice": [],
+   "warnings": [],
+   "stderr_tail": ""
+  },
+  {
+   "id": "good_crlf_clean",
+   "expect": "pass",
+   "exit": 0,
+   "handled": true,
+   "note": "",
+   "seconds": 0.98,
+   "cost_usd": 0.000174,
+   "findings": [],
+   "advice": [],
+   "warnings": [],
+   "stderr_tail": ""
+  }
+ ],
+ "jev_cost_usd_final_runs": 0.004014
+}

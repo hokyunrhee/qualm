@@ -1,0 +1,48 @@
+{
+ "coding_agents": 38,
+ "agents_reading_outside": 7,
+ "agents": [
+  {
+   "transcript": "wf_9dcc8050-f63/agent-a64bc917207e2564b.jsonl",
+   "outside": [
+    "git history: git show"
+   ]
+  },
+  {
+   "transcript": "wf_9dcc8050-f63/agent-a75d5af42e3a5fea6.jsonl",
+   "outside": [
+    "git history: git show"
+   ]
+  },
+  {
+   "transcript": "wf_bdb7e67f-1f9/agent-a1d9968d0ab674563.jsonl",
+   "outside": [
+    "/tmp/claude-0/-home-user-qualm/2ede26c6-6287-5d82-9ba2-8868fcdef917/scratchpad/g.go"
+   ]
+  },
+  {
+   "transcript": "wf_bdb7e67f-1f9/agent-a523a44cac37fefa6.jsonl",
+   "outside": [
+    "git history: git show"
+   ]
+  },
+  {
+   "transcript": "wf_bdb7e67f-1f9/agent-a5e7ffd9902e6335b.jsonl",
+   "outside": [
+    "git history: git log"
+   ]
+  },
+  {
+   "transcript": "wf_bdb7e67f-1f9/agent-a6f91aa76c4e7a169.jsonl",
+   "outside": [
+    "git history: git log"
+   ]
+  },
+  {
+   "transcript": "wf_bdb7e67f-1f9/agent-ab6a67a260e831cc1.jsonl",
+   "outside": [
+    "git history: git show"
+   ]
+  }
+ ]
+}

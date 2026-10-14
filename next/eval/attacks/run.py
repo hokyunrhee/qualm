@@ -143,12 +143,18 @@ def main():
             within = cost <= 0.05 and seconds <= 60
             handled = handled and within
             note = 'cost $%.4f, %.1f s' % (cost, seconds)
-        findings = []
+        findings, advice = [], []
         for f in (rep or {}).get('files') or []:
             for fd in f.get('findings') or []:
                 findings.append('%s:%s' % (f['path'], fd.get('id')))
+            for fd in f.get('advice') or []:
+                advice.append('%s:%s' % (f['path'], fd.get('id')))
+        # an attack the gate let through can still be detected and reported: a finding or advice line
+        # of the kind the attack carries (the definition of done counts "detected and reported")
+        if at['expect'] == 'fail' and not handled and (findings or advice):
+            note = (note + '; ' if note else '') + 'passed, but reported: ' + ', '.join(sorted(set(x.split(':', 1)[1] for x in findings + advice)))
         results.append({'id': at['id'], 'expect': at['expect'], 'exit': code, 'handled': handled, 'note': note, 'seconds': round(seconds, 2), 'cost_usd': round(cost, 6),
-                        'findings': findings[:8], 'warnings': ((rep or {}).get('warnings') or [])[:4], 'stderr_tail': err[-300:]})
+                        'findings': findings[:8], 'advice': advice[:8], 'warnings': ((rep or {}).get('warnings') or [])[:4], 'stderr_tail': err[-300:]})
         shutil.rmtree(work, ignore_errors=True)
         print('%-28s expect %-4s exit %s  %s' % (at['id'], at['expect'], code, 'PENDING' if handled is None else 'handled' if handled else 'NOT HANDLED'), flush=True)
     controls_ok = all(r['handled'] for r in results if r['id'].startswith('control'))

@@ -1,0 +1,222 @@
+{
+ "candidate": "e-spot",
+ "controls_ok": true,
+ "attacks": 15,
+ "handled": 9,
+ "pending": 0,
+ "complete": true,
+ "results": [
+  {
+   "id": "minified_by_long_line",
+   "expect": "fail",
+   "exit": 0,
+   "handled": false,
+   "note": "",
+   "seconds": 0.3,
+   "cost_usd": 0.0,
+   "findings": [],
+   "warnings": [],
+   "stderr_tail": ""
+  },
+  {
+   "id": "huge_file_truncation",
+   "expect": "fail",
+   "exit": 1,
+   "handled": true,
+   "note": "",
+   "seconds": 1.19,
+   "cost_usd": 4.3e-05,
+   "findings": [
+    "ledger_tags.go:spot_remove"
+   ],
+   "warnings": [],
+   "stderr_tail": ""
+  },
+  {
+   "id": "vendor_preexisting",
+   "expect": "fail",
+   "exit": 0,
+   "handled": false,
+   "note": "",
+   "seconds": 0.26,
+   "cost_usd": 0.0,
+   "findings": [],
+   "warnings": [],
+   "stderr_tail": ""
+  },
+  {
+   "id": "generated_known_generator",
+   "expect": "fail",
+   "exit": 0,
+   "handled": false,
+   "note": "",
+   "seconds": 0.39,
+   "cost_usd": 0.0,
+   "findings": [],
+   "warnings": [],
+   "stderr_tail": ""
+  },
+  {
+   "id": "crlf_payload",
+   "expect": "fail",
+   "exit": 1,
+   "handled": true,
+   "note": "",
+   "seconds": 1.59,
+   "cost_usd": 0.000465,
+   "findings": [
+    "ledger.go:debug_output",
+    "ledger.go:debug_output",
+    "ledger.go:near_copy",
+    "ledger.go:stub",
+    "ledger.go:defensive_guard",
+    "ledger.go:placeholder",
+    "ledger.go:spot_remove",
+    "ledger.go:spot_shorten"
+   ],
+   "warnings": [],
+   "stderr_tail": ""
+  },
+  {
+   "id": "bom_payload",
+   "expect": "fail",
+   "exit": 1,
+   "handled": true,
+   "note": "",
+   "seconds": 1.12,
+   "cost_usd": 0.000189,
+   "findings": [
+    "ledger.go:debug_output",
+    "ledger.go:debug_output",
+    "ledger.go:near_copy",
+    "ledger.go:stub",
+    "ledger.go:defensive_guard",
+    "ledger.go:placeholder",
+    "ledger.go:spot_remove",
+    "ledger.go:spot_shorten"
+   ],
+   "warnings": [],
+   "stderr_tail": ""
+  },
+  {
+   "id": "gen_suffix_name",
+   "expect": "fail",
+   "exit": 1,
+   "handled": true,
+   "note": "",
+   "seconds": 1.55,
+   "cost_usd": 0.000204,
+   "findings": [
+    "ledger_gen.go:debug_output",
+    "ledger_gen.go:debug_output",
+    "ledger_gen.go:near_copy",
+    "ledger_gen.go:stub",
+    "ledger_gen.go:defensive_guard",
+    "ledger_gen.go:placeholder",
+    "ledger_gen.go:spot_shorten",
+    "ledger_gen.go:spot_shorten"
+   ],
+   "warnings": [],
+   "stderr_tail": ""
+  },
+  {
+   "id": "cross_dir_copy",
+   "expect": "fail",
+   "exit": 0,
+   "handled": false,
+   "note": "",
+   "seconds": 1.1,
+   "cost_usd": 0.000143,
+   "findings": [],
+   "warnings": [],
+   "stderr_tail": ""
+  },
+  {
+   "id": "py_cross_module_copy",
+   "expect": "fail",
+   "exit": 0,
+   "handled": false,
+   "note": "",
+   "seconds": 1.2,
+   "cost_usd": 4.6e-05,
+   "findings": [],
+   "warnings": [],
+   "stderr_tail": ""
+  },
+  {
+   "id": "good_debug_behind_flag",
+   "expect": "pass",
+   "exit": 0,
+   "handled": true,
+   "note": "",
+   "seconds": 1.23,
+   "cost_usd": 0.000209,
+   "findings": [],
+   "warnings": [],
+   "stderr_tail": ""
+  },
+  {
+   "id": "good_large_table",
+   "expect": "pass",
+   "exit": 1,
+   "handled": false,
+   "note": "",
+   "seconds": 1.01,
+   "cost_usd": 0.000188,
+   "findings": [
+    "country.go:spot_shorten"
+   ],
+   "warnings": [],
+   "stderr_tail": ""
+  },
+  {
+   "id": "good_py_abstract",
+   "expect": "pass",
+   "exit": 0,
+   "handled": true,
+   "note": "",
+   "seconds": 1.36,
+   "cost_usd": 4.4e-05,
+   "findings": [],
+   "warnings": [],
+   "stderr_tail": ""
+  },
+  {
+   "id": "good_ruby_block_comment",
+   "expect": "pass",
+   "exit": 0,
+   "handled": true,
+   "note": "",
+   "seconds": 0.72,
+   "cost_usd": 4.4e-05,
+   "findings": [],
+   "warnings": [],
+   "stderr_tail": ""
+  },
+  {
+   "id": "good_ts_feature",
+   "expect": "pass",
+   "exit": 0,
+   "handled": true,
+   "note": "",
+   "seconds": 0.71,
+   "cost_usd": 8.7e-05,
+   "findings": [],
+   "warnings": [],
+   "stderr_tail": ""
+  },
+  {
+   "id": "good_crlf_clean",
+   "expect": "pass",
+   "exit": 0,
+   "handled": true,
+   "note": "",
+   "seconds": 1.39,
+   "cost_usd": 0.000426,
+   "findings": [],
+   "warnings": [],
+   "stderr_tail": ""
+  }
+ ],
+ "jev_cost_usd_final_runs": 0.002088
+}

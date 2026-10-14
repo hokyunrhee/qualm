@@ -1,0 +1,174 @@
+{
+ "runs": 5,
+ "cases": 509,
+ "per_file": {
+  "files": 2343,
+  "flipped": 13,
+  "rate": 0.005548442168160478,
+  "upper95": 0.00881
+ },
+ "per_pull_request": {
+  "cases": 509,
+  "flipped": 8,
+  "rate": 0.015717092337917484,
+  "upper95": 0.02818
+ },
+ "pairwise_per_file": {
+  "pairs": 23430,
+  "differ": 60,
+  "rate": 0.002560819462227913
+ },
+ "scored_items": {
+  "items": 634,
+  "flipped": 6,
+  "rate": 0.00946372239747634,
+  "upper95": 0.01859,
+  "max_score_spread": 0.07889999999999997,
+  "mean_score_spread": 0.016694479495268137
+ },
+ "flipped_files": [
+  [
+   "fx-held-google_go-cmp-c3ad8435",
+   "cmp/cmpopts/equate.go",
+   [
+    true,
+    true,
+    true,
+    false,
+    true
+   ]
+  ],
+  [
+   "gerrit-chromium-review-8120550-ps6",
+   "crossbench/benchmarks/webxprt/webxprt_main.py",
+   [
+    true,
+    true,
+    true,
+    true,
+    false
+   ]
+  ],
+  [
+   "gerrit-gerrit-review-546822-ps7",
+   "java/com/google/gerrit/server/notedb/AbstractChangeUpdate.java",
+   [
+    true,
+    true,
+    true,
+    false,
+    true
+   ]
+  ],
+  [
+   "gerrit-gerrit-review-552741-ps16",
+   "polygerrit-ui/app/elements/change/gr-flows/gr-create-flow.ts",
+   [
+    true,
+    false,
+    false,
+    true,
+    true
+   ]
+  ],
+  [
+   "gerrit-go-review-746760-ps5",
+   "internal/http3/server.go",
+   [
+    false,
+    false,
+    false,
+    true,
+    false
+   ]
+  ],
+  [
+   "gerrit-review-900419-ps19",
+   "glance/sqlite_migration.py",
+   [
+    false,
+    false,
+    false,
+    false,
+    true
+   ]
+  ],
+  [
+   "gerrit-review-911089-ps60",
+   "manila/db/sqlalchemy/models.py",
+   [
+    false,
+    true,
+    true,
+    true,
+    true
+   ]
+  ],
+  [
+   "gerrit-review-955827-ps4",
+   "watcher/decision_engine/model/model_root.py",
+   [
+    true,
+    true,
+    true,
+    false,
+    false
+   ]
+  ],
+  [
+   "github-HumanAndMachines__Lazurio-350-43fa4d4a",
+   "lazurio/runtime/runtime-lib.mjs",
+   [
+    false,
+    true,
+    true,
+    false,
+    true
+   ]
+  ],
+  [
+   "github-tpsdev-ai__flair-1598-ff164afa",
+   "scripts/materialize-bundled-descriptors.mjs",
+   [
+    true,
+    false,
+    false,
+    false,
+    false
+   ]
+  ],
+  [
+   "github-wso2-open-operations__one-wso2-177-05c1eade",
+   "webapp/src/features/marketing-ops/event-platform/utils/sanitizeHtml.ts",
+   [
+    true,
+    true,
+    true,
+    true,
+    false
+   ]
+  ],
+  [
+   "gitlab-gitlab-development-kit-5635-758958d5",
+   "lib/gdk/command/component.rb",
+   [
+    true,
+    false,
+    false,
+    true,
+    true
+   ]
+  ],
+  [
+   "inj-placeholder-github-wso2-open-operations__one-wso2-177-05c1eade",
+   "webapp/src/features/marketing-ops/event-platform/utils/sanitizeHtml.ts",
+   [
+    true,
+    true,
+    false,
+    true,
+    true
+   ]
+  ]
+ ]
+}

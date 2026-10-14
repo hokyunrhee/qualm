@@ -1,0 +1,94 @@
+{
+ "runs": 3,
+ "cases": 30,
+ "per_file": {
+  "files": 170,
+  "flipped": 7,
+  "rate": 0.041176470588235294,
+  "upper95": 0.07595
+ },
+ "per_pull_request": {
+  "cases": 30,
+  "flipped": 5,
+  "rate": 0.16666666666666666,
+  "upper95": 0.31897
+ },
+ "pairwise_per_file": {
+  "pairs": 510,
+  "differ": 14,
+  "rate": 0.027450980392156862
+ },
+ "scored_items": {
+  "items": 51,
+  "flipped": 1,
+  "rate": 0.0196078431372549,
+  "upper95": 0.08967,
+  "max_score_spread": 0.18,
+  "mean_score_spread": 0.036470588235294116
+ },
+ "flipped_files": [
+  [
+   "gerrit-chromium-review-8454871-ps8",
+   "front_end/ui/comments/CommentAnchorResolver.ts",
+   [
+    true,
+    false,
+    false
+   ]
+  ],
+  [
+   "gerrit-chromium-review-8492633-ps1",
+   "crossbench/device_config.py",
+   [
+    false,
+    false,
+    true
+   ]
+  ],
+  [
+   "gerrit-review-928129-ps10",
+   "examples/dns/find.py",
+   [
+    true,
+    false,
+    false
+   ]
+  ],
+  [
+   "gerrit-review-951517-ps7",
+   "openstack/dns/v2/_base.py",
+   [
+    false,
+    false,
+    true
+   ]
+  ],
+  [
+   "gerrit-review-967822-ps22",
+   "manila/api/v2/qos_types.py",
+   [
+    false,
+    true,
+    true
+   ]
+  ],
+  [
+   "github-discopy__discopy-438-a7effbca",
+   "discopy/monoidal.py",
+   [
+    false,
+    false,
+    true
+   ]
+  ],
+  [
+   "gitlab-release-tools-4980-5b7ef052",
+   "lib/release_tools/security/finalize/sync_security_to_canonical.rb",
+   [
+    true,
+    true,
+    false
+   ]
+  ]
+ ]
+}

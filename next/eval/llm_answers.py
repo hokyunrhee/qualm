@@ -4,6 +4,8 @@
                                                              and write STAGE/args_<k>.json for workflows/answer_llm.js
     python3 -I llm_answers.py write STAGE RUN_ID [RUN_ID ...]  write each agent's answer to every responses/<key>.json
                                                              that asked for it
+    python3 -I llm_answers.py number STAGE                   also give every staged request a number (STAGE/n/<i>.json),
+                                                             so a workflow can be handed a range instead of a list
 
 A request lives at <dir>/requests/<key>.json and its answer at <dir>/responses/<key>.json. The
 answering agents see only STAGE/<key>.json: the key is a hash, so nothing in the path (a case id
@@ -55,12 +57,32 @@ def stage(root, stage_dir, shards):
     print('%d new requests staged in %s; %d workflow arg files' % (len(new), stage_dir, k))
 
 
+def number(stage_dir):
+    index = json.load(open(os.path.join(stage_dir, 'index.json')))
+    os.makedirs(os.path.join(stage_dir, 'n'), exist_ok=True)
+    alias_path = os.path.join(stage_dir, 'aliases.json')
+    aliases = json.load(open(alias_path)) if os.path.exists(alias_path) else {}
+    have = set(aliases.values())
+    i = len(aliases)
+    for key in sorted(index):
+        if key in have:
+            continue
+        shutil.copyfile(os.path.join(stage_dir, key + '.json'), os.path.join(stage_dir, 'n', '%d.json' % i))
+        aliases[str(i)] = key
+        i += 1
+    json.dump(aliases, open(alias_path, 'w'), indent=1)
+    print('%d numbered requests in %s/n' % (len(aliases), stage_dir))
+
+
 def write(stage_dir, run_ids):
     index = json.load(open(os.path.join(stage_dir, 'index.json')))
+    alias_path = os.path.join(stage_dir, 'aliases.json')
+    aliases = json.load(open(alias_path)) if os.path.exists(alias_path) else {}
     n = 0
     for run in run_ids:
         for path, ans in journal.results(run).items():
             key = os.path.basename(str(path))[:-5]
+            key = aliases.get(key, key) if '/n/' in str(path) else key
             if not isinstance(ans, dict) or key not in index:
                 continue
             for resp in index[key]:
@@ -78,3 +100,5 @@ if __name__ == '__main__':
         stage(sys.argv[2], sys.argv[3], shards)
     elif cmd == 'write':
         write(sys.argv[2], sys.argv[3:])
+    elif cmd == 'number':
+        number(sys.argv[2])

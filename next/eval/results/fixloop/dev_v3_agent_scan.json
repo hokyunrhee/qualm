@@ -1,0 +1,64 @@
+{
+ "coding_agents": 49,
+ "agents_reading_outside": 9,
+ "agents": [
+  {
+   "transcript": "wf_dc35a075-d84/agent-a0cd02dcc3796e6c6.jsonl",
+   "outside": [
+    "/tmp/claude-0/-home-user-qualm/2ede26c6-6287-5d82-9ba2-8868fcdef917/scratchpad/fix.py"
+   ]
+  },
+  {
+   "transcript": "wf_dc35a075-d84/agent-a825f5f6fa987b102.jsonl",
+   "outside": [
+    "git history: git','show"
+   ]
+  },
+  {
+   "transcript": "wf_dc35a075-d84/agent-ab4c385e380b109d2.jsonl",
+   "outside": [
+    "/tmp/claude-0/-home-user-qualm/2ede26c6-6287-5d82-9ba2-8868fcdef917/scratchpad/new.py",
+    "/tmp/claude-0/-home-user-qualm/2ede26c6-6287-5d82-9ba2-8868fcdef917/scratchpad/rest.py",
+    "/tmp/claude-0/-home-user-qualm/2ede26c6-6287-5d82-9ba2-8868fcdef917/scratchpad/rest.py\\ncat",
+    "git history: git show"
+   ]
+  },
+  {
+   "transcript": "wf_dc35a075-d84/agent-adcc39aaac2ab2e41.jsonl",
+   "outside": [
+    "git history: git log"
+   ]
+  },
+  {
+   "transcript": "wf_4e305075-785/agent-a275c20eee1824960.jsonl",
+   "outside": [
+    "/tmp/claude-0/-home-user-qualm/2ede26c6-6287-5d82-9ba2-8868fcdef917/scratchpad/lib.go",
+    "/tmp/claude-0/-home-user-qualm/2ede26c6-6287-5d82-9ba2-8868fcdef917/scratchpad/new.go"
+   ]
+  },
+  {
+   "transcript": "wf_4e305075-785/agent-a617ec5b8d0b8ee11.jsonl",
+   "outside": [
+    "/tmp/claude-0/-home-user-qualm/2ede26c6-6287-5d82-9ba2-8868fcdef917/scratchpad/new_head.py"
+   ]
+  },
+  {
+   "transcript": "wf_4e305075-785/agent-ac6f7ccd70b217179.jsonl",
+   "outside": [
+    "git history: git log"
+   ]
+  },
+  {
+   "transcript": "wf_4e305075-785/agent-aedc85647eb2cdd54.jsonl",
+   "outside": [
+    "/tmp/claude-0/-home-user-qualm/2ede26c6-6287-5d82-9ba2-8868fcdef917/scratchpad/edit.py"
+   ]
+  },
+  {
+   "transcript": "wf_ea865a07-ab5/agent-a874970d01e267e40.jsonl",
+   "outside": [
+    "git history: git show"
+   ]
+  }
+ ]
+}
