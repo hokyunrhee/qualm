@@ -104,9 +104,9 @@ class Scorer:
         except (OSError, ValueError):
             return True
 
-    def error(self, reason):
-        # the core reads score and threshold before it looks at the error
-        return {'score': 1.0, 'threshold': self.threshold, 'failed': True, 'abstained': False, 'findings': [], 'signals': {}, 'error': reason}
+    @staticmethod
+    def error(reason):
+        return {'error': reason}
 
     def judge(self, f, req, answers, keys):
         parsed = [verify.parse(a) for a in answers]
