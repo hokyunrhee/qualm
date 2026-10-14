@@ -75,6 +75,33 @@ def feature_vector(raw, masked, feats):
     return x
 
 
+def pieces(f, limit=MAX_HUNKS):
+    """The places a reviewer would comment on: each changed top-level function, and each run of
+    added code outside any function, as (lo, hi, name, added lines), most added code first, with
+    the masked text of the file (comments removed, prose strings replaced)."""
+    masked = asks.masked_text(f.head, f.language).split('\n')
+    added_code = set(f.added_code_lines())
+    out, covered = [], set()
+    for u in f.top_units:
+        rows = [n for n in range(u.start, u.end + 1) if n in added_code]
+        covered.update(range(u.start, u.end + 1))
+        if len(rows) >= 2:
+            out.append((u.start, u.end, u.name, rows))
+    loose = sorted(n for n in added_code if n not in covered)
+    for lo, hi in units_ranges(loose):
+        rows = [n for n in loose if lo <= n <= hi]
+        if len(rows) >= 2:
+            out.append((max(1, lo - 3), min(len(masked), hi + 3), None, rows))
+    out.sort(key=lambda r: (-len(r[3]), r[0]))
+    return out[:limit], masked
+
+
+def piece_state(f, lo, hi, name, masked):
+    body = ''.join(('+' if n in f.added else ' ') + masked[n - 1] + '\n' for n in range(lo, hi + 1))
+    piece = '--- a/%s\n+++ b/%s\n@@ -%d +%d,%d @@%s\n%s' % (f.path, f.path, lo, lo, hi - lo + 1, (' ' + name) if name else '', body)
+    return asks.state(piece, asks.language(f.path), asks.MASKED_FORMAT)
+
+
 class Scorer:
     def __init__(self, args, policy, model_path=None):
         self.args = args
@@ -135,41 +162,20 @@ class Scorer:
         return {'p': p, 'readings': ps, 'raw': raw, 'masked': masked, 'x': x, 'masked_diff': masked_d}
 
     # ---------------------------------------------------------------- findings
-    def pieces(self, f):
-        """The places a reviewer would comment on: each changed top-level function, and each run of
-        added code outside any function, as (lo, hi, name, added lines). Comments are masked."""
-        masked = asks.masked_text(f.head, f.language).split('\n')
-        added_code = set(f.added_code_lines())
-        out, covered = [], set()
-        for u in f.top_units:
-            rows = [n for n in range(u.start, u.end + 1) if n in added_code]
-            covered.update(range(u.start, u.end + 1))
-            if len(rows) >= 2:
-                out.append((u.start, u.end, u.name, rows))
-        loose = sorted(n for n in added_code if n not in covered)
-        for lo, hi in units_ranges(loose):
-            rows = [n for n in loose if lo <= n <= hi]
-            if len(rows) >= 2:
-                out.append((max(1, lo - 3), min(len(masked), hi + 3), None, rows))
-        out.sort(key=lambda r: -len(r[3]))
-        return out[:MAX_HUNKS], masked
-
     def localize(self, f, masked_d, found):
-        lang = asks.language(f.path)
-        pieces, masked = self.pieces(f)
+        places, masked = pieces(f)
         asked = []
-        for lo, hi, name, rows in pieces:
-            body = ''.join(('+' if n in f.added else ' ') + masked[n - 1] + '\n' for n in range(lo, hi + 1))
-            piece = '--- a/%s\n+++ b/%s\n@@ -%d +%d,%d @@%s\n%s' % (f.path, f.path, lo, lo, hi - lo + 1, (' ' + name) if name else '', body)
-            ans = self.client.ask(asks.state(piece, lang, asks.MASKED_FORMAT), asks.HUNK_QUESTIONS, use_cache=not self.args.no_cache)
-            asked.append((ans['push_back'], min(rows), max(rows), name, ans))
+        for lo, hi, name, rows in places:
+            ans = self.client.ask(piece_state(f, lo, hi, name, masked), asks.HUNK_QUESTIONS, use_cache=not self.args.no_cache)
+            asked.append((ans['push_back'], min(rows), max(rows), name, ans, rows))
         asked.sort(key=lambda r: -r[0])
         findings = []
-        for k, (pb, lo, hi, name, ans) in enumerate(asked):
+        for k, (pb, lo, hi, name, ans, rows) in enumerate(asked):
             if pb < 0.5 and k > 0:
                 continue
-            if any(not (hi < d['lines'][0] or lo > d['lines'][1]) and d['confidence'] >= 0.6 for d in found):
-                continue  # an exact detector finding already covers this place
+            covered = {n for d in found if d['confidence'] >= 0.6 for n in range(d['lines'][0], d['lines'][1] + 1)}
+            if sum(1 for n in rows if n in covered) >= 0.5 * len(rows):
+                continue  # exact detector findings already cover most of this place
             verb = max(VERB_TEXT, key=lambda q: ans.get(q, 0.0))
             what, fix = VERB_TEXT[verb]
             span = 'Line %d' % lo if lo == hi else 'Lines %d-%d' % (lo, hi)
