@@ -58,8 +58,32 @@ def logit(p):
     return math.log(p / (1 - p))
 
 
-def feature_vector(raw, masked, feats):
+PIECE_Q = list(asks.HUNK_QUESTIONS)
+
+
+def piece_features(answers, sizes):
+    """Spot-level signal: for each question, the strongest answer over the file's changed functions,
+    and the push_back answer weighted by how much code each function added."""
+    x = {}
+    if not answers:
+        for q in PIECE_Q:
+            x['piece_max_' + q] = 0.0
+        x['piece_wmean_push_back'] = 0.0
+        x['piece_n'] = 0.0
+        x['piece_missing'] = 1.0
+        return x
+    for q in PIECE_Q:
+        x['piece_max_' + q] = max(logit(a[q]) for a in answers)
+    total = float(sum(sizes)) or 1.0
+    x['piece_wmean_push_back'] = sum(logit(a['push_back']) * w for a, w in zip(answers, sizes)) / total
+    x['piece_n'] = math.log1p(len(answers))
+    x['piece_missing'] = 0.0
+    return x
+
+
+def feature_vector(raw, masked, feats, pieces_answers=None, pieces_sizes=None):
     x = dict(feats)
+    x.update(piece_features(pieces_answers, pieces_sizes or []))
     for q in RAW_Q:
         x['raw_' + q] = logit(raw[q]) if raw and q in raw else 0.0
     x['raw_missing'] = 0.0 if raw else 1.0
@@ -107,6 +131,7 @@ class Scorer:
         self.args = args
         self.model = LogisticModel.load(model_path or os.path.join(HERE, 'model.json'))
         self.threshold = args.threshold or policy.threshold or self.model.threshold
+        self.uses_pieces = any(n.startswith('piece_') for n in self.model.names)
         band_path = os.path.join(HERE, 'band.json')
         self.band = None
         if os.path.exists(band_path):
@@ -141,32 +166,40 @@ class Scorer:
         masked = asks.masked_diff(f.path, f.base, f.head, f.language, f.old_path)
         return raw, masked
 
-    def ask_file(self, ctx, f, feats, use_cache=True, reading=0):
+    def ask_places(self, f, use_cache=True):
+        """Jev's answers for each changed function (asked once per run; close-call re-readings reuse them)."""
+        places, masked = pieces(f)
+        answers = [self.client.ask(piece_state(f, lo, hi, name, masked), asks.HUNK_QUESTIONS, use_cache=use_cache) for lo, hi, name, _ in places]
+        return places, answers
+
+    def ask_file(self, ctx, f, feats, use_cache=True, reading=0, places=None):
         raw_d, masked_d = self.views(ctx, f)
         lang = asks.language(f.path)
         raw = asks.ask_pieces(self.client, raw_d, lang, asks.QUALM, asks.DIFF_FORMAT, use_cache, reading) if raw_d.strip() else None
         masked = asks.ask_pieces(self.client, masked_d, lang, asks.MASKED_QUESTIONS, asks.MASKED_FORMAT, use_cache, reading) if masked_d.strip() else None
-        x = feature_vector(raw, masked, feats)
-        return self.model.predict(x), raw, masked, x, masked_d
+        if places is None:
+            places = self.ask_places(f, use_cache) if self.uses_pieces else ([], [])
+        x = feature_vector(raw, masked, feats, places[1], [len(r[3]) for r in places[0]])
+        return self.model.predict(x), raw, masked, x, masked_d, places
 
     def judge(self, ctx, f, feats):
         use_cache = not self.args.no_cache
-        p, raw, masked, x, masked_d = self.ask_file(ctx, f, feats, use_cache=use_cache)
+        p, raw, masked, x, masked_d, places = self.ask_file(ctx, f, feats, use_cache=use_cache)
         ps = [p]
         if abs(p - self.threshold) <= CLOSE:
             # two more readings, and the median decides; each reading has its own cache entry,
             # so a second run with the cache on reaches the same verdict
             for k in (1, 2):
-                ps.append(self.ask_file(ctx, f, feats, use_cache=use_cache, reading=k)[0])
+                ps.append(self.ask_file(ctx, f, feats, use_cache=use_cache, reading=k, places=places)[0])
             p = statistics.median(ps)
-        return {'p': p, 'readings': ps, 'raw': raw, 'masked': masked, 'x': x, 'masked_diff': masked_d}
+        return {'p': p, 'readings': ps, 'raw': raw, 'masked': masked, 'x': x, 'masked_diff': masked_d, 'places': places}
 
     # ---------------------------------------------------------------- findings
-    def localize(self, f, masked_d, found):
-        places, masked = pieces(f)
+    def localize(self, f, places, found):
+        if not places or not places[0]:
+            places = self.ask_places(f, use_cache=not self.args.no_cache)
         asked = []
-        for lo, hi, name, rows in places:
-            ans = self.client.ask(piece_state(f, lo, hi, name, masked), asks.HUNK_QUESTIONS, use_cache=not self.args.no_cache)
+        for (lo, hi, name, rows), ans in zip(*places):
             asked.append((ans['push_back'], min(rows), max(rows), name, ans, rows))
         asked.sort(key=lambda r: -r[0])
         findings = []
@@ -225,7 +258,7 @@ class Scorer:
             findings = list(dets)
             if failed:
                 try:
-                    findings += self.localize(f, r['masked_diff'], dets)
+                    findings += self.localize(f, r['places'], dets)
                 except jev.JevError as e:
                     self.warnings.append('%s: findings could not be localized (%s)' % (f.path, e))
                 if abstained:

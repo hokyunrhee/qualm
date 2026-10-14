@@ -30,12 +30,15 @@ DET = [n for n in features.names() if n.startswith(('n_', 'max_')) and n not in 
 RAW = ['raw_' + q for q in S.RAW_Q] + ['raw_missing']
 MASKED = ['masked_' + q for q in S.MASKED_Q] + ['masked_missing']
 BOTH = ['push_back_mean', 'push_back_gap']
+PIECES = ['piece_max_' + q for q in S.PIECE_Q] + ['piece_wmean_push_back', 'piece_n', 'piece_missing']
 SETS = {
     'raw': RAW,
     'masked': MASKED,
     'raw+masked': RAW + MASKED + BOTH,
     'raw+masked+det': RAW + MASKED + BOTH + DET,
     'raw+masked+det+shape': RAW + MASKED + BOTH + DET + ['is_script', 'comment_share'],
+    'raw+masked+pieces': RAW + MASKED + BOTH + PIECES,
+    'raw+masked+det+pieces': RAW + MASKED + BOTH + DET + PIECES,
 }
 
 
@@ -50,11 +53,13 @@ def load(a):
             if f.get('status') == 'judged':
                 raw[r['case_id'] + '::' + f['path']] = f['signals']
     masked = json.load(open(a.masked))
+    pieces = json.load(open(a.pieces)) if a.pieces else {}
     for r in rows:
         m = masked.get(r['item_id'])
         if m is not None and ('error' in m or 'empty' in m):
             m = None
-        r['x'] = S.feature_vector(raw.get(r['item_id']), m, r['x'])
+        pc = pieces.get(r['item_id']) or {}
+        r['x'] = S.feature_vector(raw.get(r['item_id']), m, r['x'], pc.get('pieces'), pc.get('sizes'))
     return rows
 
 
@@ -89,6 +94,11 @@ def platt(z, y):
     from sklearn.linear_model import LogisticRegression
     m = LogisticRegression(C=1e6, max_iter=1000).fit(z.reshape(-1, 1), y)
     return float(m.coef_[0][0]), float(m.intercept_[0])
+
+
+def platt_apply(z, y):
+    a_, b_ = platt(z, y)
+    return a_ * z + b_
 
 
 def pr_at(y, p, t):
@@ -167,6 +177,7 @@ def main():
     ap.add_argument('--features', required=True)
     ap.add_argument('--raw', required=True)
     ap.add_argument('--masked', required=True)
+    ap.add_argument('--pieces', default=None, help='per-function answers (collect_pieces.py); without it the piece sets are skipped')
     ap.add_argument('--out', default=os.path.join(HERE, 'model.json'))
     ap.add_argument('--band', default=os.path.join(HERE, 'band.json'))
     ap.add_argument('--report')
@@ -175,6 +186,7 @@ def main():
     ap.add_argument('--fail-precision', type=float, default=0.75)
     ap.add_argument('--miss-rate', type=float, default=0.10)
     ap.add_argument('--set', default=None, help='force a feature set')
+    ap.add_argument('--oof-all', default=None, help='write calibrated out-of-fold probabilities of every feature set')
     a = ap.parse_args()
     rows = load(a)
     y = np.array([r['label'] for r in rows])
@@ -182,6 +194,8 @@ def main():
     sig = lambda z: 1 / (1 + np.exp(-z))
     results = {}
     for name, cols in SETS.items():
+        if 'pieces' in name and not a.pieces:
+            continue
         X, _ = matrix(rows, cols)
         best = None
         for C in (0.003, 0.01, 0.03, 0.1):
@@ -192,6 +206,8 @@ def main():
         results[name] = best
         print('%-24s C=%-6s all %s | natural PR-AUC %.4f ROC %.4f' % (name, best[0], best[1], best[2]['pr_auc'], best[2]['roc_auc']), flush=True)
     name = a.set or max(results, key=lambda k: results[k][1]['pr_auc'])
+    if a.oof_all:
+        json.dump({k: {r['item_id']: round(float(v), 5) for r, v in zip(rows, sig(platt_apply(results[k][3], y)))} for k in results}, open(a.oof_all, 'w'))
     C, m_all, m_nat, z = results[name]
     cols = SETS[name]
     pa, pb = platt(z, y)
