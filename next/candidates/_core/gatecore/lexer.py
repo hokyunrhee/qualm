@@ -84,7 +84,7 @@ def scan(text, language):
                 continue
             if isinstance(state, tuple):
                 kind, q = state
-                if line.startswith(q, i) and (len(q) == 3 or True):
+                if line.startswith(q, i):
                     L.strings.append(''.join(buf))
                     buf = []
                     L.code.append('""')
@@ -115,11 +115,17 @@ def scan(text, language):
                 state, block_end = 'block', '*/'
                 i += 2
                 continue
-            if language == 'Python' and (line.startswith('"""', i) or line.startswith("'''", i)):
+            if (language == 'Python' and (line.startswith('"""', i) or line.startswith("'''", i))) or (language == 'Java' and line.startswith('"""', i)):
                 state = ('tstr', line[i:i + 3])
                 buf = []
                 i += 3
                 continue
+            if c == '/' and language in ('TypeScript', 'JavaScript'):
+                end = _regex_end(line, i, ''.join(L.code))
+                if end:
+                    L.code.append('""')
+                    i = end
+                    continue
             if c in '"\'' or (c == '`' and language in ('Go', 'TypeScript', 'JavaScript')):
                 # a quote inside an identifier (Ruby's foo? or Rust lifetimes) is rare enough to ignore
                 if c == "'" and language in ('Go', 'Java') and i + 2 < m and line[i + 2] == "'":
@@ -142,6 +148,35 @@ def scan(text, language):
         elif isinstance(state, tuple):
             buf.append('\n')
     return [(''.join(L.code), ' '.join(s.strip() for s in L.comment).strip(), L.strings) for L in out]
+
+
+REGEX_BEFORE = re.compile(r'(^|[(,=:\[!&|?{};+\-*%<>~^]|\b(return|typeof|case|in|of|void|delete|throw|yield|await))\s*$')
+
+
+def _regex_end(line, i, before):
+    """Where a JavaScript regular expression literal that starts at line[i] ends, or None when the
+    slash is division. A slash after an operand (a name, a number, a closing bracket) divides."""
+    if not REGEX_BEFORE.search(before):
+        return None
+    j, in_class = i + 1, False
+    while j < len(line):
+        ch = line[j]
+        if ch == '\\':
+            j += 2
+            continue
+        if ch == '[':
+            in_class = True
+        elif ch == ']':
+            in_class = False
+        elif ch == '/' and not in_class:
+            if j == i + 1:
+                return None
+            j += 1
+            while j < len(line) and line[j].isalpha():
+                j += 1
+            return j
+        j += 1
+    return None
 
 
 TOKEN = re.compile(r'[A-Za-z_$][A-Za-z0-9_$]*[?!]?|\d[\w.]*|""|\'\'|==|!=|<=|>=|&&|\|\||:=|->|=>|\+\+|--|\+=|-=|\S')

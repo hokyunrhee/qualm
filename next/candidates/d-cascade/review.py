@@ -6,6 +6,8 @@ inside a comment or a string may pass into the report.
 """
 import re
 
+from gatecore import llmdir
+
 MODEL = 'claude-haiku-5-5'
 CONTEXT = 12
 MAX_BYTES = 40000
@@ -87,10 +89,16 @@ def clean(text, banned):
 
 
 def read(ans, f):
-    banned = quoted_only(f)
+    """The verified answer. An answer without a yes/no verdict or with a probability outside [0, 1]
+    is not a judgement: it raises BadAnswer and the run exits 2, so it can never pass the file."""
+    if not isinstance(ans.get('blocking'), bool):
+        raise llmdir.BadAnswer('the reviewer\'s answer has no yes/no verdict')
     prob = ans.get('probability')
-    prob = float(prob) if isinstance(prob, (int, float)) and 0 <= prob <= 1 else (0.75 if ans.get('blocking') else 0.25)
-    blocking = bool(ans.get('blocking'))
+    if isinstance(prob, bool) or not isinstance(prob, (int, float)) or not 0 <= prob <= 1:
+        raise llmdir.BadAnswer('the reviewer\'s probability is missing or outside [0, 1]')
+    prob = float(prob)
+    blocking = ans['blocking']
+    banned = quoted_only(f)
     findings = []
     for c in (ans.get('comments') or [])[:3]:
         lines = c.get('lines') or []

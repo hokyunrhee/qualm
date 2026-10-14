@@ -52,7 +52,7 @@ def debug_output(f, ctx):
         return []
     script = f.is_script()
     hits = []
-    for n in f.added_code_lines():
+    for n in f.new_code_lines():
         code = f.code[n - 1]
         if not rx.search(code):
             continue
@@ -93,7 +93,7 @@ STUB_TEXT = re.compile(r'not (yet )?implemented|unimplemented|implement me|todo|
 def placeholder(f, ctx):
     out = []
     todos = []
-    for n in sorted(f.added):
+    for n in sorted(f.new):
         c = f.comments[n - 1] if n <= len(f.comments) else ''
         if c and TODO.search(c) and not TRACKED.search(c):
             todos.append(n)
@@ -104,7 +104,7 @@ def placeholder(f, ctx):
                            0.55))
     rx = STUB.get(f.language)
     stubs = []
-    for n in f.added_code_lines():
+    for n in f.new_code_lines():
         code = f.code[n - 1]
         strs = ' '.join(f.strings[n - 1])
         if rx and rx.search(code) and (f.language in ('Python', 'Ruby') or STUB_TEXT.search(strs)):
@@ -131,20 +131,53 @@ def placeholder(f, ctx):
 # ---------------------------------------------------------------- commented-out code
 
 
+COMMENT_LEAD = re.compile(r'^\s*(?://+|#+|/\*+|\*+(?!/))([ \t]*)')
+EXAMPLE_INTRO = re.compile(r'(@example|\bexamples?\b|\busage\b|\be\.g\.|```|:\s*$)', re.I)
+
+
+def _comment_indent(line):
+    m = COMMENT_LEAD.match(line)
+    return len(m.group(1).expandtabs(4)) if m else 0
+
+
+def is_doc_example(f, n):
+    """A code-like comment line that is an example inside documentation: the comment block around
+    it has prose, and the code sits deeper than the prose or follows an introduction (Example:,
+    @example, a line ending in a colon, a fence)."""
+    def in_block(k):
+        return not f.code[k - 1].strip() and bool(f.comments[k - 1] or COMMENT_LEAD.match(f.lines[k - 1]))
+    lo = n
+    while lo > 1 and in_block(lo - 1):
+        lo -= 1
+    hi = n
+    while hi < len(f.code) and in_block(hi + 1):
+        hi += 1
+    prose = [k for k in range(lo, hi + 1) if f.comments[k - 1] and not lexer.looks_like_code(f.comments[k - 1])
+             and len(re.findall(r'[A-Za-z]{2,}', f.comments[k - 1])) >= 3]
+    if not prose:
+        return False
+    if any(EXAMPLE_INTRO.search(f.comments[k - 1]) for k in prose if k < n):
+        return True
+    return _comment_indent(f.lines[n - 1]) > min(_comment_indent(f.lines[k - 1]) for k in prose)
+
+
+ONE_LINE_CODE = re.compile(r'[;{}]\s*$|\)\s*$|^\s*[A-Za-z_][\w.:\[\]]*\s*(=|:=|\+=|-=)\s*\S')
+
+
 def commented_out_code(f, ctx):
     rows = []
-    for n in sorted(f.added):
+    for n in sorted(f.new):
         if n > len(f.code):
             continue
         if f.code[n - 1].strip():
             continue
         c = f.comments[n - 1]
-        if c and lexer.looks_like_code(c):
+        if c and lexer.looks_like_code(c) and not is_doc_example(f, n):
             rows.append(n)
     out = []
     for lo, hi in ranges(rows, gap=1):
         k = sum(1 for n in rows if lo <= n <= hi)
-        if k < 2 and not re.search(r'[;{}]\s*$|\)\s*$', f.comments[lo - 1]):
+        if k < 2 and not ONE_LINE_CODE.search(f.comments[lo - 1]):
             continue
         out.append(finding('commented_out_code', (lo, hi),
                            'The change adds %d line%s of commented-out code at %s.' % (k, '' if k == 1 else 's', where(f, lo, hi)),
@@ -223,6 +256,8 @@ def build_index(f, ctx):
             if path in changed or path in removed_paths:
                 continue
             idx.add('base', path, text, f.language)
+        for path, text in ctx.copy_sources(f):
+            idx.add('base', path, text, f.language)
         d = f.path.rsplit('/', 1)[0] if '/' in f.path else ''
         ctx.__dict__.setdefault('_indexed_dirs', {}).setdefault(d, set()).add(f.language)
     return idx
@@ -274,10 +309,14 @@ def near_copy(f, ctx):
         for lo, hi, olo, ohi in groups:
             if any(not (hi < r[0] or lo > r[1]) for r in reported):
                 continue
-            # an added copy of code the change itself added later in the same file: report once, at the later copy
-            if src == 'head' and path == f.path and olo > lo:
+            # two copies the change itself added in the same file: report once, at the later copy
+            if src == 'head' and path == f.path and olo > lo and sum(1 for k in range(olo, ohi + 1) if k in f.added) >= 0.6 * (ohi - olo + 1):
                 continue
-            other_lines = (ctx.by_path[path].code if src == 'head' else [s[0] for s in lexer.scan(dict(ctx.base_neighbours(f)).get(path, ''), f.language)])
+            # two new copies in two changed files: report once, in the file whose path sorts later
+            if src == 'head' and path != f.path and path > f.path and path in ctx.by_path and \
+                    sum(1 for k in range(olo, ohi + 1) if k in ctx.by_path[path].added) >= 0.6 * (ohi - olo + 1):
+                continue
+            other_lines = (ctx.by_path[path].code if src == 'head' else [s[0] for s in lexer.scan(ctx.fetched.get(path, ''), f.language)])
             diffs = raw_differences(f, lo, hi, other_lines, olo, ohi, f.language)
             n = hi - lo + 1
             if src == 'head' and path == f.path:
@@ -326,6 +365,8 @@ def near_copy(f, ctx):
         score, src, path, ou = best
         # the copy is the later one when both are new in this file
         if src == 'head' and path == f.path and ou.start > u.start and ou in f.new_units():
+            continue
+        if src == 'head' and path != f.path and path > f.path and path in ctx.by_path and ou in ctx.by_path[path].new_units():
             continue
         rel = ('%s at lines %d-%d of this file' % (ou.name, ou.start, ou.end) if (src == 'head' and path == f.path)
                else '%s at lines %d-%d of %s' % (ou.name, ou.start, ou.end, path))

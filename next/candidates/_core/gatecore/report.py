@@ -2,6 +2,9 @@
 import json
 
 PRICE_NOTE = 'LLM costs are estimates from token counts at list price.'
+STANDING = ('Keep every behaviour, option and test the change introduces, and keep documentation examples: simplify how the code '
+            'is written, not what it does.')
+ADVICE_SHOWN = 12
 
 
 def empty_usage():
@@ -40,13 +43,16 @@ def to_text(rep):
             out.append('    Fix: %s' % d['fix'])
             for r in d.get('related') or []:
                 out.append('    See: %s lines %d-%d' % (r['path'], r['lines'][0], r['lines'][1]))
-    advice = [(f, d) for f in files if not f.get('failed') and f.get('status') == 'judged' for d in (f.get('findings') or [])]
-    if advice and not rep['passed']:
+    advice = [(f, d) for f in files if f.get('status') == 'judged' for d in (f.get('advice') or [])]
+    advice += [(f, d) for f in files if not f.get('failed') and f.get('status') == 'judged' for d in (f.get('findings') or [])]
+    if advice:
         out.append('')
-        out.append('Advice below the gate (optional):')
-        for f, d in advice[:8]:
+        out.append('Advice (does not fail the gate):')
+        for f, d in advice[:ADVICE_SHOWN]:
             lo, hi = d['lines']
             out.append('  - %s:%d-%d %s' % (f['path'], lo, hi, d['message']))
+        if len(advice) > ADVICE_SHOWN:
+            out.append('  ... and %d more in the JSON report.' % (len(advice) - ADVICE_SHOWN))
     for f in files:
         if f.get('status') == 'error':
             out.append('')
@@ -59,8 +65,8 @@ def to_text(rep):
     if rep['passed']:
         out.append('Nothing to do.')
     elif failing:
-        out.append('Next: make the fixes above, keep the behaviour and the tests as they are, then run the gate again. '
-                   'Do not rename, reformat or add comments to get past it; it judges what the code does.')
+        out.append('Next: make the fixes above, then run the gate again. ' + STANDING + ' Do not rename, reformat or add comments to get '
+                   'past it; it judges what the code does.')
     else:
         out.append('Next: fix the problem above (or ask a maintainer), then run the gate again.')
     return '\n'.join(out) + '\n'

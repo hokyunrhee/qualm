@@ -6,12 +6,15 @@ model trained on dev combines the answers with the detectors' findings into a ca
 probability. A file whose probability lands near the threshold is asked twice more and the median
 probability decides, so a close call reads the same on every run.
 
-A failing file is localized: each of its larger hunks is asked again on its own, and the hunks
-reviewers would push back on become findings with the verb that fits, next to the detectors'
-exact-line findings.
+A failing file is localized one function at a time: every function the change wrote and every
+existing function it changed is asked about on its own (with the lines it removed shown), and
+each one a reviewer would push back on becomes a finding. The verb is the question whose answer
+stands out most against its usual level on dev. The detectors' exact-line findings come first.
 
 With --llm-dir and a band in band.json, files whose probability falls inside the abstain band are
-settled by an LLM reviewer instead (the cascade); without it, the model's threshold decides.
+settled by an LLM reviewer instead (the cascade); without it, the model's threshold decides. The
+measured gate is the model alone: on dev the band could not keep its fail precision without the
+LLM deciding every file above 0.26, and the LLM's answers flip between runs.
 """
 import json, math, os, statistics
 from concurrent.futures import ThreadPoolExecutor
@@ -26,31 +29,37 @@ import review
 VERSION = '0.1.0'
 HERE = os.path.dirname(os.path.realpath(__file__))
 CLOSE = 0.05          # a probability this near the threshold is a close call
-MAX_HUNKS = 6         # places (functions or runs of added code) asked about when localizing a failing file
-DET_FAILING_MIN = 0.3
+MAX_PLACES = 10       # functions (or runs of added code) asked about when localizing a failing file
+PLACE_BYTES = 60000   # and at most this much text across them
+PLACE_LINES = 150     # a longer function is shown from 10 lines before its first change to 10 after its last
+LOOSE_LINES = 60      # added code outside any function is cut into runs of at most this many lines
+PRECISE = 8           # a detector finding this short points at the spot itself
 DET_ADVICE_MIN = 0.6
+LEFTOVERS = ('debug_output', 'placeholder', 'stub', 'commented_out_code', 'unused_code', 'defensive_guard', 'change_narration')
 
 RAW_Q = [q for q in asks.QUALM if q != 'direction']
 MASKED_Q = list(asks.MASKED_QUESTIONS)
 
 VERB_TEXT = {
-    'added_copies': ('repeat logic that is already in this file',
-                     'Find the code these lines duplicate, move the shared steps into one function and call it from both places. Done when the logic is written once.'),
+    'added_copies': ('repeat logic that already exists in this file',
+                     'Find the code these lines repeat, keep one copy and call it from both places with what differs as a parameter. Done when the repeated steps exist once.'),
     'added_impossible_guards': ('add checks or fallbacks for states the surrounding code already rules out',
-                                'Delete the checks for cases that cannot happen, or turn a case that can happen into an error where it starts. Done when every remaining check guards a state a caller can produce.'),
+                                'Delete each check for a case its callers cannot produce. Keep checks for input that can really arrive. Done when every remaining check guards a state a caller can produce.'),
     'added_placeholders': ('add placeholder, debugging or unfinished code',
                            'Remove the debugging output and stubs, or finish them. Done when nothing in these lines is temporary.'),
-    'added_unused_flexibility': ('add an option, hook or layer of indirection with a single user',
-                                 'Inline it into its one caller and drop what is not used yet. Done when every new abstraction has two real users or is gone.'),
-    'indirection': ('add a wrapper, interface, class or parameter that has only one user or one implementation',
+    'added_unused_flexibility': ('add an option, hook or layer of indirection that nothing here needs yet',
+                                 'Inline the layer into its one caller, or drop the parameter or hook no caller sets. Keep options the change is meant to offer. Done when each new abstraction has a second real user or is gone.'),
+    'indirection': ('add a wrapper, interface, class or parameter with only one user or one implementation',
                     'Inline it into its one caller. Done when the extra layer is gone or has a second real user.'),
-    'remove': ('hold code that can be deleted without changing behaviour (unused values, redundant checks, dead branches or needless conversions)',
-               'Delete the lines that do not change the result, then run the tests. Done when every added line is needed.'),
+    'remove': ('hold steps that do not change the result (an unused value, a check repeated, a branch that cannot run, a needless conversion)',
+               'Delete the steps that do not change the result; keep everything a caller or test observes. Done when each remaining step changes the result.'),
     'reuse': ('re-implement something the language, the standard library or nearby code already provides',
-              'Replace them with a call to the existing function or built-in. Done when the hand-written version is gone.'),
-    'shorten': ('can be written more directly',
-                'Rewrite them with the simplest construct the language offers (a built-in, a comprehension, an early return) without changing behaviour. Done when the same logic takes noticeably fewer lines.'),
+              'Replace the hand-written version with a call to the existing function or built-in. Done when the hand-written version is gone.'),
+    'shorten': ('take a longer route than needed for what they compute',
+                'Rewrite the steps with the direct construct (a built-in, one loop instead of two, an early return instead of nesting) and keep the behaviour. Done when the construct named here is replaced, not when lines are merged.'),
 }
+with open(os.path.join(HERE, 'verbs.json')) as _fh:
+    VERB_STATS = json.load(_fh)['questions']
 
 
 def logit(p):
@@ -99,38 +108,96 @@ def feature_vector(raw, masked, feats, pieces_answers=None, pieces_sizes=None):
     return x
 
 
-def pieces(f, limit=MAX_HUNKS):
-    """The places a reviewer would comment on: each changed top-level function, and each run of
-    added code outside any function, as (lo, hi, name, added lines), most added code first, with
-    the masked text of the file (comments removed, prose strings replaced)."""
+def pieces(f, limit=MAX_PLACES):
+    """The places a reviewer would comment on, one function each: every function the change wrote
+    (small helpers included), then every existing function it changed, then runs of added code
+    outside any function, as (lo, hi, name, added code lines). Returns them with the masked text of
+    the head and base."""
     masked = asks.masked_text(f.head, f.language).split('\n')
+    base_masked = asks.masked_text(f.base, f.language).split('\n') if f.base is not None else []
     added_code = set(f.added_code_lines())
-    out, covered = [], set()
-    for u in f.top_units:
+    new, changed, inside = [], [], set()
+    for u in sorted(f.new_units(), key=lambda u: (u.start, -u.end)):
+        if any(o.start <= u.start and u.end <= o.end for o in new):
+            continue  # nested in a new function already listed
         rows = [n for n in range(u.start, u.end + 1) if n in added_code]
-        covered.update(range(u.start, u.end + 1))
-        if len(rows) >= 2:
-            out.append((u.start, u.end, u.name, rows))
-    loose = sorted(n for n in added_code if n not in covered)
-    for lo, hi in units_ranges(loose):
+        if rows:
+            new.append(u)
+    for u in f.top_units:
+        inside.update(range(u.start, u.end + 1))
+        if any(o.start >= u.start and o.end <= u.end for o in new) and not [n for n in range(u.start, u.end + 1) if n in added_code
+                                                                             and not any(o.start <= n <= o.end for o in new)]:
+            continue  # its added lines all sit in new functions listed already
+        if any(o.start <= u.start and u.end <= o.end for o in new):
+            continue
+        rows = [n for n in range(u.start, u.end + 1) if n in added_code and not any(o.start <= n <= o.end for o in new)]
+        if len(rows) >= 1:
+            changed.append((u, rows))
+    out = [(u.start, u.end, u.name, [n for n in range(u.start, u.end + 1) if n in added_code]) for u in new]
+    out += [(u.start, u.end, u.name, rows) for u, rows in sorted(changed, key=lambda r: (-len(r[1]), r[0].start))]
+    loose = sorted(n for n in added_code if n not in inside)
+    for lo, hi in units_ranges(loose, gap=2):
         rows = [n for n in loose if lo <= n <= hi]
-        if len(rows) >= 2:
-            out.append((max(1, lo - 3), min(len(masked), hi + 3), None, rows))
-    out.sort(key=lambda r: (-len(r[3]), r[0]))
-    return out[:limit], masked
+        for k in range(0, len(rows), LOOSE_LINES):
+            part = rows[k:k + LOOSE_LINES]
+            if len(part) >= 2:
+                out.append((max(1, part[0] - 3), min(len(masked), part[-1] + 3), None, part))
+    places, total = [], 0
+    for lo, hi, name, rows in out:
+        if hi - lo + 1 > PLACE_LINES:
+            lo, hi = max(lo, rows[0] - 10), min(hi, rows[-1] + 10)
+        size = sum(len(masked[n - 1]) + 2 for n in range(lo, hi + 1))
+        if len(places) >= limit or total + size > PLACE_BYTES:
+            break
+        places.append((lo, hi, name, rows))
+        total += size
+    return places, (masked, base_masked)
 
 
 def piece_state(f, lo, hi, name, masked):
-    body = ''.join(('+' if n in f.added else ' ') + masked[n - 1] + '\n' for n in range(lo, hi + 1))
-    piece = '--- a/%s\n+++ b/%s\n@@ -%d +%d,%d @@%s\n%s' % (f.path, f.path, lo, lo, hi - lo + 1, (' ' + name) if name else '', body)
+    """One place as a unified diff: head lines lo..hi, with the base lines the change removed there."""
+    head_m, base_m = masked if isinstance(masked, tuple) else (masked, [])
+    removed_before = {}  # head line -> base lines removed just before it
+    offset = 0           # base line = head line - offset, for unchanged lines before lo
+    for blo, bhi, hlo, hhi in f.diff.hunks:
+        if hlo <= lo and hhi < lo:
+            offset += (hhi - hlo + 1) - (bhi - blo + 1)
+        if bhi >= blo and lo <= max(hlo, 1) <= hi + 1:
+            removed_before.setdefault(max(hlo, 1), []).extend(range(blo, bhi + 1))
+    rows, nb, nh = [], 0, 0
+    for n in range(lo, hi + 1):
+        for b in removed_before.get(n, ()):
+            rows.append('-' + (base_m[b - 1] if b - 1 < len(base_m) else ''))
+            nb += 1
+        if n in f.added:
+            rows.append('+' + head_m[n - 1])
+        else:
+            rows.append(' ' + head_m[n - 1])
+            nb += 1
+        nh += 1
+    for b in removed_before.get(hi + 1, ()):
+        rows.append('-' + (base_m[b - 1] if b - 1 < len(base_m) else ''))
+        nb += 1
+    bstart = max(0, lo - offset) if nb else 0
+    piece = '--- a/%s\n+++ b/%s\n@@ -%d,%d +%d,%d @@%s\n%s\n' % (f.path, f.path, bstart, nb, lo, nh, (' ' + name) if name else '', '\n'.join(rows))
     return asks.state(piece, asks.language(f.path), asks.MASKED_FORMAT)
+
+
+def verb_of(ans):
+    """The question whose answer stands out most against its usual level on dev."""
+    def z(q):
+        st = VERB_STATS.get(q)
+        if not st or q not in ans:
+            return -9.0
+        return (logit(ans[q]) - st['mean']) / (st['sd'] or 1.0)
+    return max(VERB_TEXT, key=z)
 
 
 class Scorer:
     def __init__(self, args, policy, model_path=None):
         self.args = args
         self.model = LogisticModel.load(model_path or os.path.join(HERE, 'model.json'))
-        self.threshold = args.threshold or policy.threshold or self.model.threshold
+        self.threshold = args.threshold if args.threshold is not None else (policy.threshold or self.model.threshold)
         self.uses_pieces = any(n.startswith('piece_') for n in self.model.names)
         band_path = os.path.join(HERE, 'band.json')
         self.band = None
@@ -167,7 +234,7 @@ class Scorer:
         return raw, masked
 
     def ask_places(self, f, use_cache=True):
-        """Jev's answers for each changed function (asked once per run; close-call re-readings reuse them)."""
+        """Jev's answers for each place (asked once per run; close-call re-readings reuse them)."""
         places, masked = pieces(f)
         answers = [self.client.ask(piece_state(f, lo, hi, name, masked), asks.HUNK_QUESTIONS, use_cache=use_cache) for lo, hi, name, _ in places]
         return places, answers
@@ -196,21 +263,28 @@ class Scorer:
 
     # ---------------------------------------------------------------- findings
     def localize(self, f, places, found):
+        """Findings for the places a reviewer would push back on, each no wider than one function.
+        A place whose added lines precise detector findings already cover is left to them. If no
+        place reaches 0.5 and no precise finding exists, the strongest place is still named, so a
+        failing file always says where to start."""
         if not places or not places[0]:
             places = self.ask_places(f, use_cache=not self.args.no_cache)
+        precise = {n for d in found if d['confidence'] >= 0.6 and d['lines'][1] - d['lines'][0] + 1 <= PRECISE
+                   for n in range(d['lines'][0], d['lines'][1] + 1)}
         asked = []
         for (lo, hi, name, rows), ans in zip(*places):
-            asked.append((ans['push_back'], min(rows), max(rows), name, ans, rows))
-        asked.sort(key=lambda r: -r[0])
-        findings = []
-        for k, (pb, lo, hi, name, ans, rows) in enumerate(asked):
-            if pb < 0.5 and k > 0:
+            if sum(1 for n in rows if n in precise) >= 0.5 * len(rows):
                 continue
-            covered = {n for d in found if d['confidence'] >= 0.6 for n in range(d['lines'][0], d['lines'][1] + 1)}
-            if sum(1 for n in rows if n in covered) >= 0.5 * len(rows):
-                continue  # exact detector findings already cover most of this place
-            verb = max(VERB_TEXT, key=lambda q: ans.get(q, 0.0))
+            asked.append((ans['push_back'], lo, hi, name, ans, rows))
+        asked.sort(key=lambda r: (-r[0], r[1]))
+        chosen = [r for r in asked if r[0] >= 0.5]
+        if not chosen and asked and not precise:
+            chosen = asked[:1]
+        findings = []
+        for pb, lo, hi, name, ans, rows in chosen:
+            verb = verb_of(ans)
             what, fix = VERB_TEXT[verb]
+            lo, hi = min(rows), max(rows)
             span = 'Line %d' % lo if lo == hi else 'Lines %d-%d' % (lo, hi)
             where = ' (in %s)' % name if name else ''
             findings.append({'id': 'review.' + verb, 'lines': [lo, hi], 'message': '%s%s %s.' % (span, where, what), 'fix': fix,
@@ -219,6 +293,8 @@ class Scorer:
 
     # ---------------------------------------------------------------- verdict
     def score(self, ctx, found, feats):
+        if not ctx.files:
+            return {}
         if not self.client.available():
             raise gitio.GateError('no API key: set %s' % jev.KEY_VAR)
         results = {}
@@ -254,20 +330,33 @@ class Scorer:
             abstained = 'llm' in r
             failed = r['llm']['blocking'] if abstained else p >= self.threshold
             score = r['llm']['probability'] if abstained else p
-            dets = [d for d in found[f.path] if d['confidence'] >= (DET_FAILING_MIN if failed else DET_ADVICE_MIN)]
-            findings = list(dets)
+            dets = [d for d in found[f.path] if d['confidence'] >= DET_ADVICE_MIN]
+            findings, advice = [], []
             if failed:
                 try:
-                    findings += self.localize(f, r['places'], dets)
+                    located = self.localize(f, r['places'], dets)
                 except jev.JevError as e:
+                    located = []
                     self.warnings.append('%s: findings could not be localized (%s)' % (f.path, e))
+                # a detector finding is part of the verdict when it is an exact leftover or sits in a
+                # place the reviewer questions flagged; anything else is advice
+                spans = [d['lines'] for d in located]
+                for d in dets:
+                    lo, hi = d['lines']
+                    if d['id'] in LEFTOVERS and hi - lo + 1 <= PRECISE * 3 or any(s[0] <= lo and hi <= s[1] for s in spans):
+                        findings.append(d)
+                    else:
+                        advice.append(d)
+                findings += located
                 if abstained:
                     findings += [c for c in r['llm']['findings'] if not any(c['lines'] == d['lines'] for d in findings)]
                 findings.sort(key=lambda d: (-d['confidence'], d['lines'][0]))
+            else:
+                advice = dets
             signals = {'p_model': round(p, 4), 'readings': [round(v, 4) for v in r['readings']],
                        'raw': r['raw'], 'masked': r['masked'], 'top_features': self.model.contributions(r['x'])}
             if abstained:
                 signals['llm'] = {k: r['llm'][k] for k in ('blocking', 'probability')}
             out[f.path] = {'score': score, 'threshold': self.threshold, 'failed': failed, 'abstained': abstained,
-                           'findings': findings[:8], 'signals': signals}
+                           'findings': findings, 'advice': advice, 'signals': signals}
         return out

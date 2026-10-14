@@ -224,7 +224,7 @@ def main():
              'coef': [float(v) for v in lr.coef_[0]], 'intercept': float(lr.intercept_[0]), 'platt': [pa, pb], 'threshold': round(thr, 3),
              'meta': {'trained_on': 'dev split only', 'feature_set': name, 'C': C, 'items': len(rows), 'positives': int(y.sum()),
                       'threshold_rule': 'highest out-of-fold recall with precision >= %.3f' % a.precision_floor,
-                      'selection': 'feature set with the best out-of-fold %s PR-AUC' % a.select}}
+                      'selection': ('feature set fixed in advance (--set %s), not re-selected' % a.set) if a.set else 'feature set with the best out-of-fold %s PR-AUC' % a.select}}
     json.dump(model, open(a.out, 'w'), indent=1)
     band = ltt_band(y, p, thr, a.fail_precision, a.miss_rate)
     band_doc = None

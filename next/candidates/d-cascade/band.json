@@ -5,7 +5,7 @@
  "rule": "Learn-then-Test on out-of-fold dev probabilities, fixed-sequence on each edge: outside the band, fail precision >= 0.75 and positives among passes <= 0.10, jointly at 95% confidence",
  "dev_out_of_fold": {
   "auto_fail": 0,
-  "auto_pass": 3414,
-  "in_band": 1725
+  "auto_pass": 3413,
+  "in_band": 1726
  }
 }

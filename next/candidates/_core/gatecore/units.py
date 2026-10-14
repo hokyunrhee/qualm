@@ -12,7 +12,7 @@ GO_FUNC = re.compile(r'^func\s*(\([^)]*\)\s*)?([A-Za-z_]\w*)')
 JAVA_METHOD = re.compile(r'^\s*(?:@\w+(?:\([^)]*\))?\s+)*(?:(?:public|private|protected|static|final|synchronized|abstract|default|native|override|suspend|open|internal)\s+)*'
                          r'(?:<[^>]+>\s+)?[\w.<>\[\]?,\s]+?\s+([A-Za-z_]\w*)\s*\([^;]*$')
 JS_FUNCS = [re.compile(r'^\s*(?:export\s+)?(?:default\s+)?(?:async\s+)?function\s*\*?\s*([A-Za-z_$][\w$]*)\s*[<(]'),
-            re.compile(r'^\s*(?:export\s+)?(?:const|let|var)\s+([A-Za-z_$][\w$]*)\s*(?::[^=]+)?=\s*(?:async\s+)?(?:function\b|\([^)]*\)\s*(?::[^=]+)?=>|[A-Za-z_$][\w$]*\s*=>)'),
+            re.compile(r'^\s*(?:export\s+)?(?:const|let|var)\s+([A-Za-z_$][\w$]*)\s*(?::[^=]+)?=\s*(?:async\s+)?(?:function\b|(?:<[^>]*>\s*)?\([^)]*\)\s*(?::[^=]+)?=>|[A-Za-z_$][\w$]*\s*=>)'),
             re.compile(r'^\s*(?:(?:public|private|protected|static|readonly|async|override|abstract|get|set)\s+)*\*?([A-Za-z_$][\w$]*)\s*(?:<[^>]*>)?\s*\([^;]*\)\s*(?::\s*[^={;]+)?\s*\{\s*$'),
             re.compile(r'^\s*([A-Za-z_$][\w$]*)\s*:\s*(?:async\s+)?(?:function\b|\([^)]*\)\s*=>)'),
             # a method whose parameter list opens at the end of the line; a modifier is required so a
@@ -96,7 +96,7 @@ def find_units(text, language, scanned=None):
             if not m:
                 continue
             indent = m.group(1)
-            if re.search(r'\bend\s*$', line) or re.search(r'\)\s*=\s*\S', line):
+            if re.search(r'\bend\s*$', line) or re.search(r'\)\s*=\s*\S', line) or re.match(r'^\s*def\s+(?:self\.)?[A-Za-z_]\w*[?!]?\s+=\s*\S', line):
                 units.append(Unit(m.group(2), k + 1, k + 1))
                 continue
             end = None

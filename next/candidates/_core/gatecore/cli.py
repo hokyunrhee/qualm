@@ -22,6 +22,7 @@ def parse(argv, tool):
     ap.add_argument('--llm-dir', default=None)
     ap.add_argument('--include-tests', action='store_true')
     ap.add_argument('--threshold', type=float, default=None, help='override the operating point (for evaluation)')
+    ap.add_argument('--text-out', default=None, help='also write the text rendering of this same verdict to a file')
     return ap.parse_args(argv)
 
 
@@ -86,7 +87,8 @@ def run(tool, version, make_scorer, argv=None, out=sys.stdout, err=sys.stderr):
             rows.append({'path': f.path, 'status': 'error', 'language': f.language, 'reason': r['error']})
             continue
         rows.append({'path': f.path, 'status': 'judged', 'language': f.language, 'score': round(r['score'], 4), 'threshold': r['threshold'],
-                     'failed': bool(r['failed']), 'abstained': bool(r.get('abstained')), 'findings': r.get('findings', []), 'signals': r.get('signals', {})})
+                     'failed': bool(r['failed']), 'abstained': bool(r.get('abstained')), 'findings': r.get('findings', []),
+                     'advice': r.get('advice', []), 'signals': r.get('signals', {})})
     rows.sort(key=lambda r: r['path'])
     usage = report.empty_usage()
     usage.update(getattr(scorer, 'usage', lambda: {})())
@@ -96,6 +98,9 @@ def run(tool, version, make_scorer, argv=None, out=sys.stdout, err=sys.stderr):
     rep = {'tool': tool, 'version': version, 'passed': not errors and not failed, 'base': base, 'files': rows,
            'warnings': warnings + list(getattr(scorer, 'warnings', [])), 'usage': usage}
     out.write(report.to_json(rep) + '\n' if args.format == 'json' else report.to_text(rep))
+    if args.text_out:
+        with open(args.text_out, 'w') as fh:
+            fh.write(report.to_text(rep))
     if errors:
         return 2
     return 1 if failed else 0

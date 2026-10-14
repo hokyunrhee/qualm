@@ -214,3 +214,58 @@ class EndToEnd(unittest.TestCase):
 
 if __name__ == '__main__':
     unittest.main()
+
+
+class LocalizationV3Tests(unittest.TestCase):
+    BASE = 'package a\n\nfunc Total(xs []int) int {\n\ts := 0\n\tfor _, x := range xs {\n\t\ts += x\n\t}\n\treturn s\n}\n'
+    HEAD = ('package a\n\nfunc Total(xs []int) int {\n\ts := 0\n\tfor _, x := range xs {\n\t\ts += double(x)\n\t}\n\treturn s\n}\n\n'
+            'func double(x int) int {\n\treturn x * 2\n}\n')
+
+    def test_small_new_helpers_and_changed_functions_are_places(self):
+        f = analyze.FileCtx('a.go', 'Go', self.HEAD, self.BASE)
+        places, _ = scorer.pieces(f)
+        names = [p[2] for p in places]
+        self.assertEqual(names, ['double', 'Total'])
+
+    def test_a_place_shows_what_it_removed_under_a_valid_header(self):
+        f = analyze.FileCtx('a.go', 'Go', self.HEAD, self.BASE)
+        places, masked = scorer.pieces(f)
+        lo, hi, name, _ = places[1]
+        change = scorer.piece_state(f, lo, hi, name, masked)['change']
+        self.assertIn('-\t\ts += x', change)
+        self.assertIn('+\t\ts += double(x)', change)
+        import re
+        m = re.search(r'@@ -(\d+),(\d+) \+(\d+),(\d+) @@', change)
+        body = change.split('@@\n', 1)[1].rstrip('\n').split('\n') if '@@\n' in change else change.split('\n')[3:]
+        rows = [r for r in change.split('\n')[3:] if r]
+        self.assertEqual(int(m.group(2)), sum(1 for r in rows if r[0] in ' -'))
+        self.assertEqual(int(m.group(4)), sum(1 for r in rows if r[0] in ' +'))
+
+    def test_the_verb_is_the_answer_that_stands_out(self):
+        # shorten is usually high and reuse usually low: a modest reuse beats a typical shorten
+        ans = {q: 0.2 for q in scorer.VERB_TEXT}
+        ans.update({'shorten': 0.45, 'reuse': 0.35})
+        self.assertEqual(scorer.verb_of(ans), 'reuse')
+
+    def test_done_conditions_do_not_ask_for_fewer_lines(self):
+        for what, fix in scorer.VERB_TEXT.values():
+            self.assertNotIn('fewer lines', fix)
+            self.assertNotIn('every added line', fix)
+
+
+class ReviewAnswerTests(unittest.TestCase):
+    def test_an_answer_without_a_verdict_cannot_pass_the_file(self):
+        f = analyze.FileCtx('ledger.go', 'Go', BAD_GO, BASE_GO)
+        from gatecore import llmdir
+        for ans in ({}, {'probability': 0.9}, {'blocking': True, 'probability': 1.5}, {'blocking': 'no', 'probability': 0.1}):
+            with self.assertRaises(llmdir.BadAnswer):
+                review.read(ans, f)
+
+
+class NoJudgedFilesTests(unittest.TestCase):
+    def test_a_change_with_nothing_to_judge_needs_no_key(self):
+        args = types.SimpleNamespace(threshold=None, no_cache=True, budget=0.05, llm_dir=None, repo='.')
+        from gatecore import perimeter
+        s = scorer.Scorer(args, perimeter.Policy())
+        ctx = types.SimpleNamespace(files=[])
+        self.assertEqual(s.score(ctx, {}, {}), {})

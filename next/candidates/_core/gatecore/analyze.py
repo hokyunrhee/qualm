@@ -8,6 +8,8 @@ import posixpath, re
 
 from . import gitio, lexer, units
 
+CLOSERS = ('', '}', '};', '})', '});', ')', '];', ']', 'end', 'end)', '},', '),')
+
 
 class FileCtx:
     def __init__(self, path, language, head, base, status='M', old_path=None):
@@ -22,6 +24,10 @@ class FileCtx:
         self.top_units = units.outermost(self.units)
         self.diff = units.FileDiff(base, head)
         self.added = self.diff.added
+        # added lines whose text the change did not just move, re-indent or re-end: what leftover
+        # detectors (prints, TODOs, commented-out code) may call new
+        removed_text = {self.diff.base_lines[k - 1].strip() for k in self.diff.removed}
+        self.new = {n for n in self.added if n <= len(self.lines) and self.lines[n - 1].strip() not in removed_text}
         self.base_scan = lexer.scan(base, language) if base else []
         self.base_units = units.find_units(base, language, self.base_scan) if base else []
 
@@ -32,6 +38,10 @@ class FileCtx:
         """Line numbers of added lines that carry code (not blank, not comment-only)."""
         return [n for n in sorted(self.added) if n <= len(self.code) and self.code[n - 1].strip()]
 
+    def new_code_lines(self):
+        """Added code lines that are new text, not moved or re-indented existing lines."""
+        return [n for n in sorted(self.new) if n <= len(self.code) and self.code[n - 1].strip()]
+
     def changed_units(self, min_added=1):
         out = []
         for u in self.top_units:
@@ -41,10 +51,11 @@ class FileCtx:
         return out
 
     def new_units(self, share=0.8):
-        """Units the change wrote (at least `share` of their non-blank lines added)."""
+        """Units the change wrote (at least `share` of their lines added). Closing brackets and `end`
+        lines do not count: a diff may pair a new function's closing brace with an old one."""
         out = []
         for u in self.units:
-            rows = [n for n in range(u.start, u.end + 1) if self.lines[n - 1].strip()]
+            rows = [n for n in range(u.start, u.end + 1) if self.code[n - 1].strip() not in CLOSERS and self.lines[n - 1].strip()]
             if rows and sum(1 for n in rows if n in self.added) >= share * len(rows):
                 out.append(u)
         return out
@@ -55,7 +66,7 @@ class FileCtx:
         p = '/' + self.path
         if re.search(r'/(bin|scripts?|tools?|cmd|cli|examples?|demo|benchmarks?|hack|contrib|misc|internal/cmd)/', p):
             return True
-        if re.search(r'(^|/)(cli|main|__main__|manage|setup|cmd|command|commands|console|repl|script)[^/]*\.\w+$', self.path.lower()):
+        if re.search(r'(^|/)(cli|main|__main__|manage|setup|cmd|command|commands|console|repl|script)\.\w+$', self.path.lower()):
             return True
         if self.language == 'Go' and re.search(r'^package main\b', self.head, re.M):
             return True
@@ -77,13 +88,15 @@ class ChangeCtx:
         self.all_changes = all_changes
         self._dir_cache = {}
         self._grep_cache = {}
+        self._copy_cache = {}
+        self.fetched = {}  # base text of every unchanged file read for the copy index
 
     def base_neighbours(self, f, limit=40, max_bytes=200_000):
         """Base versions of the code files next to f (same directory), for finding copies of
         existing code. Read once per directory."""
         d = posixpath.dirname(f.path)
-        if d in self._dir_cache:
-            return self._dir_cache[d]
+        if (d, f.language) in self._dir_cache:
+            return self._dir_cache[(d, f.language)]
         out = []
         if self.repo:
             names = gitio.base_dir_files(self.repo, self.base, d, limit=200)
@@ -98,7 +111,48 @@ class ChangeCtx:
                 if total > max_bytes:
                     break
                 out.append((n, text))
-        self._dir_cache[d] = out
+                self.fetched[n] = text
+        self._dir_cache[(d, f.language)] = out
+        return out
+
+    def copy_sources(self, f, limit=6, max_bytes=300_000):
+        """Unchanged files anywhere in the base commit that share several distinctive lines with what
+        f added: where a copy of existing code in another directory comes from."""
+        if not self.repo:
+            return []
+        if f.path in self._copy_cache:
+            return self._copy_cache[f.path]
+        lines = []
+        for n in f.new_code_lines():
+            t = f.lines[n - 1].strip()
+            if len(t) >= 24 and len(re.findall(r'[A-Za-z_]\w*', t)) >= 3 and t not in lines and '\0' not in t:
+                lines.append(t)
+        out = []
+        if len(lines) >= 3:
+            lines = lines[:40]
+            args = ['grep', '-c', '-F', '-I']
+            for t in lines:
+                args += ['-e', t]
+            got = gitio.git(self.repo, *(args + [self.base, '--']), check=False)
+            changed = {g.path for g in self.files} | {c.path for c in self.all_changes} | {c.old_path for c in self.all_changes if getattr(c, 'old_path', None)}
+            counts = []
+            for row in got.splitlines():
+                path, _, k = row[len(self.base) + 1:].rpartition(':')
+                if not path or path in changed or lexer.language_of(path) != f.language or not k.isdigit():
+                    continue
+                if int(k) >= max(3, len(lines) // 6):
+                    counts.append((-int(k), path))
+            total = 0
+            for _k, path in sorted(counts)[:limit]:
+                text = self.fetched.get(path) or gitio.base_file(self.repo, self.base, path)
+                if text is None:
+                    continue
+                total += len(text)
+                if total > max_bytes:
+                    break
+                out.append((path, text))
+                self.fetched[path] = text
+        self._copy_cache[f.path] = out
         return out
 
     def referenced_in_base(self, name):
