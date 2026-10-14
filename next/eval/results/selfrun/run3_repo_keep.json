@@ -1,0 +1,1054 @@
+{
+ "tool": "qualm-next",
+ "version": "1.0.0",
+ "passed": true,
+ "base": "4533932a044ee486a42fc48d6b721c3828f51673",
+ "files": [
+  {
+   "path": "next/eval/results/dev_oof_v2.json",
+   "status": "skipped",
+   "reason": "not code in a judged language"
+  },
+  {
+   "path": "next/eval/results/heldout_matched_fpr_v1.json",
+   "status": "skipped",
+   "reason": "not code in a judged language"
+  },
+  {
+   "path": "next/eval/results/spend.jsonl",
+   "status": "skipped",
+   "reason": "not code in a judged language"
+  },
+  {
+   "path": "next/eval/results/winner_equivalence.json",
+   "status": "skipped",
+   "reason": "not code in a judged language"
+  },
+  {
+   "path": "next/winner/MIGRATION.md",
+   "status": "skipped",
+   "reason": "not code in a judged language"
+  },
+  {
+   "path": "next/winner/action.yml",
+   "status": "skipped",
+   "reason": "not code in a judged language"
+  },
+  {
+   "path": "next/winner/bin/qualm-next",
+   "status": "skipped",
+   "reason": "not code in a judged language"
+  },
+  {
+   "path": "next/winner/examples/qualm-next.yml",
+   "status": "skipped",
+   "reason": "not code in a judged language"
+  },
+  {
+   "path": "next/winner/lib/gatecore/__init__.py",
+   "status": "judged",
+   "language": "Python",
+   "score": 0.0311,
+   "threshold": 0.506,
+   "failed": false,
+   "abstained": false,
+   "findings": [],
+   "advice": [],
+   "signals": {
+    "p_model": 0.0311,
+    "readings": [
+     0.0311
+    ],
+    "raw": {
+     "push_back": 0.13,
+     "direction": 0.69,
+     "simplified": 0.09,
+     "comments_only": 0.49,
+     "new_behaviour": 0.81,
+     "grew_a_big_unit": 0.03,
+     "added_copies": 0.01,
+     "added_impossible_guards": 0.03,
+     "added_placeholders": 0.21,
+     "added_unused_flexibility": 0.03
+    },
+    "masked": {
+     "push_back": 0.61,
+     "simplified": 0.12,
+     "new_behaviour": 0.86,
+     "grew_a_big_unit": 0.06,
+     "added_copies": 0.03,
+     "added_impossible_guards": 0.04,
+     "added_placeholders": 0.69,
+     "added_unused_flexibility": 0.06,
+     "remove": 0.68,
+     "reuse": 0.07,
+     "shorten": 0.27,
+     "indirection": 0.27
+    },
+    "top_features": [
+     [
+      "masked_remove",
+      0.339
+     ],
+     [
+      "raw_added_placeholders",
+      0.155
+     ],
+     [
+      "masked_new_behaviour",
+      0.135
+     ],
+     [
+      "raw_new_behaviour",
+      0.07
+     ]
+    ]
+   }
+  },
+  {
+   "path": "next/winner/lib/gatecore/analyze.py",
+   "status": "judged",
+   "language": "Python",
+   "score": 0.348,
+   "threshold": 0.506,
+   "failed": false,
+   "abstained": false,
+   "findings": [],
+   "advice": [
+    {
+     "id": "near_copy",
+     "lines": [
+      148,
+      154
+     ],
+     "message": "Lines 148-154 (in copy_sources) repeat lines 108-114 of this file (base_neighbours); the differences are path for n.",
+     "fix": "Write the shared steps once: extract them into one function (or reuse base_neighbours) that takes what differs as a parameter, and call it from both places. Done when the repeated lines exist only once.",
+     "confidence": 0.81,
+     "related": [
+      {
+       "path": "next/winner/lib/gatecore/analyze.py",
+       "lines": [
+        108,
+        114
+       ]
+      }
+     ]
+    }
+   ],
+   "signals": {
+    "p_model": 0.348,
+    "readings": [
+     0.348
+    ],
+    "raw": {
+     "push_back": 0.4,
+     "direction": 0.78,
+     "simplified": 0.07,
+     "comments_only": 0.02,
+     "new_behaviour": 0.97,
+     "grew_a_big_unit": 0.2,
+     "added_copies": 0.12,
+     "added_impossible_guards": 0.29,
+     "added_placeholders": 0.1,
+     "added_unused_flexibility": 0.31
+    },
+    "masked": {
+     "push_back": 0.48,
+     "simplified": 0.08,
+     "new_behaviour": 0.96,
+     "grew_a_big_unit": 0.24,
+     "added_copies": 0.12,
+     "added_impossible_guards": 0.29,
+     "added_placeholders": 0.37,
+     "added_unused_flexibility": 0.32,
+     "remove": 0.55,
+     "reuse": 0.25,
+     "shorten": 0.57,
+     "indirection": 0.27
+    },
+    "top_features": [
+     [
+      "masked_new_behaviour",
+      0.25
+     ],
+     [
+      "masked_remove",
+      0.21
+     ],
+     [
+      "raw_new_behaviour",
+      0.179
+     ],
+     [
+      "masked_shorten",
+      0.142
+     ]
+    ]
+   }
+  },
+  {
+   "path": "next/winner/lib/gatecore/cli.py",
+   "status": "judged",
+   "language": "Python",
+   "score": 0.3783,
+   "threshold": 0.506,
+   "failed": false,
+   "abstained": false,
+   "findings": [],
+   "advice": [
+    {
+     "id": "near_copy",
+     "lines": [
+      83,
+      88
+     ],
+     "message": "Lines 83-88 (in run) repeat lines 71-76 of this file (run) almost token for token.",
+     "fix": "Write the shared steps once: extract them into one function (or reuse run) that takes what differs as a parameter, and call it from both places. Done when the repeated lines exist only once.",
+     "confidence": 0.78,
+     "related": [
+      {
+       "path": "next/winner/lib/gatecore/cli.py",
+       "lines": [
+        71,
+        76
+       ]
+      }
+     ]
+    }
+   ],
+   "signals": {
+    "p_model": 0.3783,
+    "readings": [
+     0.3783
+    ],
+    "raw": {
+     "push_back": 0.39,
+     "direction": 0.69,
+     "simplified": 0.12,
+     "comments_only": 0.02,
+     "new_behaviour": 0.96,
+     "grew_a_big_unit": 0.21,
+     "added_copies": 0.09,
+     "added_impossible_guards": 0.52,
+     "added_placeholders": 0.15,
+     "added_unused_flexibility": 0.58
+    },
+    "masked": {
+     "push_back": 0.32,
+     "simplified": 0.1,
+     "new_behaviour": 0.95,
+     "grew_a_big_unit": 0.26,
+     "added_copies": 0.07,
+     "added_impossible_guards": 0.39,
+     "added_placeholders": 0.38,
+     "added_unused_flexibility": 0.57,
+     "remove": 0.4,
+     "reuse": 0.21,
+     "shorten": 0.49,
+     "indirection": 0.34
+    },
+    "top_features": [
+     [
+      "masked_new_behaviour",
+      0.23
+     ],
+     [
+      "raw_added_impossible_guards",
+      0.171
+     ],
+     [
+      "raw_new_behaviour",
+      0.163
+     ],
+     [
+      "masked_added_impossible_guards",
+      0.155
+     ]
+    ]
+   }
+  },
+  {
+   "path": "next/winner/lib/gatecore/detectors.py",
+   "status": "kept",
+   "reason": "False positive: this file is the detector for debug output, placeholders and stubs, so its patterns (print, TODO, NotImplementedError, stub) read to Jev as the smells themselves. Reviewed by hand; the flagged functions are complete and in use.",
+   "language": "Python"
+  },
+  {
+   "path": "next/winner/lib/gatecore/features.py",
+   "status": "judged",
+   "language": "Python",
+   "score": 0.2719,
+   "threshold": 0.506,
+   "failed": false,
+   "abstained": false,
+   "findings": [],
+   "advice": [],
+   "signals": {
+    "p_model": 0.2719,
+    "readings": [
+     0.2719
+    ],
+    "raw": {
+     "push_back": 0.44,
+     "direction": 0.63,
+     "simplified": 0.09,
+     "comments_only": 0.01,
+     "new_behaviour": 0.97,
+     "grew_a_big_unit": 0.11,
+     "added_copies": 0.06,
+     "added_impossible_guards": 0.36,
+     "added_placeholders": 0.1,
+     "added_unused_flexibility": 0.17
+    },
+    "masked": {
+     "push_back": 0.37,
+     "simplified": 0.12,
+     "new_behaviour": 0.96,
+     "grew_a_big_unit": 0.14,
+     "added_copies": 0.09,
+     "added_impossible_guards": 0.34,
+     "added_placeholders": 0.17,
+     "added_unused_flexibility": 0.2,
+     "remove": 0.28,
+     "reuse": 0.18,
+     "shorten": 0.6,
+     "indirection": 0.19
+    },
+    "top_features": [
+     [
+      "masked_new_behaviour",
+      0.25
+     ],
+     [
+      "raw_new_behaviour",
+      0.179
+     ],
+     [
+      "masked_shorten",
+      0.165
+     ],
+     [
+      "masked_added_impossible_guards",
+      0.131
+     ]
+    ]
+   }
+  },
+  {
+   "path": "next/winner/lib/gatecore/gitio.py",
+   "status": "judged",
+   "language": "Python",
+   "score": 0.3466,
+   "threshold": 0.506,
+   "failed": false,
+   "abstained": false,
+   "findings": [],
+   "advice": [],
+   "signals": {
+    "p_model": 0.3466,
+    "readings": [
+     0.3466
+    ],
+    "raw": {
+     "push_back": 0.37,
+     "direction": 0.6,
+     "simplified": 0.1,
+     "comments_only": 0.02,
+     "new_behaviour": 0.97,
+     "grew_a_big_unit": 0.18,
+     "added_copies": 0.11,
+     "added_impossible_guards": 0.48,
+     "added_placeholders": 0.07,
+     "added_unused_flexibility": 0.4
+    },
+    "masked": {
+     "push_back": 0.44,
+     "simplified": 0.11,
+     "new_behaviour": 0.96,
+     "grew_a_big_unit": 0.21,
+     "added_copies": 0.09,
+     "added_impossible_guards": 0.46,
+     "added_placeholders": 0.37,
+     "added_unused_flexibility": 0.46,
+     "remove": 0.46,
+     "reuse": 0.24,
+     "shorten": 0.54,
+     "indirection": 0.31
+    },
+    "top_features": [
+     [
+      "masked_new_behaviour",
+      0.25
+     ],
+     [
+      "masked_added_impossible_guards",
+      0.187
+     ],
+     [
+      "raw_new_behaviour",
+      0.179
+     ],
+     [
+      "raw_added_impossible_guards",
+      0.156
+     ]
+    ]
+   }
+  },
+  {
+   "path": "next/winner/lib/gatecore/jev.py",
+   "status": "judged",
+   "language": "Python",
+   "score": 0.4813,
+   "threshold": 0.506,
+   "failed": false,
+   "abstained": false,
+   "findings": [],
+   "advice": [],
+   "signals": {
+    "p_model": 0.4813,
+    "readings": [
+     0.4758,
+     0.4813,
+     0.4836
+    ],
+    "raw": {
+     "push_back": 0.49,
+     "direction": 0.8,
+     "simplified": 0.06,
+     "comments_only": 0.02,
+     "new_behaviour": 0.98,
+     "grew_a_big_unit": 0.19,
+     "added_copies": 0.07,
+     "added_impossible_guards": 0.45,
+     "added_placeholders": 0.08,
+     "added_unused_flexibility": 0.56
+    },
+    "masked": {
+     "push_back": 0.62,
+     "simplified": 0.1,
+     "new_behaviour": 0.96,
+     "grew_a_big_unit": 0.33,
+     "added_copies": 0.08,
+     "added_impossible_guards": 0.43,
+     "added_placeholders": 0.6,
+     "added_unused_flexibility": 0.59,
+     "remove": 0.61,
+     "reuse": 0.23,
+     "shorten": 0.57,
+     "indirection": 0.43
+    },
+    "top_features": [
+     [
+      "masked_remove",
+      0.268
+     ],
+     [
+      "masked_new_behaviour",
+      0.25
+     ],
+     [
+      "raw_new_behaviour",
+      0.201
+     ],
+     [
+      "masked_added_impossible_guards",
+      0.174
+     ]
+    ]
+   }
+  },
+  {
+   "path": "next/winner/lib/gatecore/lexer.py",
+   "status": "judged",
+   "language": "Python",
+   "score": 0.4757,
+   "threshold": 0.506,
+   "failed": false,
+   "abstained": false,
+   "findings": [],
+   "advice": [
+    {
+     "id": "long_function",
+     "lines": [
+      47,
+      150
+     ],
+     "message": "scan (lines 47-150) has 99 lines of code, most of them added by this change.",
+     "fix": "Split scan at its natural steps into smaller functions with clear names, or remove steps it does not need. Done when no added function is over 50 lines.",
+     "confidence": 0.8,
+     "related": []
+    }
+   ],
+   "signals": {
+    "p_model": 0.4757,
+    "readings": [
+     0.4757,
+     0.4846,
+     0.4602
+    ],
+    "raw": {
+     "push_back": 0.59,
+     "direction": 0.77,
+     "simplified": 0.07,
+     "comments_only": 0.02,
+     "new_behaviour": 0.97,
+     "grew_a_big_unit": 0.23,
+     "added_copies": 0.11,
+     "added_impossible_guards": 0.32,
+     "added_placeholders": 0.1,
+     "added_unused_flexibility": 0.32
+    },
+    "masked": {
+     "push_back": 0.74,
+     "simplified": 0.1,
+     "new_behaviour": 0.95,
+     "grew_a_big_unit": 0.35,
+     "added_copies": 0.29,
+     "added_impossible_guards": 0.26,
+     "added_placeholders": 0.73,
+     "added_unused_flexibility": 0.31,
+     "remove": 0.59,
+     "reuse": 0.33,
+     "shorten": 0.62,
+     "indirection": 0.28
+    },
+    "top_features": [
+     [
+      "masked_remove",
+      0.248
+     ],
+     [
+      "masked_new_behaviour",
+      0.23
+     ],
+     [
+      "raw_push_back",
+      0.215
+     ],
+     [
+      "masked_shorten",
+      0.18
+     ]
+    ]
+   }
+  },
+  {
+   "path": "next/winner/lib/gatecore/model.py",
+   "status": "judged",
+   "language": "Python",
+   "score": 0.2751,
+   "threshold": 0.506,
+   "failed": false,
+   "abstained": false,
+   "findings": [],
+   "advice": [],
+   "signals": {
+    "p_model": 0.2751,
+    "readings": [
+     0.2751
+    ],
+    "raw": {
+     "push_back": 0.33,
+     "direction": 0.44,
+     "simplified": 0.14,
+     "comments_only": 0.02,
+     "new_behaviour": 0.98,
+     "grew_a_big_unit": 0.11,
+     "added_copies": 0.23,
+     "added_impossible_guards": 0.37,
+     "added_placeholders": 0.09,
+     "added_unused_flexibility": 0.44
+    },
+    "masked": {
+     "push_back": 0.35,
+     "simplified": 0.12,
+     "new_behaviour": 0.96,
+     "grew_a_big_unit": 0.09,
+     "added_copies": 0.32,
+     "added_impossible_guards": 0.31,
+     "added_placeholders": 0.16,
+     "added_unused_flexibility": 0.39,
+     "remove": 0.3,
+     "reuse": 0.17,
+     "shorten": 0.65,
+     "indirection": 0.3
+    },
+    "top_features": [
+     [
+      "masked_new_behaviour",
+      0.25
+     ],
+     [
+      "masked_shorten",
+      0.205
+     ],
+     [
+      "raw_new_behaviour",
+      0.201
+     ],
+     [
+      "masked_added_impossible_guards",
+      0.116
+     ]
+    ]
+   }
+  },
+  {
+   "path": "next/winner/lib/gatecore/perimeter.py",
+   "status": "judged",
+   "language": "Python",
+   "score": 0.4288,
+   "threshold": 0.506,
+   "failed": false,
+   "abstained": false,
+   "findings": [],
+   "advice": [
+    {
+     "id": "long_function",
+     "lines": [
+      135,
+      252
+     ],
+     "message": "classify (lines 135-252) has 112 lines of code, most of them added by this change.",
+     "fix": "Split classify at its natural steps into smaller functions with clear names, or remove steps it does not need. Done when no added function is over 50 lines.",
+     "confidence": 0.8,
+     "related": []
+    }
+   ],
+   "signals": {
+    "p_model": 0.4288,
+    "readings": [
+     0.4288
+    ],
+    "raw": {
+     "push_back": 0.41,
+     "direction": 0.79,
+     "simplified": 0.08,
+     "comments_only": 0.02,
+     "new_behaviour": 0.95,
+     "grew_a_big_unit": 0.3,
+     "added_copies": 0.13,
+     "added_impossible_guards": 0.38,
+     "added_placeholders": 0.08,
+     "added_unused_flexibility": 0.44
+    },
+    "masked": {
+     "push_back": 0.54,
+     "simplified": 0.09,
+     "new_behaviour": 0.95,
+     "grew_a_big_unit": 0.48,
+     "added_copies": 0.13,
+     "added_impossible_guards": 0.39,
+     "added_placeholders": 0.41,
+     "added_unused_flexibility": 0.52,
+     "remove": 0.57,
+     "reuse": 0.33,
+     "shorten": 0.55,
+     "indirection": 0.29
+    },
+    "top_features": [
+     [
+      "masked_new_behaviour",
+      0.23
+     ],
+     [
+      "masked_remove",
+      0.229
+     ],
+     [
+      "masked_reuse",
+      0.156
+     ],
+     [
+      "masked_added_impossible_guards",
+      0.155
+     ]
+    ]
+   }
+  },
+  {
+   "path": "next/winner/lib/gatecore/report.py",
+   "status": "judged",
+   "language": "Python",
+   "score": 0.2415,
+   "threshold": 0.506,
+   "failed": false,
+   "abstained": false,
+   "findings": [],
+   "advice": [],
+   "signals": {
+    "p_model": 0.2415,
+    "readings": [
+     0.2415
+    ],
+    "raw": {
+     "push_back": 0.32,
+     "direction": 0.55,
+     "simplified": 0.1,
+     "comments_only": 0.02,
+     "new_behaviour": 0.97,
+     "grew_a_big_unit": 0.14,
+     "added_copies": 0.07,
+     "added_impossible_guards": 0.28,
+     "added_placeholders": 0.11,
+     "added_unused_flexibility": 0.24
+    },
+    "masked": {
+     "push_back": 0.42,
+     "simplified": 0.11,
+     "new_behaviour": 0.93,
+     "grew_a_big_unit": 0.24,
+     "added_copies": 0.15,
+     "added_impossible_guards": 0.29,
+     "added_placeholders": 0.5,
+     "added_unused_flexibility": 0.22,
+     "remove": 0.4,
+     "reuse": 0.19,
+     "shorten": 0.59,
+     "indirection": 0.23
+    },
+    "top_features": [
+     [
+      "masked_new_behaviour",
+      0.2
+     ],
+     [
+      "raw_new_behaviour",
+      0.179
+     ],
+     [
+      "masked_shorten",
+      0.157
+     ],
+     [
+      "masked_added_impossible_guards",
+      0.105
+     ]
+    ]
+   }
+  },
+  {
+   "path": "next/winner/lib/gatecore/units.py",
+   "status": "judged",
+   "language": "Python",
+   "score": 0.3888,
+   "threshold": 0.506,
+   "failed": false,
+   "abstained": false,
+   "findings": [],
+   "advice": [],
+   "signals": {
+    "p_model": 0.3888,
+    "readings": [
+     0.3888
+    ],
+    "raw": {
+     "push_back": 0.49,
+     "direction": 0.68,
+     "simplified": 0.09,
+     "comments_only": 0.03,
+     "new_behaviour": 0.97,
+     "grew_a_big_unit": 0.19,
+     "added_copies": 0.09,
+     "added_impossible_guards": 0.31,
+     "added_placeholders": 0.09,
+     "added_unused_flexibility": 0.24
+    },
+    "masked": {
+     "push_back": 0.59,
+     "simplified": 0.1,
+     "new_behaviour": 0.96,
+     "grew_a_big_unit": 0.25,
+     "added_copies": 0.16,
+     "added_impossible_guards": 0.35,
+     "added_placeholders": 0.29,
+     "added_unused_flexibility": 0.23,
+     "remove": 0.57,
+     "reuse": 0.31,
+     "shorten": 0.57,
+     "indirection": 0.26
+    },
+    "top_features": [
+     [
+      "masked_new_behaviour",
+      0.25
+     ],
+     [
+      "masked_remove",
+      0.229
+     ],
+     [
+      "raw_new_behaviour",
+      0.179
+     ],
+     [
+      "masked_reuse",
+      0.145
+     ]
+    ]
+   }
+  },
+  {
+   "path": "next/winner/lib/qualm_next/asks.py",
+   "status": "judged",
+   "language": "Python",
+   "score": 0.2792,
+   "threshold": 0.506,
+   "failed": false,
+   "abstained": false,
+   "findings": [],
+   "advice": [
+    {
+     "id": "near_copy",
+     "lines": [
+      14,
+      198
+     ],
+     "message": "Lines 14-198 repeat lines 14-198 of next/candidates/d-cascade/asks.py (unchanged by this pull request) almost token for token.",
+     "fix": "Write the shared steps once: extract them into one function (or reuse the existing code) that takes what differs as a parameter, and call it from both places. Done when the repeated lines exist only once.",
+     "confidence": 0.95,
+     "related": [
+      {
+       "path": "next/candidates/d-cascade/asks.py",
+       "lines": [
+        14,
+        198
+       ]
+      }
+     ]
+    }
+   ],
+   "signals": {
+    "p_model": 0.2792,
+    "readings": [
+     0.2792
+    ],
+    "raw": {
+     "push_back": 0.37,
+     "direction": 0.65,
+     "simplified": 0.1,
+     "comments_only": 0.08,
+     "new_behaviour": 0.89,
+     "grew_a_big_unit": 0.16,
+     "added_copies": 0.13,
+     "added_impossible_guards": 0.14,
+     "added_placeholders": 0.16,
+     "added_unused_flexibility": 0.21
+    },
+    "masked": {
+     "push_back": 0.46,
+     "simplified": 0.09,
+     "new_behaviour": 0.94,
+     "grew_a_big_unit": 0.18,
+     "added_copies": 0.16,
+     "added_impossible_guards": 0.36,
+     "added_placeholders": 0.65,
+     "added_unused_flexibility": 0.44,
+     "remove": 0.5,
+     "reuse": 0.38,
+     "shorten": 0.55,
+     "indirection": 0.39
+    },
+    "top_features": [
+     [
+      "masked_new_behaviour",
+      0.214
+     ],
+     [
+      "masked_reuse",
+      0.182
+     ],
+     [
+      "masked_remove",
+      0.163
+     ],
+     [
+      "masked_added_impossible_guards",
+      0.141
+     ]
+    ]
+   }
+  },
+  {
+   "path": "next/winner/lib/qualm_next/main.py",
+   "status": "judged",
+   "language": "Python",
+   "score": 0.3423,
+   "threshold": 0.506,
+   "failed": false,
+   "abstained": false,
+   "findings": [],
+   "advice": [],
+   "signals": {
+    "p_model": 0.3423,
+    "readings": [
+     0.3423
+    ],
+    "raw": {
+     "push_back": 0.39,
+     "direction": 0.69,
+     "simplified": 0.11,
+     "comments_only": 0.02,
+     "new_behaviour": 0.96,
+     "grew_a_big_unit": 0.14,
+     "added_copies": 0.11,
+     "added_impossible_guards": 0.33,
+     "added_placeholders": 0.15,
+     "added_unused_flexibility": 0.56
+    },
+    "masked": {
+     "push_back": 0.39,
+     "simplified": 0.12,
+     "new_behaviour": 0.95,
+     "grew_a_big_unit": 0.18,
+     "added_copies": 0.09,
+     "added_impossible_guards": 0.28,
+     "added_placeholders": 0.37,
+     "added_unused_flexibility": 0.51,
+     "remove": 0.41,
+     "reuse": 0.22,
+     "shorten": 0.57,
+     "indirection": 0.3
+    },
+    "top_features": [
+     [
+      "masked_new_behaviour",
+      0.23
+     ],
+     [
+      "raw_new_behaviour",
+      0.163
+     ],
+     [
+      "raw_added_unused_flexibility",
+      0.144
+     ],
+     [
+      "masked_shorten",
+      0.142
+     ]
+    ]
+   }
+  },
+  {
+   "path": "next/winner/lib/qualm_next/model.json",
+   "status": "skipped",
+   "reason": "not code in a judged language"
+  },
+  {
+   "path": "next/winner/lib/qualm_next/scorer.py",
+   "status": "judged",
+   "language": "Python",
+   "score": 0.4379,
+   "threshold": 0.506,
+   "failed": false,
+   "abstained": false,
+   "findings": [],
+   "advice": [],
+   "signals": {
+    "p_model": 0.4379,
+    "readings": [
+     0.4379
+    ],
+    "raw": {
+     "push_back": 0.53,
+     "direction": 0.85,
+     "simplified": 0.08,
+     "comments_only": 0.02,
+     "new_behaviour": 0.97,
+     "grew_a_big_unit": 0.23,
+     "added_copies": 0.11,
+     "added_impossible_guards": 0.08,
+     "added_placeholders": 0.09,
+     "added_unused_flexibility": 0.22
+    },
+    "masked": {
+     "push_back": 0.64,
+     "simplified": 0.09,
+     "new_behaviour": 0.96,
+     "grew_a_big_unit": 0.32,
+     "added_copies": 0.14,
+     "added_impossible_guards": 0.41,
+     "added_placeholders": 0.45,
+     "added_unused_flexibility": 0.53,
+     "remove": 0.66,
+     "reuse": 0.33,
+     "shorten": 0.57,
+     "indirection": 0.36
+    },
+    "top_features": [
+     [
+      "masked_remove",
+      0.318
+     ],
+     [
+      "masked_new_behaviour",
+      0.25
+     ],
+     [
+      "raw_new_behaviour",
+      0.179
+     ],
+     [
+      "masked_added_impossible_guards",
+      0.165
+     ]
+    ]
+   }
+  },
+  {
+   "path": "next/winner/lib/qualm_next/verbs.json",
+   "status": "skipped",
+   "reason": "not code in a judged language"
+  },
+  {
+   "path": "next/winner/tests/test_cli.py",
+   "status": "skipped",
+   "reason": "test",
+   "language": "Python"
+  },
+  {
+   "path": "next/winner/tests/test_core.py",
+   "status": "skipped",
+   "reason": "test",
+   "language": "Python"
+  },
+  {
+   "path": "next/winner/tests/test_scorer.py",
+   "status": "skipped",
+   "reason": "test",
+   "language": "Python"
+  },
+  {
+   "path": "next/winner/tests/testdata/base_ledger.go",
+   "status": "skipped",
+   "reason": "test",
+   "language": "Go"
+  },
+  {
+   "path": "next/winner/tests/testdata/clean_tags.go",
+   "status": "skipped",
+   "reason": "test",
+   "language": "Go"
+  },
+  {
+   "path": "next/winner/tests/testdata/payload_tags.go",
+   "status": "skipped",
+   "reason": "test",
+   "language": "Go"
+  }
+ ],
+ "warnings": [],
+ "usage": {
+  "jev_requests": 0,
+  "jev_input_tokens": 0,
+  "jev_cost_usd": 0.0,
+  "llm_requests": 0,
+  "llm_input_tokens": 0,
+  "llm_output_tokens": 0,
+  "llm_cost_usd": 0.0,
+  "llm_cost_estimated": true,
+  "seconds": 0.95
+ }
+}

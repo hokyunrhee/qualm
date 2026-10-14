@@ -1,0 +1,1645 @@
+{
+ "tool": "qualm-next",
+ "version": "1.0.0",
+ "passed": false,
+ "base": "7b0ac2c6fd966ee0e40d77548458eaeb95ae1bd2",
+ "files": [
+  {
+   "path": "winner/MIGRATION.md",
+   "status": "skipped",
+   "reason": "not code in a judged language"
+  },
+  {
+   "path": "winner/action.yml",
+   "status": "skipped",
+   "reason": "not code in a judged language"
+  },
+  {
+   "path": "winner/bin/qualm-next",
+   "status": "skipped",
+   "reason": "not code in a judged language"
+  },
+  {
+   "path": "winner/examples/qualm-next.yml",
+   "status": "skipped",
+   "reason": "not code in a judged language"
+  },
+  {
+   "path": "winner/lib/gatecore/__init__.py",
+   "status": "judged",
+   "language": "Python",
+   "score": 0.0352,
+   "threshold": 0.506,
+   "failed": false,
+   "abstained": false,
+   "findings": [],
+   "advice": [],
+   "signals": {
+    "p_model": 0.0352,
+    "readings": [
+     0.0352
+    ],
+    "raw": {
+     "push_back": 0.16,
+     "direction": 0.69,
+     "simplified": 0.09,
+     "comments_only": 0.45,
+     "new_behaviour": 0.83,
+     "grew_a_big_unit": 0.03,
+     "added_copies": 0.01,
+     "added_impossible_guards": 0.03,
+     "added_placeholders": 0.22,
+     "added_unused_flexibility": 0.03
+    },
+    "masked": {
+     "push_back": 0.56,
+     "simplified": 0.11,
+     "new_behaviour": 0.88,
+     "grew_a_big_unit": 0.06,
+     "added_copies": 0.02,
+     "added_impossible_guards": 0.04,
+     "added_placeholders": 0.63,
+     "added_unused_flexibility": 0.06,
+     "remove": 0.66,
+     "reuse": 0.08,
+     "shorten": 0.24,
+     "indirection": 0.26
+    },
+    "top_features": [
+     [
+      "masked_remove",
+      0.318
+     ],
+     [
+      "raw_added_placeholders",
+      0.164
+     ],
+     [
+      "masked_new_behaviour",
+      0.15
+     ],
+     [
+      "raw_new_behaviour",
+      0.077
+     ]
+    ]
+   }
+  },
+  {
+   "path": "winner/lib/gatecore/analyze.py",
+   "status": "judged",
+   "language": "Python",
+   "score": 0.3404,
+   "threshold": 0.506,
+   "failed": false,
+   "abstained": false,
+   "findings": [],
+   "advice": [
+    {
+     "id": "near_copy",
+     "lines": [
+      148,
+      154
+     ],
+     "message": "Lines 148-154 (in copy_sources) repeat lines 108-114 of this file (base_neighbours); the differences are path for n.",
+     "fix": "Write the shared steps once: extract them into one function (or reuse base_neighbours) that takes what differs as a parameter, and call it from both places. Done when the repeated lines exist only once.",
+     "confidence": 0.81,
+     "related": [
+      {
+       "path": "winner/lib/gatecore/analyze.py",
+       "lines": [
+        108,
+        114
+       ]
+      }
+     ]
+    }
+   ],
+   "signals": {
+    "p_model": 0.3404,
+    "readings": [
+     0.3404
+    ],
+    "raw": {
+     "push_back": 0.4,
+     "direction": 0.83,
+     "simplified": 0.06,
+     "comments_only": 0.02,
+     "new_behaviour": 0.97,
+     "grew_a_big_unit": 0.17,
+     "added_copies": 0.12,
+     "added_impossible_guards": 0.3,
+     "added_placeholders": 0.1,
+     "added_unused_flexibility": 0.31
+    },
+    "masked": {
+     "push_back": 0.47,
+     "simplified": 0.09,
+     "new_behaviour": 0.96,
+     "grew_a_big_unit": 0.23,
+     "added_copies": 0.15,
+     "added_impossible_guards": 0.29,
+     "added_placeholders": 0.38,
+     "added_unused_flexibility": 0.35,
+     "remove": 0.52,
+     "reuse": 0.26,
+     "shorten": 0.57,
+     "indirection": 0.26
+    },
+    "top_features": [
+     [
+      "masked_new_behaviour",
+      0.25
+     ],
+     [
+      "masked_remove",
+      0.182
+     ],
+     [
+      "raw_new_behaviour",
+      0.179
+     ],
+     [
+      "masked_shorten",
+      0.142
+     ]
+    ]
+   }
+  },
+  {
+   "path": "winner/lib/gatecore/cli.py",
+   "status": "judged",
+   "language": "Python",
+   "score": 0.3962,
+   "threshold": 0.506,
+   "failed": false,
+   "abstained": false,
+   "findings": [],
+   "advice": [
+    {
+     "id": "near_copy",
+     "lines": [
+      83,
+      88
+     ],
+     "message": "Lines 83-88 (in run) repeat lines 71-76 of this file (run) almost token for token.",
+     "fix": "Write the shared steps once: extract them into one function (or reuse run) that takes what differs as a parameter, and call it from both places. Done when the repeated lines exist only once.",
+     "confidence": 0.78,
+     "related": [
+      {
+       "path": "winner/lib/gatecore/cli.py",
+       "lines": [
+        71,
+        76
+       ]
+      }
+     ]
+    }
+   ],
+   "signals": {
+    "p_model": 0.3962,
+    "readings": [
+     0.3962
+    ],
+    "raw": {
+     "push_back": 0.43,
+     "direction": 0.62,
+     "simplified": 0.12,
+     "comments_only": 0.02,
+     "new_behaviour": 0.96,
+     "grew_a_big_unit": 0.21,
+     "added_copies": 0.09,
+     "added_impossible_guards": 0.51,
+     "added_placeholders": 0.16,
+     "added_unused_flexibility": 0.58
+    },
+    "masked": {
+     "push_back": 0.33,
+     "simplified": 0.11,
+     "new_behaviour": 0.94,
+     "grew_a_big_unit": 0.27,
+     "added_copies": 0.09,
+     "added_impossible_guards": 0.37,
+     "added_placeholders": 0.42,
+     "added_unused_flexibility": 0.61,
+     "remove": 0.42,
+     "reuse": 0.18,
+     "shorten": 0.49,
+     "indirection": 0.31
+    },
+    "top_features": [
+     [
+      "masked_new_behaviour",
+      0.214
+     ],
+     [
+      "raw_added_impossible_guards",
+      0.167
+     ],
+     [
+      "raw_new_behaviour",
+      0.163
+     ],
+     [
+      "raw_added_unused_flexibility",
+      0.152
+     ]
+    ]
+   }
+  },
+  {
+   "path": "winner/lib/gatecore/detectors.py",
+   "status": "judged",
+   "language": "Python",
+   "score": 0.5572,
+   "threshold": 0.506,
+   "failed": true,
+   "abstained": false,
+   "findings": [
+    {
+     "id": "review.added_placeholders",
+     "lines": [
+      93,
+      128
+     ],
+     "message": "Lines 93-128 (in placeholder) add placeholder, debugging or unfinished code.",
+     "fix": "Remove the debugging output and stubs, or finish them. Done when nothing in these lines is temporary.",
+     "confidence": 0.61,
+     "related": [],
+     "place": [
+      93,
+      128
+     ]
+    },
+    {
+     "id": "review.added_placeholders",
+     "lines": [
+      143,
+      163
+     ],
+     "message": "Lines 143-163 (in is_doc_example) add placeholder, debugging or unfinished code.",
+     "fix": "Remove the debugging output and stubs, or finish them. Done when nothing in these lines is temporary.",
+     "confidence": 0.57,
+     "related": [],
+     "place": [
+      143,
+      163
+     ]
+    },
+    {
+     "id": "review.added_impossible_guards",
+     "lines": [
+      49,
+      75
+     ],
+     "message": "Lines 49-75 (in debug_output) add checks or fallbacks for states the surrounding code already rules out.",
+     "fix": "Delete each check for a case its callers cannot produce. Keep checks for input that can really arrive. Done when every remaining check guards a state a caller can produce.",
+     "confidence": 0.51,
+     "related": [],
+     "place": [
+      49,
+      75
+     ]
+    }
+   ],
+   "advice": [
+    {
+     "id": "near_copy",
+     "lines": [
+      82,
+      88
+     ],
+     "message": "Lines 82-88 repeat lines 37-43 of this file; the differences are STUB for DEBUG_CALLS.",
+     "fix": "Write the shared steps once: extract them into one function (or reuse the existing code) that takes what differs as a parameter, and call it from both places. Done when the repeated lines exist only once.",
+     "confidence": 0.81,
+     "related": [
+      {
+       "path": "winner/lib/gatecore/detectors.py",
+       "lines": [
+        37,
+        43
+       ]
+      }
+     ]
+    },
+    {
+     "id": "near_copy",
+     "lines": [
+      397,
+      402
+     ],
+     "message": "Lines 397-402 repeat lines 389-394 of this file almost token for token.",
+     "fix": "Write the shared steps once: extract them into one function (or reuse the existing code) that takes what differs as a parameter, and call it from both places. Done when the repeated lines exist only once.",
+     "confidence": 0.78,
+     "related": [
+      {
+       "path": "winner/lib/gatecore/detectors.py",
+       "lines": [
+        389,
+        394
+       ]
+      }
+     ]
+    },
+    {
+     "id": "long_function",
+     "lines": [
+      284,
+      380
+     ],
+     "message": "near_copy (lines 284-380) has 92 lines of code, most of them added by this change.",
+     "fix": "Split near_copy at its natural steps into smaller functions with clear names, or remove steps it does not need. Done when no added function is over 50 lines.",
+     "confidence": 0.77,
+     "related": []
+    }
+   ],
+   "signals": {
+    "p_model": 0.5572,
+    "readings": [
+     0.5572
+    ],
+    "raw": {
+     "push_back": 0.56,
+     "direction": 0.9,
+     "simplified": 0.06,
+     "comments_only": 0.02,
+     "new_behaviour": 0.97,
+     "grew_a_big_unit": 0.39,
+     "added_copies": 0.28,
+     "added_impossible_guards": 0.43,
+     "added_placeholders": 0.2,
+     "added_unused_flexibility": 0.3
+    },
+    "masked": {
+     "push_back": 0.59,
+     "simplified": 0.08,
+     "new_behaviour": 0.95,
+     "grew_a_big_unit": 0.28,
+     "added_copies": 0.25,
+     "added_impossible_guards": 0.37,
+     "added_placeholders": 0.59,
+     "added_unused_flexibility": 0.41,
+     "remove": 0.67,
+     "reuse": 0.4,
+     "shorten": 0.53,
+     "indirection": 0.28
+    },
+    "top_features": [
+     [
+      "masked_remove",
+      0.329
+     ],
+     [
+      "masked_new_behaviour",
+      0.23
+     ],
+     [
+      "masked_reuse",
+      0.192
+     ],
+     [
+      "raw_push_back",
+      0.187
+     ]
+    ],
+    "places": [
+     {
+      "lines": [
+       15,
+       17
+      ],
+      "name": "finding",
+      "answers": {
+       "push_back": 0.32,
+       "added_copies": 0.04,
+       "added_impossible_guards": 0.17,
+       "added_placeholders": 0.25,
+       "added_unused_flexibility": 0.13,
+       "remove": 0.24,
+       "reuse": 0.13,
+       "shorten": 0.38,
+       "indirection": 0.26
+      }
+     },
+     {
+      "lines": [
+       20,
+       21
+      ],
+      "name": "ranges",
+      "answers": {
+       "push_back": 0.29,
+       "added_copies": 0.07,
+       "added_impossible_guards": 0.04,
+       "added_placeholders": 0.19,
+       "added_unused_flexibility": 0.24,
+       "remove": 0.2,
+       "reuse": 0.14,
+       "shorten": 0.24,
+       "indirection": 0.57
+      }
+     },
+     {
+      "lines": [
+       24,
+       26
+      ],
+      "name": "unit_label",
+      "answers": {
+       "push_back": 0.34,
+       "added_copies": 0.07,
+       "added_impossible_guards": 0.25,
+       "added_placeholders": 0.24,
+       "added_unused_flexibility": 0.12,
+       "remove": 0.22,
+       "reuse": 0.12,
+       "shorten": 0.62,
+       "indirection": 0.19
+      }
+     },
+     {
+      "lines": [
+       29,
+       32
+      ],
+      "name": "where",
+      "answers": {
+       "push_back": 0.35,
+       "added_copies": 0.07,
+       "added_impossible_guards": 0.24,
+       "added_placeholders": 0.19,
+       "added_unused_flexibility": 0.1,
+       "remove": 0.21,
+       "reuse": 0.14,
+       "shorten": 0.53,
+       "indirection": 0.19
+      }
+     },
+     {
+      "lines": [
+       49,
+       75
+      ],
+      "name": "debug_output",
+      "answers": {
+       "push_back": 0.51,
+       "added_copies": 0.16,
+       "added_impossible_guards": 0.24,
+       "added_placeholders": 0.32,
+       "added_unused_flexibility": 0.18,
+       "remove": 0.26,
+       "reuse": 0.2,
+       "shorten": 0.53,
+       "indirection": 0.14
+      }
+     },
+     {
+      "lines": [
+       93,
+       128
+      ],
+      "name": "placeholder",
+      "answers": {
+       "push_back": 0.61,
+       "added_copies": 0.19,
+       "added_impossible_guards": 0.28,
+       "added_placeholders": 0.83,
+       "added_unused_flexibility": 0.25,
+       "remove": 0.38,
+       "reuse": 0.24,
+       "shorten": 0.6,
+       "indirection": 0.2
+      }
+     },
+     {
+      "lines": [
+       138,
+       140
+      ],
+      "name": "_comment_indent",
+      "answers": {
+       "push_back": 0.25,
+       "added_copies": 0.1,
+       "added_impossible_guards": 0.15,
+       "added_placeholders": 0.16,
+       "added_unused_flexibility": 0.19,
+       "remove": 0.25,
+       "reuse": 0.16,
+       "shorten": 0.52,
+       "indirection": 0.17
+      }
+     },
+     {
+      "lines": [
+       143,
+       163
+      ],
+      "name": "is_doc_example",
+      "answers": {
+       "push_back": 0.57,
+       "added_copies": 0.16,
+       "added_impossible_guards": 0.16,
+       "added_placeholders": 0.37,
+       "added_unused_flexibility": 0.13,
+       "remove": 0.27,
+       "reuse": 0.19,
+       "shorten": 0.52,
+       "indirection": 0.14
+      }
+     },
+     {
+      "lines": [
+       169,
+       188
+      ],
+      "name": "commented_out_code",
+      "answers": {
+       "push_back": 0.41,
+       "added_copies": 0.12,
+       "added_impossible_guards": 0.29,
+       "added_placeholders": 0.33,
+       "added_unused_flexibility": 0.11,
+       "remove": 0.28,
+       "reuse": 0.19,
+       "shorten": 0.55,
+       "indirection": 0.11
+      }
+     },
+     {
+      "lines": [
+       199,
+       208
+      ],
+      "name": "norm_lines",
+      "answers": {
+       "push_back": 0.24,
+       "added_copies": 0.07,
+       "added_impossible_guards": 0.16,
+       "added_placeholders": 0.36,
+       "added_unused_flexibility": 0.09,
+       "remove": 0.25,
+       "reuse": 0.14,
+       "shorten": 0.64,
+       "indirection": 0.17
+      }
+     }
+    ]
+   }
+  },
+  {
+   "path": "winner/lib/gatecore/features.py",
+   "status": "judged",
+   "language": "Python",
+   "score": 0.2699,
+   "threshold": 0.506,
+   "failed": false,
+   "abstained": false,
+   "findings": [],
+   "advice": [],
+   "signals": {
+    "p_model": 0.2699,
+    "readings": [
+     0.2699
+    ],
+    "raw": {
+     "push_back": 0.44,
+     "direction": 0.63,
+     "simplified": 0.09,
+     "comments_only": 0.01,
+     "new_behaviour": 0.97,
+     "grew_a_big_unit": 0.11,
+     "added_copies": 0.06,
+     "added_impossible_guards": 0.36,
+     "added_placeholders": 0.1,
+     "added_unused_flexibility": 0.17
+    },
+    "masked": {
+     "push_back": 0.36,
+     "simplified": 0.11,
+     "new_behaviour": 0.96,
+     "grew_a_big_unit": 0.13,
+     "added_copies": 0.08,
+     "added_impossible_guards": 0.35,
+     "added_placeholders": 0.14,
+     "added_unused_flexibility": 0.21,
+     "remove": 0.27,
+     "reuse": 0.17,
+     "shorten": 0.61,
+     "indirection": 0.18
+    },
+    "top_features": [
+     [
+      "masked_new_behaviour",
+      0.25
+     ],
+     [
+      "raw_new_behaviour",
+      0.179
+     ],
+     [
+      "masked_shorten",
+      0.173
+     ],
+     [
+      "masked_added_impossible_guards",
+      0.136
+     ]
+    ]
+   }
+  },
+  {
+   "path": "winner/lib/gatecore/gitio.py",
+   "status": "judged",
+   "language": "Python",
+   "score": 0.3466,
+   "threshold": 0.506,
+   "failed": false,
+   "abstained": false,
+   "findings": [],
+   "advice": [],
+   "signals": {
+    "p_model": 0.3466,
+    "readings": [
+     0.3466
+    ],
+    "raw": {
+     "push_back": 0.36,
+     "direction": 0.62,
+     "simplified": 0.09,
+     "comments_only": 0.02,
+     "new_behaviour": 0.97,
+     "grew_a_big_unit": 0.18,
+     "added_copies": 0.09,
+     "added_impossible_guards": 0.49,
+     "added_placeholders": 0.07,
+     "added_unused_flexibility": 0.4
+    },
+    "masked": {
+     "push_back": 0.39,
+     "simplified": 0.11,
+     "new_behaviour": 0.97,
+     "grew_a_big_unit": 0.19,
+     "added_copies": 0.07,
+     "added_impossible_guards": 0.47,
+     "added_placeholders": 0.33,
+     "added_unused_flexibility": 0.48,
+     "remove": 0.46,
+     "reuse": 0.24,
+     "shorten": 0.54,
+     "indirection": 0.29
+    },
+    "top_features": [
+     [
+      "masked_new_behaviour",
+      0.276
+     ],
+     [
+      "masked_added_impossible_guards",
+      0.192
+     ],
+     [
+      "raw_new_behaviour",
+      0.179
+     ],
+     [
+      "raw_added_impossible_guards",
+      0.16
+     ]
+    ]
+   }
+  },
+  {
+   "path": "winner/lib/gatecore/jev.py",
+   "status": "judged",
+   "language": "Python",
+   "score": 0.4944,
+   "threshold": 0.506,
+   "failed": false,
+   "abstained": false,
+   "findings": [],
+   "advice": [],
+   "signals": {
+    "p_model": 0.4944,
+    "readings": [
+     0.4944,
+     0.5004,
+     0.4982,
+     0.5099,
+     0.4717,
+     0.5053,
+     0.5104,
+     0.4934,
+     0.4704,
+     0.4779,
+     0.4779
+    ],
+    "raw": {
+     "push_back": 0.51,
+     "direction": 0.83,
+     "simplified": 0.07,
+     "comments_only": 0.02,
+     "new_behaviour": 0.97,
+     "grew_a_big_unit": 0.19,
+     "added_copies": 0.08,
+     "added_impossible_guards": 0.45,
+     "added_placeholders": 0.07,
+     "added_unused_flexibility": 0.56
+    },
+    "masked": {
+     "push_back": 0.61,
+     "simplified": 0.1,
+     "new_behaviour": 0.96,
+     "grew_a_big_unit": 0.34,
+     "added_copies": 0.08,
+     "added_impossible_guards": 0.44,
+     "added_placeholders": 0.55,
+     "added_unused_flexibility": 0.57,
+     "remove": 0.65,
+     "reuse": 0.26,
+     "shorten": 0.57,
+     "indirection": 0.46
+    },
+    "top_features": [
+     [
+      "masked_remove",
+      0.308
+     ],
+     [
+      "masked_new_behaviour",
+      0.25
+     ],
+     [
+      "raw_new_behaviour",
+      0.179
+     ],
+     [
+      "masked_added_impossible_guards",
+      0.178
+     ]
+    ]
+   }
+  },
+  {
+   "path": "winner/lib/gatecore/lexer.py",
+   "status": "judged",
+   "language": "Python",
+   "score": 0.4947,
+   "threshold": 0.506,
+   "failed": false,
+   "abstained": false,
+   "findings": [],
+   "advice": [
+    {
+     "id": "long_function",
+     "lines": [
+      47,
+      150
+     ],
+     "message": "scan (lines 47-150) has 99 lines of code, most of them added by this change.",
+     "fix": "Split scan at its natural steps into smaller functions with clear names, or remove steps it does not need. Done when no added function is over 50 lines.",
+     "confidence": 0.8,
+     "related": []
+    }
+   ],
+   "signals": {
+    "p_model": 0.4947,
+    "readings": [
+     0.5093,
+     0.5187,
+     0.5063,
+     0.4818,
+     0.478,
+     0.478,
+     0.4947
+    ],
+    "raw": {
+     "push_back": 0.58,
+     "direction": 0.77,
+     "simplified": 0.07,
+     "comments_only": 0.02,
+     "new_behaviour": 0.97,
+     "grew_a_big_unit": 0.29,
+     "added_copies": 0.13,
+     "added_impossible_guards": 0.3,
+     "added_placeholders": 0.09,
+     "added_unused_flexibility": 0.31
+    },
+    "masked": {
+     "push_back": 0.71,
+     "simplified": 0.1,
+     "new_behaviour": 0.95,
+     "grew_a_big_unit": 0.32,
+     "added_copies": 0.28,
+     "added_impossible_guards": 0.27,
+     "added_placeholders": 0.55,
+     "added_unused_flexibility": 0.33,
+     "remove": 0.72,
+     "reuse": 0.31,
+     "shorten": 0.62,
+     "indirection": 0.26
+    },
+    "top_features": [
+     [
+      "masked_remove",
+      0.384
+     ],
+     [
+      "masked_new_behaviour",
+      0.23
+     ],
+     [
+      "raw_push_back",
+      0.206
+     ],
+     [
+      "masked_shorten",
+      0.18
+     ]
+    ]
+   }
+  },
+  {
+   "path": "winner/lib/gatecore/model.py",
+   "status": "judged",
+   "language": "Python",
+   "score": 0.2917,
+   "threshold": 0.506,
+   "failed": false,
+   "abstained": false,
+   "findings": [],
+   "advice": [],
+   "signals": {
+    "p_model": 0.2917,
+    "readings": [
+     0.2917
+    ],
+    "raw": {
+     "push_back": 0.36,
+     "direction": 0.38,
+     "simplified": 0.15,
+     "comments_only": 0.02,
+     "new_behaviour": 0.97,
+     "grew_a_big_unit": 0.1,
+     "added_copies": 0.27,
+     "added_impossible_guards": 0.36,
+     "added_placeholders": 0.08,
+     "added_unused_flexibility": 0.43
+    },
+    "masked": {
+     "push_back": 0.36,
+     "simplified": 0.12,
+     "new_behaviour": 0.96,
+     "grew_a_big_unit": 0.1,
+     "added_copies": 0.41,
+     "added_impossible_guards": 0.31,
+     "added_placeholders": 0.16,
+     "added_unused_flexibility": 0.38,
+     "remove": 0.33,
+     "reuse": 0.19,
+     "shorten": 0.66,
+     "indirection": 0.29
+    },
+    "top_features": [
+     [
+      "masked_new_behaviour",
+      0.25
+     ],
+     [
+      "masked_shorten",
+      0.213
+     ],
+     [
+      "raw_new_behaviour",
+      0.179
+     ],
+     [
+      "masked_added_impossible_guards",
+      0.116
+     ]
+    ]
+   }
+  },
+  {
+   "path": "winner/lib/gatecore/perimeter.py",
+   "status": "judged",
+   "language": "Python",
+   "score": 0.4038,
+   "threshold": 0.506,
+   "failed": false,
+   "abstained": false,
+   "findings": [],
+   "advice": [
+    {
+     "id": "long_function",
+     "lines": [
+      135,
+      252
+     ],
+     "message": "classify (lines 135-252) has 112 lines of code, most of them added by this change.",
+     "fix": "Split classify at its natural steps into smaller functions with clear names, or remove steps it does not need. Done when no added function is over 50 lines.",
+     "confidence": 0.8,
+     "related": []
+    }
+   ],
+   "signals": {
+    "p_model": 0.4038,
+    "readings": [
+     0.4038
+    ],
+    "raw": {
+     "push_back": 0.41,
+     "direction": 0.83,
+     "simplified": 0.08,
+     "comments_only": 0.02,
+     "new_behaviour": 0.95,
+     "grew_a_big_unit": 0.34,
+     "added_copies": 0.13,
+     "added_impossible_guards": 0.38,
+     "added_placeholders": 0.06,
+     "added_unused_flexibility": 0.43
+    },
+    "masked": {
+     "push_back": 0.53,
+     "simplified": 0.1,
+     "new_behaviour": 0.94,
+     "grew_a_big_unit": 0.45,
+     "added_copies": 0.15,
+     "added_impossible_guards": 0.39,
+     "added_placeholders": 0.43,
+     "added_unused_flexibility": 0.49,
+     "remove": 0.53,
+     "reuse": 0.35,
+     "shorten": 0.53,
+     "indirection": 0.29
+    },
+    "top_features": [
+     [
+      "masked_new_behaviour",
+      0.214
+     ],
+     [
+      "masked_remove",
+      0.191
+     ],
+     [
+      "masked_reuse",
+      0.167
+     ],
+     [
+      "masked_added_impossible_guards",
+      0.155
+     ]
+    ]
+   }
+  },
+  {
+   "path": "winner/lib/gatecore/report.py",
+   "status": "judged",
+   "language": "Python",
+   "score": 0.2591,
+   "threshold": 0.506,
+   "failed": false,
+   "abstained": false,
+   "findings": [],
+   "advice": [],
+   "signals": {
+    "p_model": 0.2591,
+    "readings": [
+     0.2591
+    ],
+    "raw": {
+     "push_back": 0.33,
+     "direction": 0.62,
+     "simplified": 0.11,
+     "comments_only": 0.02,
+     "new_behaviour": 0.97,
+     "grew_a_big_unit": 0.15,
+     "added_copies": 0.07,
+     "added_impossible_guards": 0.29,
+     "added_placeholders": 0.09,
+     "added_unused_flexibility": 0.24
+    },
+    "masked": {
+     "push_back": 0.44,
+     "simplified": 0.11,
+     "new_behaviour": 0.93,
+     "grew_a_big_unit": 0.26,
+     "added_copies": 0.15,
+     "added_impossible_guards": 0.31,
+     "added_placeholders": 0.57,
+     "added_unused_flexibility": 0.24,
+     "remove": 0.46,
+     "reuse": 0.18,
+     "shorten": 0.61,
+     "indirection": 0.24
+    },
+    "top_features": [
+     [
+      "masked_new_behaviour",
+      0.2
+     ],
+     [
+      "raw_new_behaviour",
+      0.179
+     ],
+     [
+      "masked_shorten",
+      0.173
+     ],
+     [
+      "masked_remove",
+      0.125
+     ]
+    ]
+   }
+  },
+  {
+   "path": "winner/lib/gatecore/units.py",
+   "status": "judged",
+   "language": "Python",
+   "score": 0.4074,
+   "threshold": 0.506,
+   "failed": false,
+   "abstained": false,
+   "findings": [],
+   "advice": [],
+   "signals": {
+    "p_model": 0.4074,
+    "readings": [
+     0.4074
+    ],
+    "raw": {
+     "push_back": 0.49,
+     "direction": 0.74,
+     "simplified": 0.08,
+     "comments_only": 0.02,
+     "new_behaviour": 0.97,
+     "grew_a_big_unit": 0.18,
+     "added_copies": 0.09,
+     "added_impossible_guards": 0.31,
+     "added_placeholders": 0.09,
+     "added_unused_flexibility": 0.24
+    },
+    "masked": {
+     "push_back": 0.58,
+     "simplified": 0.11,
+     "new_behaviour": 0.96,
+     "grew_a_big_unit": 0.27,
+     "added_copies": 0.17,
+     "added_impossible_guards": 0.36,
+     "added_placeholders": 0.33,
+     "added_unused_flexibility": 0.25,
+     "remove": 0.59,
+     "reuse": 0.34,
+     "shorten": 0.57,
+     "indirection": 0.27
+    },
+    "top_features": [
+     [
+      "masked_new_behaviour",
+      0.25
+     ],
+     [
+      "masked_remove",
+      0.248
+     ],
+     [
+      "raw_new_behaviour",
+      0.179
+     ],
+     [
+      "masked_reuse",
+      0.161
+     ]
+    ]
+   }
+  },
+  {
+   "path": "winner/lib/qualm_next/asks.py",
+   "status": "judged",
+   "language": "Python",
+   "score": 0.2652,
+   "threshold": 0.506,
+   "failed": false,
+   "abstained": false,
+   "findings": [],
+   "advice": [],
+   "signals": {
+    "p_model": 0.2652,
+    "readings": [
+     0.2652
+    ],
+    "raw": {
+     "push_back": 0.33,
+     "direction": 0.67,
+     "simplified": 0.1,
+     "comments_only": 0.08,
+     "new_behaviour": 0.88,
+     "grew_a_big_unit": 0.17,
+     "added_copies": 0.13,
+     "added_impossible_guards": 0.15,
+     "added_placeholders": 0.15,
+     "added_unused_flexibility": 0.21
+    },
+    "masked": {
+     "push_back": 0.47,
+     "simplified": 0.09,
+     "new_behaviour": 0.94,
+     "grew_a_big_unit": 0.17,
+     "added_copies": 0.17,
+     "added_impossible_guards": 0.37,
+     "added_placeholders": 0.63,
+     "added_unused_flexibility": 0.43,
+     "remove": 0.53,
+     "reuse": 0.35,
+     "shorten": 0.56,
+     "indirection": 0.37
+    },
+    "top_features": [
+     [
+      "masked_new_behaviour",
+      0.214
+     ],
+     [
+      "masked_remove",
+      0.191
+     ],
+     [
+      "masked_reuse",
+      0.167
+     ],
+     [
+      "masked_added_impossible_guards",
+      0.146
+     ]
+    ]
+   }
+  },
+  {
+   "path": "winner/lib/qualm_next/main.py",
+   "status": "judged",
+   "language": "Python",
+   "score": 0.3663,
+   "threshold": 0.506,
+   "failed": false,
+   "abstained": false,
+   "findings": [],
+   "advice": [],
+   "signals": {
+    "p_model": 0.3663,
+    "readings": [
+     0.3663
+    ],
+    "raw": {
+     "push_back": 0.4,
+     "direction": 0.67,
+     "simplified": 0.11,
+     "comments_only": 0.02,
+     "new_behaviour": 0.96,
+     "grew_a_big_unit": 0.12,
+     "added_copies": 0.09,
+     "added_impossible_guards": 0.36,
+     "added_placeholders": 0.15,
+     "added_unused_flexibility": 0.55
+    },
+    "masked": {
+     "push_back": 0.4,
+     "simplified": 0.12,
+     "new_behaviour": 0.95,
+     "grew_a_big_unit": 0.17,
+     "added_copies": 0.08,
+     "added_impossible_guards": 0.3,
+     "added_placeholders": 0.41,
+     "added_unused_flexibility": 0.52,
+     "remove": 0.51,
+     "reuse": 0.21,
+     "shorten": 0.58,
+     "indirection": 0.31
+    },
+    "top_features": [
+     [
+      "masked_new_behaviour",
+      0.23
+     ],
+     [
+      "masked_remove",
+      0.172
+     ],
+     [
+      "raw_new_behaviour",
+      0.163
+     ],
+     [
+      "masked_shorten",
+      0.149
+     ]
+    ]
+   }
+  },
+  {
+   "path": "winner/lib/qualm_next/model.json",
+   "status": "skipped",
+   "reason": "not code in a judged language"
+  },
+  {
+   "path": "winner/lib/qualm_next/scorer.py",
+   "status": "judged",
+   "language": "Python",
+   "score": 0.4376,
+   "threshold": 0.506,
+   "failed": false,
+   "abstained": false,
+   "findings": [],
+   "advice": [],
+   "signals": {
+    "p_model": 0.4376,
+    "readings": [
+     0.4376
+    ],
+    "raw": {
+     "push_back": 0.52,
+     "direction": 0.84,
+     "simplified": 0.08,
+     "comments_only": 0.02,
+     "new_behaviour": 0.97,
+     "grew_a_big_unit": 0.31,
+     "added_copies": 0.12,
+     "added_impossible_guards": 0.09,
+     "added_placeholders": 0.08,
+     "added_unused_flexibility": 0.22
+    },
+    "masked": {
+     "push_back": 0.62,
+     "simplified": 0.1,
+     "new_behaviour": 0.96,
+     "grew_a_big_unit": 0.33,
+     "added_copies": 0.12,
+     "added_impossible_guards": 0.4,
+     "added_placeholders": 0.42,
+     "added_unused_flexibility": 0.49,
+     "remove": 0.65,
+     "reuse": 0.31,
+     "shorten": 0.58,
+     "indirection": 0.34
+    },
+    "top_features": [
+     [
+      "masked_remove",
+      0.308
+     ],
+     [
+      "masked_new_behaviour",
+      0.25
+     ],
+     [
+      "raw_new_behaviour",
+      0.179
+     ],
+     [
+      "masked_added_impossible_guards",
+      0.16
+     ]
+    ]
+   }
+  },
+  {
+   "path": "winner/lib/qualm_next/verbs.json",
+   "status": "skipped",
+   "reason": "not code in a judged language"
+  },
+  {
+   "path": "winner/tests/fixture/base_ledger.go",
+   "status": "judged",
+   "language": "Go",
+   "score": 0.1343,
+   "threshold": 0.506,
+   "failed": false,
+   "abstained": false,
+   "findings": [],
+   "advice": [],
+   "signals": {
+    "p_model": 0.1343,
+    "readings": [
+     0.1343
+    ],
+    "raw": {
+     "push_back": 0.28,
+     "direction": 0.53,
+     "simplified": 0.11,
+     "comments_only": 0.03,
+     "new_behaviour": 0.96,
+     "grew_a_big_unit": 0.12,
+     "added_copies": 0.04,
+     "added_impossible_guards": 0.15,
+     "added_placeholders": 0.14,
+     "added_unused_flexibility": 0.08
+    },
+    "masked": {
+     "push_back": 0.24,
+     "simplified": 0.1,
+     "new_behaviour": 0.96,
+     "grew_a_big_unit": 0.1,
+     "added_copies": 0.03,
+     "added_impossible_guards": 0.13,
+     "added_placeholders": 0.18,
+     "added_unused_flexibility": 0.09,
+     "remove": 0.33,
+     "reuse": 0.21,
+     "shorten": 0.45,
+     "indirection": 0.17
+    },
+    "top_features": [
+     [
+      "masked_new_behaviour",
+      0.25
+     ],
+     [
+      "raw_new_behaviour",
+      0.163
+     ],
+     [
+      "push_back_gap",
+      0.106
+     ],
+     [
+      "raw_added_placeholders",
+      0.086
+     ]
+    ]
+   }
+  },
+  {
+   "path": "winner/tests/fixture/clean_tags.go",
+   "status": "judged",
+   "language": "Go",
+   "score": 0.1633,
+   "threshold": 0.506,
+   "failed": false,
+   "abstained": false,
+   "findings": [],
+   "advice": [],
+   "signals": {
+    "p_model": 0.1633,
+    "readings": [
+     0.1633
+    ],
+    "raw": {
+     "push_back": 0.33,
+     "direction": 0.59,
+     "simplified": 0.18,
+     "comments_only": 0.02,
+     "new_behaviour": 0.93,
+     "grew_a_big_unit": 0.19,
+     "added_copies": 0.24,
+     "added_impossible_guards": 0.07,
+     "added_placeholders": 0.17,
+     "added_unused_flexibility": 0.38
+    },
+    "masked": {
+     "push_back": 0.33,
+     "simplified": 0.16,
+     "new_behaviour": 0.94,
+     "grew_a_big_unit": 0.18,
+     "added_copies": 0.18,
+     "added_impossible_guards": 0.06,
+     "added_placeholders": 0.17,
+     "added_unused_flexibility": 0.41,
+     "remove": 0.15,
+     "reuse": 0.15,
+     "shorten": 0.48,
+     "indirection": 0.41
+    },
+    "top_features": [
+     [
+      "masked_new_behaviour",
+      0.214
+     ],
+     [
+      "raw_new_behaviour",
+      0.131
+     ],
+     [
+      "raw_added_placeholders",
+      0.118
+     ],
+     [
+      "masked_shorten",
+      0.075
+     ]
+    ]
+   }
+  },
+  {
+   "path": "winner/tests/fixture/payload_tags.go",
+   "status": "judged",
+   "language": "Go",
+   "score": 0.8498,
+   "threshold": 0.506,
+   "failed": true,
+   "abstained": false,
+   "findings": [
+    {
+     "id": "debug_output",
+     "lines": [
+      10,
+      10
+     ],
+     "message": "The change adds debugger or print output at line 10 (in TagStatement) that reads like debugging left in.",
+     "fix": "Delete the debugging statements. If the output is needed, send it through the logger the surrounding code already uses, at debug level. Done when no print or debugger call is left in the added lines.",
+     "confidence": 0.9,
+     "related": []
+    },
+    {
+     "id": "debug_output",
+     "lines": [
+      27,
+      27
+     ],
+     "message": "The change adds debugger or print output at line 27 (in TagStatement) that reads like debugging left in.",
+     "fix": "Delete the debugging statements. If the output is needed, send it through the logger the surrounding code already uses, at debug level. Done when no print or debugger call is left in the added lines.",
+     "confidence": 0.9,
+     "related": []
+    },
+    {
+     "id": "stub",
+     "lines": [
+      63,
+      63
+     ],
+     "message": "The change adds a stub at line 63 (in TagSummary): code that exists but does not do its job yet.",
+     "fix": "Remove the stub and anything that only exists to call it, or implement it. Done when no function added by this change is unimplemented.",
+     "confidence": 0.75,
+     "related": []
+    },
+    {
+     "id": "defensive_guard",
+     "lines": [
+      23,
+      26
+     ],
+     "message": "The check at lines 23-26 (in TagStatement) guards a case its own comment says cannot happen.",
+     "fix": "Delete the check, and rely on the place that already guarantees the invariant. If the case can really happen, handle it as an error instead. Done when the guard is gone or justified by a real path.",
+     "confidence": 0.65,
+     "related": []
+    }
+   ],
+   "advice": [
+    {
+     "id": "near_copy",
+     "lines": [
+      43,
+      49
+     ],
+     "message": "Lines 43-49 (in TagStatementByWeek) repeat lines 11-17 of this file (TagStatement) almost token for token.",
+     "fix": "Write the shared steps once: extract them into one function (or reuse TagStatement) that takes what differs as a parameter, and call it from both places. Done when the repeated lines exist only once.",
+     "confidence": 0.81,
+     "related": [
+      {
+       "path": "winner/tests/fixture/payload_tags.go",
+       "lines": [
+        11,
+        17
+       ]
+      }
+     ]
+    }
+   ],
+   "signals": {
+    "p_model": 0.8498,
+    "readings": [
+     0.8498
+    ],
+    "raw": {
+     "push_back": 0.84,
+     "direction": 0.65,
+     "simplified": 0.08,
+     "comments_only": 0.02,
+     "new_behaviour": 0.95,
+     "grew_a_big_unit": 0.21,
+     "added_copies": 0.75,
+     "added_impossible_guards": 0.66,
+     "added_placeholders": 0.99,
+     "added_unused_flexibility": 0.1
+    },
+    "masked": {
+     "push_back": 0.84,
+     "simplified": 0.19,
+     "new_behaviour": 0.96,
+     "grew_a_big_unit": 0.23,
+     "added_copies": 0.58,
+     "added_impossible_guards": 0.34,
+     "added_placeholders": 0.98,
+     "added_unused_flexibility": 0.08,
+     "remove": 0.82,
+     "reuse": 0.23,
+     "shorten": 0.67,
+     "indirection": 0.35
+    },
+    "top_features": [
+     [
+      "raw_added_placeholders",
+      0.993
+     ],
+     [
+      "masked_remove",
+      0.518
+     ],
+     [
+      "raw_push_back",
+      0.505
+     ],
+     [
+      "push_back_mean",
+      0.332
+     ]
+    ],
+    "places": [
+     {
+      "lines": [
+       3,
+       33
+      ],
+      "name": "TagStatement",
+      "answers": {
+       "push_back": 0.8,
+       "added_copies": 0.16,
+       "added_impossible_guards": 0.32,
+       "added_placeholders": 0.96,
+       "added_unused_flexibility": 0.11,
+       "remove": 0.7,
+       "reuse": 0.2,
+       "shorten": 0.66,
+       "indirection": 0.26
+      }
+     },
+     {
+      "lines": [
+       36,
+       60
+      ],
+      "name": "TagStatementByWeek",
+      "answers": {
+       "push_back": 0.36,
+       "added_copies": 0.13,
+       "added_impossible_guards": 0.41,
+       "added_placeholders": 0.11,
+       "added_unused_flexibility": 0.06,
+       "remove": 0.2,
+       "reuse": 0.16,
+       "shorten": 0.52,
+       "indirection": 0.15
+      }
+     },
+     {
+      "lines": [
+       63,
+       66
+      ],
+      "name": "TagSummary",
+      "answers": {
+       "push_back": 0.5,
+       "added_copies": 0.04,
+       "added_impossible_guards": 0.05,
+       "added_placeholders": 0.94,
+       "added_unused_flexibility": 0.07,
+       "remove": 0.49,
+       "reuse": 0.12,
+       "shorten": 0.25,
+       "indirection": 0.35
+      }
+     }
+    ]
+   }
+  },
+  {
+   "path": "winner/tests/test_cli.py",
+   "status": "skipped",
+   "reason": "test",
+   "language": "Python"
+  },
+  {
+   "path": "winner/tests/test_core.py",
+   "status": "skipped",
+   "reason": "test",
+   "language": "Python"
+  },
+  {
+   "path": "winner/tests/test_scorer.py",
+   "status": "skipped",
+   "reason": "test",
+   "language": "Python"
+  }
+ ],
+ "warnings": [],
+ "usage": {
+  "jev_requests": 81,
+  "jev_input_tokens": 228394,
+  "jev_cost_usd": 0.009593,
+  "llm_requests": 0,
+  "llm_input_tokens": 0,
+  "llm_output_tokens": 0,
+  "llm_cost_usd": 0.0,
+  "llm_cost_estimated": true,
+  "seconds": 11.22
+ }
+}

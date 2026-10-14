@@ -1,0 +1,24 @@
+FAIL: 1 of 15 changed code files should be simpler before merge.
+
+next/winner/lib/gatecore/detectors.py  (score 0.59, gate 0.51)
+  - lines 93-128 [review.added_placeholders, confidence 0.63]
+    What: Lines 93-128 (in placeholder) add placeholder, debugging or unfinished code.
+    Fix: Remove the debugging output and stubs, or finish them. Done when nothing in these lines is temporary.
+  - lines 143-163 [review.added_placeholders, confidence 0.57]
+    What: Lines 143-163 (in is_doc_example) add placeholder, debugging or unfinished code.
+    Fix: Remove the debugging output and stubs, or finish them. Done when nothing in these lines is temporary.
+  - lines 49-75 [review.shorten, confidence 0.50]
+    What: Lines 49-75 (in debug_output) take a longer route than needed for what they compute.
+    Fix: Rewrite the steps with the direct construct (a built-in, one loop instead of two, an early return instead of nesting) and keep the behaviour. Done when the construct named here is replaced, not when lines are merged.
+
+Advice (does not fail the gate):
+  - next/winner/lib/gatecore/analyze.py:148-154 Lines 148-154 (in copy_sources) repeat lines 108-114 of this file (base_neighbours); the differences are path for n.
+  - next/winner/lib/gatecore/cli.py:83-88 Lines 83-88 (in run) repeat lines 71-76 of this file (run) almost token for token.
+  - next/winner/lib/gatecore/detectors.py:82-88 Lines 82-88 repeat lines 37-43 of this file; the differences are STUB for DEBUG_CALLS.
+  - next/winner/lib/gatecore/detectors.py:397-402 Lines 397-402 repeat lines 389-394 of this file almost token for token.
+  - next/winner/lib/gatecore/detectors.py:284-380 near_copy (lines 284-380) has 92 lines of code, most of them added by this change.
+  - next/winner/lib/gatecore/lexer.py:47-150 scan (lines 47-150) has 99 lines of code, most of them added by this change.
+  - next/winner/lib/gatecore/perimeter.py:135-252 classify (lines 135-252) has 112 lines of code, most of them added by this change.
+  - next/winner/lib/qualm_next/asks.py:14-198 Lines 14-198 repeat lines 14-198 of next/candidates/d-cascade/asks.py (unchanged by this pull request) almost token for token.
+
+Next: make the fixes above, then run the gate again. Keep every behaviour, option and test the change introduces, and keep documentation examples: simplify how the code is written, not what it does. Do not rename, reformat or add comments to get past it; it judges what the code does.

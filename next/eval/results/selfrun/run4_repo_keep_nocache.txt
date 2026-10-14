@@ -1,0 +1,10 @@
+PASS: none of the 14 changed code files needs simplifying before merge.
+
+Advice (does not fail the gate):
+  - next/winner/lib/gatecore/analyze.py:148-154 Lines 148-154 (in copy_sources) repeat lines 108-114 of this file (base_neighbours); the differences are path for n.
+  - next/winner/lib/gatecore/cli.py:83-88 Lines 83-88 (in run) repeat lines 71-76 of this file (run) almost token for token.
+  - next/winner/lib/gatecore/lexer.py:47-150 scan (lines 47-150) has 99 lines of code, most of them added by this change.
+  - next/winner/lib/gatecore/perimeter.py:135-252 classify (lines 135-252) has 112 lines of code, most of them added by this change.
+  - next/winner/lib/qualm_next/asks.py:14-198 Lines 14-198 repeat lines 14-198 of next/candidates/d-cascade/asks.py (unchanged by this pull request) almost token for token.
+
+Nothing to do.

@@ -1,0 +1,54 @@
+{
+ "what": "qualm-next judged the change that adds its own code (next/winner/), base 4533932, head 0cce66a.",
+ "runs": {
+  "run1_scratch_fixture_dir": {
+   "passed": false,
+   "failed_files": [
+    "winner/lib/gatecore/detectors.py",
+    "winner/tests/fixture/payload_tags.go"
+   ],
+   "judged": 18,
+   "kept": [],
+   "jev_cost_usd": 0.009593,
+   "seconds": 11.22
+  },
+  "run2_repo": {
+   "passed": false,
+   "failed_files": [
+    "next/winner/lib/gatecore/detectors.py"
+   ],
+   "judged": 15,
+   "kept": [],
+   "jev_cost_usd": 0.005891,
+   "seconds": 6.42
+  },
+  "run3_repo_keep": {
+   "passed": true,
+   "failed_files": [],
+   "judged": 14,
+   "kept": [
+    "next/winner/lib/gatecore/detectors.py"
+   ],
+   "jev_cost_usd": 0.0,
+   "seconds": 0.95
+  },
+  "run4_repo_keep_nocache": {
+   "passed": true,
+   "failed_files": [],
+   "judged": 14,
+   "kept": [
+    "next/winner/lib/gatecore/detectors.py"
+   ],
+   "jev_cost_usd": 0.006752,
+   "seconds": 5.8
+  }
+ },
+ "notes": [
+  "run1: a scratch repository holding only winner/; the Go fixtures were then in tests/fixture/, which the Go test rule does not cover, so the deliberately bad fixture failed. They were moved to tests/testdata/ (Go convention) before the commit.",
+  "run2: in this repository. detectors.py failed (0.594): Jev reads the debug-output and stub detectors as debug output and stubs. Hand review: false positive. Nothing else failed.",
+  "run3: the same, with a maintainer keep for detectors.py given through GATE_KEEPS_FILE from outside the checkout (maintainer_keeps.json). Passed. Cached answers, $0.",
+  "run4: run3 again with every cache off. Passed; per-file scores moved by at most 0.013 from run2; the two closest files (jev.py 0.488, lexer.py 0.486) stayed under 0.506.",
+  "Not judged: bin/qualm-next, a Python script without a .py extension (the perimeter decides language by extension).",
+  "Not reported: lib/gatecore/* are copies of next/candidates/_core/gatecore/*. Only asks.py was reported as a copy, and only as advice. This is the copy weakness the attack suite found (py_cross_module_copy)."
+ ]
+}

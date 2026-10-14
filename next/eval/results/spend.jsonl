@@ -123,3 +123,5 @@
 {"when": "2026-10-14T04:35Z", "what": "run d-cascade on dev.jsonl.gz (equiv-frozen) -> ../../../tmp/claude-0/-home-user-qualm/2ede26c6-6287-5d82-9ba2-8868fcdef917/scratchpad/equiv/frozen.jsonl", "cases": 100, "cost_usd": 0.095796}
 {"when": "2026-10-14T04:35Z", "what": "run winner_cand on dev.jsonl.gz (equiv-winner) -> ../../../tmp/claude-0/-home-user-qualm/2ede26c6-6287-5d82-9ba2-8868fcdef917/scratchpad/equiv/winner.jsonl", "cases": 100, "cost_usd": 0.0}
 {"when": "2026-10-14T04:37Z", "what": "winner self-run on its own code (selfrun-1)", "cases": 1, "cost_usd": 0.009593}
+{"when": "2026-10-14T04:39Z", "what": "winner self-run in the repository, base 4533932 (selfrun-2)", "cases": 1, "cost_usd": 0.005891}
+{"when": "2026-10-14T04:39Z", "what": "winner self-run with the keep, no cache (selfrun-4)", "cases": 1, "cost_usd": 0.006752}

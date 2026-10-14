@@ -1,0 +1,9 @@
+{
+ "keeps": [
+  {
+   "path": "next/winner/lib/gatecore/detectors.py",
+   "hash": "e51c70ce133f079858a3a7539682f6e25406e74a9761fc65bbb42f866b280e6c",
+   "reason": "False positive: this file is the detector for debug output, placeholders and stubs, so its patterns (print, TODO, NotImplementedError, stub) read to Jev as the smells themselves. Reviewed by hand; the flagged functions are complete and in use."
+  }
+ ]
+}
