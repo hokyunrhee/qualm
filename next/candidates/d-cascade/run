@@ -1,0 +1,14 @@
+#!/usr/bin/env -S python3 -I
+"""d-cascade: Jev on the raw and the masked change, the detectors, a calibrated model, and an
+LLM reviewer for the files the model is unsure of."""
+import os, sys
+
+HERE = os.path.dirname(os.path.realpath(__file__))
+sys.path.insert(0, os.path.join(HERE, '..', '_core'))
+sys.path.insert(0, HERE)
+
+from gatecore import cli  # noqa: E402
+import scorer  # noqa: E402
+
+if __name__ == '__main__':
+    sys.exit(cli.run('d-cascade', scorer.VERSION, scorer.Scorer))
