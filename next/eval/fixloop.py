@@ -91,9 +91,9 @@ def prepare(items_path, cand, ids):
         if code:
             print('worktree failed', it['fix_id'], err[-300:])
             continue
-        nm = os.path.join(repo, 'node_modules')
-        if os.path.isdir(nm) and not os.path.exists(os.path.join(ws, 'node_modules')):
-            os.symlink(nm, os.path.join(ws, 'node_modules'))
+        scode, _, serr = sh(subst(it['setup'], ws), cwd=ws, timeout=900)  # per-workspace dependencies (pnpm store, bundle path, venv)
+        if scode:
+            print('setup failed', it['fix_id'], serr[-300:])
         injected = open(os.path.join(SP, 'fixloop', it['fix_id'], 'head.txt')).read()
         with open(os.path.join(ws, it['file']), 'w') as fh:
             fh.write(injected)

@@ -1,0 +1,157 @@
+{
+ "items": [
+  {
+   "fix_id": "fx-dev-jeremyevans_roda-33054425",
+   "split": "dev",
+   "repo_key": "jeremyevans_roda",
+   "repo": "jeremyevans/roda",
+   "language": "Ruby",
+   "sha": "33054425935327a05b29d6cda86d37acd9a365ab",
+   "file": "lib/roda/plugins/params_capturing_restore.rb",
+   "all_files": [
+    "lib/roda/plugins/params_capturing.rb",
+    "lib/roda/plugins/params_capturing_restore.rb"
+   ],
+   "smell": "near_copy",
+   "setup": "mkdir -p \"$SP/gems/jeremyevans_roda\" && cp .ci.gemfile \"$SP/gems/jeremyevans_roda/Gemfile\" && BUNDLE_GEMFILE=\"$SP/gems/jeremyevans_roda/Gemfile\" BUNDLE_PATH=\"$SP/gems/jeremyevans_roda\" bundle install",
+   "test": "BUNDLE_GEMFILE=\"$SP/gems/jeremyevans_roda/Gemfile\" BUNDLE_PATH=\"$SP/gems/jeremyevans_roda\" bundle exec rake spec"
+  },
+  {
+   "fix_id": "fx-dev-jeremyevans_roda-809b0b73",
+   "split": "dev",
+   "repo_key": "jeremyevans_roda",
+   "repo": "jeremyevans/roda",
+   "language": "Ruby",
+   "sha": "809b0b738d9be0ca7f1c48bd422d6298d1c6097b",
+   "file": "lib/roda/plugins/url_escape.rb",
+   "all_files": [
+    "lib/roda/plugins/url_escape.rb"
+   ],
+   "smell": "impossible_guard",
+   "setup": "mkdir -p \"$SP/gems/jeremyevans_roda\" && cp .ci.gemfile \"$SP/gems/jeremyevans_roda/Gemfile\" && BUNDLE_GEMFILE=\"$SP/gems/jeremyevans_roda/Gemfile\" BUNDLE_PATH=\"$SP/gems/jeremyevans_roda\" bundle install",
+   "test": "BUNDLE_GEMFILE=\"$SP/gems/jeremyevans_roda/Gemfile\" BUNDLE_PATH=\"$SP/gems/jeremyevans_roda\" bundle exec rake spec"
+  },
+  {
+   "fix_id": "fx-dev-jeremyevans_roda-166b9dec",
+   "split": "dev",
+   "repo_key": "jeremyevans_roda",
+   "repo": "jeremyevans/roda",
+   "language": "Ruby",
+   "sha": "166b9dec82cdb80b7aec693e0f37a1b78a0eae2c",
+   "file": "lib/roda/plugins/hash_public.rb",
+   "all_files": [
+    "lib/roda/plugins/hash_public.rb"
+   ],
+   "smell": "leftover",
+   "setup": "mkdir -p \"$SP/gems/jeremyevans_roda\" && cp .ci.gemfile \"$SP/gems/jeremyevans_roda/Gemfile\" && BUNDLE_GEMFILE=\"$SP/gems/jeremyevans_roda/Gemfile\" BUNDLE_PATH=\"$SP/gems/jeremyevans_roda\" bundle install",
+   "test": "BUNDLE_GEMFILE=\"$SP/gems/jeremyevans_roda/Gemfile\" BUNDLE_PATH=\"$SP/gems/jeremyevans_roda\" bundle exec rake spec"
+  },
+  {
+   "fix_id": "fx-dev-jeremyevans_roda-24d8ac2f",
+   "split": "dev",
+   "repo_key": "jeremyevans_roda",
+   "repo": "jeremyevans/roda",
+   "language": "Ruby",
+   "sha": "24d8ac2f1d845c936c9d4d7b817d9069330ab211",
+   "file": "lib/roda/plugins/assets.rb",
+   "all_files": [
+    "lib/roda/plugins/assets.rb"
+   ],
+   "smell": "single_use_indirection",
+   "setup": "mkdir -p \"$SP/gems/jeremyevans_roda\" && cp .ci.gemfile \"$SP/gems/jeremyevans_roda/Gemfile\" && BUNDLE_GEMFILE=\"$SP/gems/jeremyevans_roda/Gemfile\" BUNDLE_PATH=\"$SP/gems/jeremyevans_roda\" bundle install",
+   "test": "BUNDLE_GEMFILE=\"$SP/gems/jeremyevans_roda/Gemfile\" BUNDLE_PATH=\"$SP/gems/jeremyevans_roda\" bundle exec rake spec"
+  },
+  {
+   "fix_id": "fx-dev-jeremyevans_roda-f40733e1",
+   "split": "dev",
+   "repo_key": "jeremyevans_roda",
+   "repo": "jeremyevans/roda",
+   "language": "Ruby",
+   "sha": "f40733e1c22b994b2831fcbf7d5f6f52ee19d044",
+   "file": "lib/roda/plugins/ip_from_header.rb",
+   "all_files": [
+    "lib/roda/plugins/ip_from_header.rb"
+   ],
+   "smell": "long_unit_growth",
+   "setup": "mkdir -p \"$SP/gems/jeremyevans_roda\" && cp .ci.gemfile \"$SP/gems/jeremyevans_roda/Gemfile\" && BUNDLE_GEMFILE=\"$SP/gems/jeremyevans_roda/Gemfile\" BUNDLE_PATH=\"$SP/gems/jeremyevans_roda\" bundle install",
+   "test": "BUNDLE_GEMFILE=\"$SP/gems/jeremyevans_roda/Gemfile\" BUNDLE_PATH=\"$SP/gems/jeremyevans_roda\" bundle exec rake spec"
+  },
+  {
+   "fix_id": "fx-dev-jeremyevans_roda-dfd475a3",
+   "split": "dev",
+   "repo_key": "jeremyevans_roda",
+   "repo": "jeremyevans/roda",
+   "language": "Ruby",
+   "sha": "dfd475a39d75c0c8833dc190f3067b8c40f666b9",
+   "file": "lib/roda/plugins/bearer_token.rb",
+   "all_files": [
+    "lib/roda/plugins/bearer_token.rb"
+   ],
+   "smell": "near_copy",
+   "setup": "mkdir -p \"$SP/gems/jeremyevans_roda\" && cp .ci.gemfile \"$SP/gems/jeremyevans_roda/Gemfile\" && BUNDLE_GEMFILE=\"$SP/gems/jeremyevans_roda/Gemfile\" BUNDLE_PATH=\"$SP/gems/jeremyevans_roda\" bundle install",
+   "test": "BUNDLE_GEMFILE=\"$SP/gems/jeremyevans_roda/Gemfile\" BUNDLE_PATH=\"$SP/gems/jeremyevans_roda\" bundle exec rake spec"
+  },
+  {
+   "fix_id": "fx-dev-jeremyevans_roda-df3d7dfb",
+   "split": "dev",
+   "repo_key": "jeremyevans_roda",
+   "repo": "jeremyevans/roda",
+   "language": "Ruby",
+   "sha": "df3d7dfb711a8cff9cd5e959438155461be4c7b8",
+   "file": "lib/roda/plugins/send_file.rb",
+   "all_files": [
+    "lib/roda/plugins/send_file.rb",
+    "lib/roda/plugins/sinatra_helpers.rb"
+   ],
+   "smell": "impossible_guard",
+   "setup": "mkdir -p \"$SP/gems/jeremyevans_roda\" && cp .ci.gemfile \"$SP/gems/jeremyevans_roda/Gemfile\" && BUNDLE_GEMFILE=\"$SP/gems/jeremyevans_roda/Gemfile\" BUNDLE_PATH=\"$SP/gems/jeremyevans_roda\" bundle install",
+   "test": "BUNDLE_GEMFILE=\"$SP/gems/jeremyevans_roda/Gemfile\" BUNDLE_PATH=\"$SP/gems/jeremyevans_roda\" bundle exec rake spec"
+  },
+  {
+   "fix_id": "fx-dev-jeremyevans_roda-20e672c2",
+   "split": "dev",
+   "repo_key": "jeremyevans_roda",
+   "repo": "jeremyevans/roda",
+   "language": "Ruby",
+   "sha": "20e672c2c0b9c155fd330f556ce69398d02577f6",
+   "file": "lib/roda/plugins/hash_public_cache.rb",
+   "all_files": [
+    "lib/roda/plugins/hash_public.rb",
+    "lib/roda/plugins/hash_public_cache.rb"
+   ],
+   "smell": "leftover",
+   "setup": "mkdir -p \"$SP/gems/jeremyevans_roda\" && cp .ci.gemfile \"$SP/gems/jeremyevans_roda/Gemfile\" && BUNDLE_GEMFILE=\"$SP/gems/jeremyevans_roda/Gemfile\" BUNDLE_PATH=\"$SP/gems/jeremyevans_roda\" bundle install",
+   "test": "BUNDLE_GEMFILE=\"$SP/gems/jeremyevans_roda/Gemfile\" BUNDLE_PATH=\"$SP/gems/jeremyevans_roda\" bundle exec rake spec"
+  },
+  {
+   "fix_id": "fx-held-hanami_utils-a86941d5",
+   "split": "heldout",
+   "repo_key": "hanami_utils",
+   "repo": "hanami/utils",
+   "language": "Ruby",
+   "sha": "a86941d5cf5ebdd2c56900eabf7ce01020a7d4ae",
+   "file": "lib/hanami/interactor.rb",
+   "all_files": [
+    "lib/hanami/interactor.rb"
+   ],
+   "smell": "near_copy",
+   "setup": "RV=3.2.6; grep -Eq 'required_ruby_version = \">= 3\\.[3-9]' hanami-utils.gemspec && RV=3.3.6; export PATH=\"/opt/rbenv/versions/$RV/bin:$PATH\" GEM_HOME=\"$SP/gems/hanami_utils-$RV\"; gem list -i bundler -v 2.7.2 >/dev/null || gem install --no-document bundler -v 2.7.2; CI=1 bundle _2.7.2_ install",
+   "test": "RV=3.2.6; grep -Eq 'required_ruby_version = \">= 3\\.[3-9]' hanami-utils.gemspec && RV=3.3.6; export PATH=\"/opt/rbenv/versions/$RV/bin:$PATH\" GEM_HOME=\"$SP/gems/hanami_utils-$RV\"; CI=1 bundle _2.7.2_ exec rake spec:unit"
+  },
+  {
+   "fix_id": "fx-held-hanami_utils-e3b95315",
+   "split": "heldout",
+   "repo_key": "hanami_utils",
+   "repo": "hanami/utils",
+   "language": "Ruby",
+   "sha": "e3b95315d482b298cf9c05561d5e8c652e993fd0",
+   "file": "lib/hanami/utils/callbacks.rb",
+   "all_files": [
+    "lib/hanami/utils/callbacks.rb"
+   ],
+   "smell": "impossible_guard",
+   "setup": "RV=3.2.6; grep -Eq 'required_ruby_version = \">= 3\\.[3-9]' hanami-utils.gemspec && RV=3.3.6; export PATH=\"/opt/rbenv/versions/$RV/bin:$PATH\" GEM_HOME=\"$SP/gems/hanami_utils-$RV\"; gem list -i bundler -v 2.7.2 >/dev/null || gem install --no-document bundler -v 2.7.2; CI=1 bundle _2.7.2_ install",
+   "test": "RV=3.2.6; grep -Eq 'required_ruby_version = \">= 3\\.[3-9]' hanami-utils.gemspec && RV=3.3.6; export PATH=\"/opt/rbenv/versions/$RV/bin:$PATH\" GEM_HOME=\"$SP/gems/hanami_utils-$RV\"; CI=1 bundle _2.7.2_ exec rake spec:unit"
+  }
+ ]
+}

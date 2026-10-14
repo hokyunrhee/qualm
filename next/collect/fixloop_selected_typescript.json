@@ -1,0 +1,257 @@
+{
+ "items": [
+  {
+   "fix_id": "fx-dev-unjs_ufo-f7d47110",
+   "split": "dev",
+   "repo_key": "unjs_ufo",
+   "repo": "unjs/ufo",
+   "language": "TypeScript",
+   "sha": "f7d47110af9a028abcab45c6a6378a38713cb8ca",
+   "file": "src/utils.ts",
+   "all_files": [
+    "src/utils.ts"
+   ],
+   "smell": "near_copy",
+   "setup": "if [ -f pnpm-lock.yaml ]; then V=$(node -p \"const v=((require('./package.json').packageManager||'').match(/^pnpm@([0-9.]+)/)||[])[1]; (!v||parseInt(v)<8)?'7.33.7':v\"); npx -y pnpm@$V install --frozen-lockfile --store-dir \"$SP/pnpm-store\"; else npx -y yarn@1.22.22 install --frozen-lockfile --ignore-scripts; fi",
+   "test": "if [ -x node_modules/.bin/vitest ]; then npx --no-install vitest run; else npx --no-install jest; fi"
+  },
+  {
+   "fix_id": "fx-dev-unjs_defu-934d736d",
+   "split": "dev",
+   "repo_key": "unjs_defu",
+   "repo": "unjs/defu",
+   "language": "TypeScript",
+   "sha": "934d736da31f4824d9e135d925cece361b73c533",
+   "file": "src/defu.ts",
+   "all_files": [
+    "src/defu.ts",
+    "src/types.ts"
+   ],
+   "smell": "impossible_guard",
+   "setup": "if [ -f pnpm-lock.yaml ]; then V=$(node -p \"const v=((require('./package.json').packageManager||'').match(/^pnpm@([0-9.]+)/)||[])[1]; (!v||parseInt(v)<8)?'7.33.7':v\"); npx -y pnpm@$V install --frozen-lockfile --store-dir \"$SP/pnpm-store\"; else npx -y yarn@1.22.22 install --frozen-lockfile --ignore-scripts; fi",
+   "test": "if [ -x node_modules/.bin/vitest ]; then npx --no-install vitest run; else npx --no-install jest; fi"
+  },
+  {
+   "fix_id": "fx-dev-unjs_ufo-aa54b6ae",
+   "split": "dev",
+   "repo_key": "unjs_ufo",
+   "repo": "unjs/ufo",
+   "language": "TypeScript",
+   "sha": "aa54b6ae8f8b320bc0e03b4ff3ffc0bb2aa2b964",
+   "file": "src/utils.ts",
+   "all_files": [
+    "src/utils.ts"
+   ],
+   "smell": "leftover",
+   "setup": "if [ -f pnpm-lock.yaml ]; then V=$(node -p \"const v=((require('./package.json').packageManager||'').match(/^pnpm@([0-9.]+)/)||[])[1]; (!v||parseInt(v)<8)?'7.33.7':v\"); npx -y pnpm@$V install --frozen-lockfile --store-dir \"$SP/pnpm-store\"; else npx -y yarn@1.22.22 install --frozen-lockfile --ignore-scripts; fi",
+   "test": "if [ -x node_modules/.bin/vitest ]; then npx --no-install vitest run; else npx --no-install jest; fi"
+  },
+  {
+   "fix_id": "fx-dev-unjs_defu-4111333b",
+   "split": "dev",
+   "repo_key": "unjs_defu",
+   "repo": "unjs/defu",
+   "language": "TypeScript",
+   "sha": "4111333b7f830712947b3d48c127f23061569620",
+   "file": "src/defu.ts",
+   "all_files": [
+    "src/defu.ts"
+   ],
+   "smell": "single_use_indirection",
+   "setup": "if [ -f pnpm-lock.yaml ]; then V=$(node -p \"const v=((require('./package.json').packageManager||'').match(/^pnpm@([0-9.]+)/)||[])[1]; (!v||parseInt(v)<8)?'7.33.7':v\"); npx -y pnpm@$V install --frozen-lockfile --store-dir \"$SP/pnpm-store\"; else npx -y yarn@1.22.22 install --frozen-lockfile --ignore-scripts; fi",
+   "test": "if [ -x node_modules/.bin/vitest ]; then npx --no-install vitest run; else npx --no-install jest; fi"
+  },
+  {
+   "fix_id": "fx-dev-unjs_ufo-3b66d62b",
+   "split": "dev",
+   "repo_key": "unjs_ufo",
+   "repo": "unjs/ufo",
+   "language": "TypeScript",
+   "sha": "3b66d62b58ca3e9958286434a6eec688042e0626",
+   "file": "src/utils.ts",
+   "all_files": [
+    "src/utils.ts"
+   ],
+   "smell": "long_unit_growth",
+   "setup": "if [ -f pnpm-lock.yaml ]; then V=$(node -p \"const v=((require('./package.json').packageManager||'').match(/^pnpm@([0-9.]+)/)||[])[1]; (!v||parseInt(v)<8)?'7.33.7':v\"); npx -y pnpm@$V install --frozen-lockfile --store-dir \"$SP/pnpm-store\"; else npx -y yarn@1.22.22 install --frozen-lockfile --ignore-scripts; fi",
+   "test": "if [ -x node_modules/.bin/vitest ]; then npx --no-install vitest run; else npx --no-install jest; fi"
+  },
+  {
+   "fix_id": "fx-dev-unjs_defu-49322327",
+   "split": "dev",
+   "repo_key": "unjs_defu",
+   "repo": "unjs/defu",
+   "language": "TypeScript",
+   "sha": "493223278840132a6de2c3291b60f7b00b3fa477",
+   "file": "src/defu.ts",
+   "all_files": [
+    "src/defu.ts"
+   ],
+   "smell": "near_copy",
+   "setup": "if [ -f pnpm-lock.yaml ]; then V=$(node -p \"const v=((require('./package.json').packageManager||'').match(/^pnpm@([0-9.]+)/)||[])[1]; (!v||parseInt(v)<8)?'7.33.7':v\"); npx -y pnpm@$V install --frozen-lockfile --store-dir \"$SP/pnpm-store\"; else npx -y yarn@1.22.22 install --frozen-lockfile --ignore-scripts; fi",
+   "test": "if [ -x node_modules/.bin/vitest ]; then npx --no-install vitest run; else npx --no-install jest; fi"
+  },
+  {
+   "fix_id": "fx-dev-unjs_ufo-c9e385ec",
+   "split": "dev",
+   "repo_key": "unjs_ufo",
+   "repo": "unjs/ufo",
+   "language": "TypeScript",
+   "sha": "c9e385ec0841dc90d458f3234626a6f15fe7f7f9",
+   "file": "src/parse.ts",
+   "all_files": [
+    "src/parse.ts",
+    "src/utils.ts"
+   ],
+   "smell": "impossible_guard",
+   "setup": "if [ -f pnpm-lock.yaml ]; then V=$(node -p \"const v=((require('./package.json').packageManager||'').match(/^pnpm@([0-9.]+)/)||[])[1]; (!v||parseInt(v)<8)?'7.33.7':v\"); npx -y pnpm@$V install --frozen-lockfile --store-dir \"$SP/pnpm-store\"; else npx -y yarn@1.22.22 install --frozen-lockfile --ignore-scripts; fi",
+   "test": "if [ -x node_modules/.bin/vitest ]; then npx --no-install vitest run; else npx --no-install jest; fi"
+  },
+  {
+   "fix_id": "fx-dev-unjs_defu-26477edc",
+   "split": "dev",
+   "repo_key": "unjs_defu",
+   "repo": "unjs/defu",
+   "language": "TypeScript",
+   "sha": "26477edcf11ee961f01e04937b47caef1f0f420d",
+   "file": "src/defu.ts",
+   "all_files": [
+    "src/defu.ts",
+    "src/types.ts"
+   ],
+   "smell": "leftover",
+   "setup": "if [ -f pnpm-lock.yaml ]; then V=$(node -p \"const v=((require('./package.json').packageManager||'').match(/^pnpm@([0-9.]+)/)||[])[1]; (!v||parseInt(v)<8)?'7.33.7':v\"); npx -y pnpm@$V install --frozen-lockfile --store-dir \"$SP/pnpm-store\"; else npx -y yarn@1.22.22 install --frozen-lockfile --ignore-scripts; fi",
+   "test": "if [ -x node_modules/.bin/vitest ]; then npx --no-install vitest run; else npx --no-install jest; fi"
+  },
+  {
+   "fix_id": "fx-held-unjs_pathe-3807727d",
+   "split": "heldout",
+   "repo_key": "unjs_pathe",
+   "repo": "unjs/pathe",
+   "language": "TypeScript",
+   "sha": "3807727df86858e157f3e87bf7e57e77fc368c09",
+   "file": "src/path.ts",
+   "all_files": [
+    "src/_internal.ts",
+    "src/path.ts",
+    "src/utils.ts"
+   ],
+   "smell": "near_copy",
+   "setup": "if [ -f pnpm-lock.yaml ]; then V=$(node -p \"const v=((require('./package.json').packageManager||'').match(/^pnpm@([0-9.]+)/)||[])[1]; (!v||parseInt(v)<8)?'7.33.7':v\"); npx -y pnpm@$V install --frozen-lockfile --store-dir \"$SP/pnpm-store\"; else npx -y yarn@1.22.22 install --frozen-lockfile --ignore-scripts; fi",
+   "test": "if [ -x node_modules/.bin/vitest ]; then npx --no-install vitest run; else npx --no-install jest; fi"
+  },
+  {
+   "fix_id": "fx-held-unjs_scule-d2c281f1",
+   "split": "heldout",
+   "repo_key": "unjs_scule",
+   "repo": "unjs/scule",
+   "language": "TypeScript",
+   "sha": "d2c281f10e12b8e33a2ed6ef3630eeb54de7de7c",
+   "file": "src/index.ts",
+   "all_files": [
+    "src/index.ts",
+    "src/types.ts"
+   ],
+   "smell": "impossible_guard",
+   "setup": "if [ -f pnpm-lock.yaml ]; then V=$(node -p \"const v=((require('./package.json').packageManager||'').match(/^pnpm@([0-9.]+)/)||[])[1]; (!v||parseInt(v)<8)?'7.33.7':v\"); npx -y pnpm@$V install --frozen-lockfile --store-dir \"$SP/pnpm-store\"; else npx -y yarn@1.22.22 install --frozen-lockfile --ignore-scripts; fi",
+   "test": "if [ -x node_modules/.bin/vitest ]; then npx --no-install vitest run; else npx --no-install jest; fi"
+  },
+  {
+   "fix_id": "fx-held-unjs_pathe-0888daf8",
+   "split": "heldout",
+   "repo_key": "unjs_pathe",
+   "repo": "unjs/pathe",
+   "language": "TypeScript",
+   "sha": "0888daf8902f3ed2a6bfac8eb6117a648973d9a8",
+   "file": "src/path.ts",
+   "all_files": [
+    "build.config.ts",
+    "src/index.ts",
+    "src/path.ts"
+   ],
+   "smell": "leftover",
+   "setup": "if [ -f pnpm-lock.yaml ]; then V=$(node -p \"const v=((require('./package.json').packageManager||'').match(/^pnpm@([0-9.]+)/)||[])[1]; (!v||parseInt(v)<8)?'7.33.7':v\"); npx -y pnpm@$V install --frozen-lockfile --store-dir \"$SP/pnpm-store\"; else npx -y yarn@1.22.22 install --frozen-lockfile --ignore-scripts; fi",
+   "test": "if [ -x node_modules/.bin/vitest ]; then npx --no-install vitest run; else npx --no-install jest; fi"
+  },
+  {
+   "fix_id": "fx-held-unjs_scule-146ecd07",
+   "split": "heldout",
+   "repo_key": "unjs_scule",
+   "repo": "unjs/scule",
+   "language": "TypeScript",
+   "sha": "146ecd076373a0a295d7f9649c144226ddfb0c2d",
+   "file": "src/index.ts",
+   "all_files": [
+    "src/index.ts",
+    "src/types.ts"
+   ],
+   "smell": "single_use_indirection",
+   "setup": "if [ -f pnpm-lock.yaml ]; then V=$(node -p \"const v=((require('./package.json').packageManager||'').match(/^pnpm@([0-9.]+)/)||[])[1]; (!v||parseInt(v)<8)?'7.33.7':v\"); npx -y pnpm@$V install --frozen-lockfile --store-dir \"$SP/pnpm-store\"; else npx -y yarn@1.22.22 install --frozen-lockfile --ignore-scripts; fi",
+   "test": "if [ -x node_modules/.bin/vitest ]; then npx --no-install vitest run; else npx --no-install jest; fi"
+  },
+  {
+   "fix_id": "fx-held-unjs_pathe-6136b3ca",
+   "split": "heldout",
+   "repo_key": "unjs_pathe",
+   "repo": "unjs/pathe",
+   "language": "TypeScript",
+   "sha": "6136b3ca9c1c26ec2a0002b24f08f8dcf28a78af",
+   "file": "src/path.ts",
+   "all_files": [
+    "src/index.ts",
+    "src/path.ts"
+   ],
+   "smell": "long_unit_growth",
+   "setup": "if [ -f pnpm-lock.yaml ]; then V=$(node -p \"const v=((require('./package.json').packageManager||'').match(/^pnpm@([0-9.]+)/)||[])[1]; (!v||parseInt(v)<8)?'7.33.7':v\"); npx -y pnpm@$V install --frozen-lockfile --store-dir \"$SP/pnpm-store\"; else npx -y yarn@1.22.22 install --frozen-lockfile --ignore-scripts; fi",
+   "test": "if [ -x node_modules/.bin/vitest ]; then npx --no-install vitest run; else npx --no-install jest; fi"
+  },
+  {
+   "fix_id": "fx-held-unjs_scule-155ff343",
+   "split": "heldout",
+   "repo_key": "unjs_scule",
+   "repo": "unjs/scule",
+   "language": "TypeScript",
+   "sha": "155ff34311e1575a58dd1e38fd9bf84f5a6b31c1",
+   "file": "src/index.ts",
+   "all_files": [
+    "src/index.ts",
+    "src/types.ts"
+   ],
+   "smell": "near_copy",
+   "setup": "if [ -f pnpm-lock.yaml ]; then V=$(node -p \"const v=((require('./package.json').packageManager||'').match(/^pnpm@([0-9.]+)/)||[])[1]; (!v||parseInt(v)<8)?'7.33.7':v\"); npx -y pnpm@$V install --frozen-lockfile --store-dir \"$SP/pnpm-store\"; else npx -y yarn@1.22.22 install --frozen-lockfile --ignore-scripts; fi",
+   "test": "if [ -x node_modules/.bin/vitest ]; then npx --no-install vitest run; else npx --no-install jest; fi"
+  },
+  {
+   "fix_id": "fx-held-unjs_pathe-a48a6005",
+   "split": "heldout",
+   "repo_key": "unjs_pathe",
+   "repo": "unjs/pathe",
+   "language": "TypeScript",
+   "sha": "a48a60053f9965ffe57b8f64823f81d78657ebc4",
+   "file": "src/index.ts",
+   "all_files": [
+    "src/index.ts",
+    "src/utils.ts"
+   ],
+   "smell": "impossible_guard",
+   "setup": "if [ -f pnpm-lock.yaml ]; then V=$(node -p \"const v=((require('./package.json').packageManager||'').match(/^pnpm@([0-9.]+)/)||[])[1]; (!v||parseInt(v)<8)?'7.33.7':v\"); npx -y pnpm@$V install --frozen-lockfile --store-dir \"$SP/pnpm-store\"; else npx -y yarn@1.22.22 install --frozen-lockfile --ignore-scripts; fi",
+   "test": "if [ -x node_modules/.bin/vitest ]; then npx --no-install vitest run; else npx --no-install jest; fi"
+  },
+  {
+   "fix_id": "fx-held-unjs_scule-e32421a1",
+   "split": "heldout",
+   "repo_key": "unjs_scule",
+   "repo": "unjs/scule",
+   "language": "TypeScript",
+   "sha": "e32421a14e96fba492df17b12c1e0de4a08f7217",
+   "file": "src/index.ts",
+   "all_files": [
+    "src/index.ts",
+    "src/types.ts"
+   ],
+   "smell": "leftover",
+   "setup": "if [ -f pnpm-lock.yaml ]; then V=$(node -p \"const v=((require('./package.json').packageManager||'').match(/^pnpm@([0-9.]+)/)||[])[1]; (!v||parseInt(v)<8)?'7.33.7':v\"); npx -y pnpm@$V install --frozen-lockfile --store-dir \"$SP/pnpm-store\"; else npx -y yarn@1.22.22 install --frozen-lockfile --ignore-scripts; fi",
+   "test": "if [ -x node_modules/.bin/vitest ]; then npx --no-install vitest run; else npx --no-install jest; fi"
+  }
+ ]
+}

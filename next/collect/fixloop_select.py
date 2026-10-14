@@ -14,6 +14,9 @@ from assemble import FIXLOOP_HELDOUT, FIXLOOP_DEV  # noqa: E402
 SMELLS = ['near_copy', 'impossible_guard', 'leftover', 'single_use_indirection', 'long_unit_growth']
 
 
+import re
+# Files the tests don't exercise make poor fix-loop targets: configuration, type-only modules, docs.
+NOT_TARGET = re.compile(r'(^|/)(docs?/|[^/]*\.config\.[jt]s$|jest\.config|vite\.config|build\.config|types\.ts$|[^/]*\.d\.ts$|conf\.py$|setup\.py$|Rakefile$|[^/]*\.gemspec$)')
 SP = '/tmp/claude-0/-home-user-qualm/2ede26c6-6287-5d82-9ba2-8868fcdef917/scratchpad'
 
 
@@ -22,7 +25,8 @@ def biggest(key, c):
     out = subprocess.run(['git', '-C', os.path.join(SP, 'fixrepos', key), 'diff', '--numstat', c['sha'] + '^', c['sha'], '--', *c['files']],
                          capture_output=True, text=True).stdout
     rows = [(int(l.split('\t')[0]), l.split('\t')[2]) for l in out.splitlines() if l.split('\t')[0].isdigit()]
-    return max(rows)[1] if rows else c['files'][0]
+    rows = [r for r in rows if not NOT_TARGET.search(r[1])]
+    return max(rows)[1] if rows else None
 
 
 def main():
@@ -63,9 +67,11 @@ def main():
                 for k in sorted(by_repo):
                     if by_repo[k]:
                         order.append(by_repo[k].pop())
-            for i, (k, r, c) in enumerate(order[:quota[lang]]):
+            order = [(k, r, c, biggest(k, c)) for k, r, c in order]
+            order = [(k, r, c, f) for k, r, c, f in order if f][:quota[lang]]
+            for i, (k, r, c, target) in enumerate(order):
                 items.append({'fix_id': 'fx-%s-%s-%s' % (split[:4], k, c['sha'][:8]), 'split': split, 'repo_key': k,
-                              'repo': k.replace('_', '/', 1), 'language': r['language'], 'sha': c['sha'], 'file': biggest(k, c),
+                              'repo': k.replace('_', '/', 1), 'language': r['language'], 'sha': c['sha'], 'file': target,
                               'all_files': c['files'], 'smell': SMELLS[i % len(SMELLS)], 'setup': r.get('setup_ws', r['setup']), 'test': r.get('test_ws', r['test'])})
     json.dump({'items': items}, open(a.out, 'w'), indent=1)
     for split in pools:

@@ -1,0 +1,53 @@
+{
+ "items": [
+  {
+   "fix_id": "fx-dev-expr-lang_expr-bbcbc530",
+   "split": "dev",
+   "repo_key": "expr-lang_expr",
+   "repo": "expr-lang/expr",
+   "language": "Go",
+   "sha": "bbcbc530f31620623b36750365ee883aa4b86d8f",
+   "file": "parser/lexer/lexer.go",
+   "all_files": [
+    "parser/lexer/lexer.go"
+   ],
+   "smell": "impossible_guard",
+   "setup": "go mod download",
+   "test": "go test -count=1 -vet=off ./..."
+  },
+  {
+   "fix_id": "fx-dev-expr-lang_expr-13c5b65f",
+   "split": "dev",
+   "repo_key": "expr-lang_expr",
+   "repo": "expr-lang/expr",
+   "language": "Go",
+   "sha": "13c5b65f9bab45fcc942320a64e94ec92972641a",
+   "file": "optimizer/count_any.go",
+   "all_files": [
+    "optimizer/count_any.go",
+    "optimizer/optimizer.go"
+   ],
+   "smell": "near_copy",
+   "setup": "go mod download",
+   "test": "go test -count=1 -vet=off ./..."
+  },
+  {
+   "fix_id": "fx-dev-more-itertools_more-itertools-3c1e75e0",
+   "split": "dev",
+   "repo_key": "more-itertools_more-itertools",
+   "repo": "more-itertools/more-itertools",
+   "language": "Python",
+   "sha": "3c1e75e02fbfdf9d860d16a52739ce81c39260ca",
+   "file": "more_itertools/more.py",
+   "all_files": [
+    "docs/conf.py",
+    "more_itertools/more.py",
+    "setup.py"
+   ],
+   "smell": "single_use_indirection",
+   "setup": "test -x $SP/venvs/more-itertools_more-itertools/bin/python",
+   "test": "env PYTHONPATH=$REPO/src:$REPO $SP/venvs/more-itertools_more-itertools/bin/python -m pytest -q -x -p no:cacheprovider tests"
+  }
+ ],
+ "note": "dev top-up to reach 40: expr gained passing commits after the Go batch; one Python item replaces a docs/ target"
+}

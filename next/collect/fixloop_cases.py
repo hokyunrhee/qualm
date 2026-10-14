@@ -43,8 +43,25 @@ def patch_span(patch):
 
 def main():
     selected, results, out_dir, out_items = sys.argv[1:5]
-    sel = {it['fix_id']: it for it in json.load(open(selected))['items']}
-    res = {r['fix_id']: r for r in json.load(open(results))}
+    sel = {}
+    for path in selected.split(','):
+        for it in json.load(open(path))['items']:
+            sel[it['fix_id']] = it
+    res = {}
+    for path in results.split(','):
+        for r in json.load(open(path)):
+            res[r['fix_id']] = r
+    # Each repository's latest, workspace-safe commands (the helpers refined some after selection).
+    cfg = {}
+    for path in ('fixrepos.json', 'fixrepos_b.json'):
+        p = os.path.join(os.path.dirname(os.path.abspath(__file__)), path)
+        if os.path.exists(p):
+            cfg.update(json.load(open(p))['repos'])
+    for it in sel.values():
+        r = cfg.get(it['repo_key'])
+        if r:
+            it['setup'] = r.get('setup_ws', r['setup'])
+            it['test'] = r.get('test_ws', r['test'])
     os.makedirs(out_dir, exist_ok=True)
     items_out = []
     fh = {s: open(os.path.join(out_dir, 'fixloop_%s.jsonl' % s), 'w') for s in ('dev', 'heldout')}
