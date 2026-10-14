@@ -1,51 +1,82 @@
 # d-cascade
 
-Decides, for each file a pull request changes, whether an experienced reviewer would ask for that change to be simplified before it merges, and tells the coding agent where and what to fix.
+Decides, for each file a pull request changes, whether an experienced reviewer would ask for that change to be simplified before it merges. When it fails a file, it tells the coding agent where and what to fix.
 
-It keeps qualm 0.1.1's signal and uses all of it. qualm asks Jev ten questions about each file's diff and gates on one of them, `push_back >= 0.6`. d-cascade asks the same ten questions, asks twelve more about a second view of the change with the comments removed, and lets a model trained on 5,139 labelled files weigh every answer.
+It keeps qualm 0.1.1's signal and uses all of it:
+- qualm asks Jev ten questions about each file's diff and gates on one of them, `push_back >= 0.6`;
+- d-cascade asks the same ten questions;
+- it asks twelve more about a second view of the change, with the comments removed;
+- a model trained on 5,139 labelled files weighs all the answers.
+
+This is version 3. The name is historical: the measured gate is the model alone (see "The LLM band").
 
 ## What it does
 
-1. **Reads the change inside a trust perimeter** (`../_core`). The change is the working tree against the merge base, untracked files included. Configuration, keeps and git attributes come from the base commit, so a pull request cannot loosen its own gate. A new `vendor/` directory or a file that only claims to be generated is judged like any other code. Edits to the gate's configuration or to a CI workflow that runs it are named in the report.
+1. **Reads the change inside a trust perimeter** (`../_core`).
+   - The change is the working tree against the merge base, untracked files included.
+   - Configuration, keeps and git attributes come from the base commit, so a pull request cannot loosen its own gate.
+   - A file is skipped as generated only if its base version was generated, or if its own schema (`foo.proto` for `foo.pb.go`) changes in the pull request; the second case is named in the report.
+   - Only JavaScript and TypeScript can be skipped as minified, and only when most lines are very long. A file the base did not have as minified is never skipped as minified.
+   - Code under an existing `vendor/` directory is judged unless a dependency manifest changes too.
+   - A judged file over 1 MB is not judged in part: the run exits 2.
+   - Edits to the gate's configuration, to `.gitattributes` or to a CI workflow that runs the gate are named in the report.
 2. **Asks Jev about two views of each judged file.**
-   - **Raw:** qualm's request exactly: the same diff (`-U8`, Myers), the same ten questions, the same 60 KB pieces.
+   - **Raw:** exactly qualm's request: the same diff (`-U8`, Myers), the same ten questions, the same 60 KB pieces.
    - **Masked:** every comment removed and every prose string replaced by `"<text>"`. Jev is asked eight of qualm's questions plus four that name what reviewers ask for: *remove*, *reuse*, *shorten* and *indirection*. Text in the change cannot address the judge through this view.
-3. **Combines the answers.** A logistic model turns them into a calibrated probability, using the 22 answers and the core detectors' counts. Dev folds were grouped by repository. A file whose probability lands within 0.05 of the threshold is asked twice more, and the median decides.
-4. **Fails a file** when its probability is at least **0.505**. That is the highest out-of-fold recall on dev with precision at least 0.65, where qualm runs at 0.61.
-5. **Localizes the findings.** For a failing file, it asks about each of its larger hunks on its own and writes the hunks reviewers would push back on as findings, with the verb that fits. The detectors' exact-line findings come first: debug output, stubs, copies, guards with "can't happen" comments, commented-out code and unused new functions.
-6. **Optional cascade.** With `--llm-dir` (and, when shipped, an Anthropic key), files whose probability falls in the abstain band **[0.25, 0.69)** go to an LLM reviewer (`review.py`, Claude Haiku 5.5). The reviewer's verdict decides them, and its located comments are verified before they reach the report. The band comes from Learn-then-Test on out-of-fold dev probabilities. Outside it, fails keep precision ≥ 0.75 and passes keep ≤ 10% positives, jointly at 95% confidence. On dev about 30% of files fall inside it.
+3. **Combines the answers.**
+   - A logistic model turns the 22 answers into a calibrated probability. Dev folds were grouped by repository, and a Platt step calibrates the result.
+   - A close call is a file within 0.05 of the threshold. It is read again: 3 readings, then 7 if the median is within 0.02, then at most 11 if it is within 0.01. The median decides.
+4. **Fails a file** when its probability is at least **0.506**. That is the highest out-of-fold recall on dev with precision at least 0.65; qualm runs at 0.61.
+5. **Localizes the findings of a failing file, one function at a time.**
+   - **Which functions are asked about:** every function the change wrote (small helpers included), then every existing function it changed, then runs of added code outside any function. Each is asked on its own, with the lines it removed shown.
+   - **Which become findings:** each function a reviewer would push back on (`push_back >= 0.5`).
+   - **The verb:** the question whose answer stands out most against its usual level on dev (`verbs.json`).
+   - **Exact lines first:** the detectors' findings come first (debug output, stubs, copies, guards with "can't happen" comments, commented-out code, unused new functions). A function finding is dropped when the detectors already name that kind of problem inside the function.
+   - **Advice:** detector findings outside a flagged function are listed as advice, which does not fail the gate.
+   - **Every report ends with the same rule:** keep every behaviour, option, test and documentation example the change introduces; simplify how the code is written, not what it does.
 
 ## Running it
 
 ```
-OPENROUTER_API_KEY=... next/candidates/d-cascade/run --repo . --base origin/main [--format text] [--budget 0.05] [--no-cache] [--llm-dir DIR]
+OPENROUTER_API_KEY=... next/candidates/d-cascade/run --repo . --base origin/main [--format text] [--budget 0.05] [--no-cache] [--text-out FILE]
 ```
 
-Exit 0 passes, 1 fails, 2 could not judge (no key, Jev failing after retries, a spent budget, an unanswered LLM request). It never passes a change it could not judge.
+Exit codes:
+- 0: passes.
+- 1: fails.
+- 2: could not judge. Causes include no key, Jev failing after retries, a spent budget and a judged file over 1 MB.
+
+It never passes a change it could not judge. A change with no judged file passes without a key.
 
 The cache lives in `$GATE_CACHE_DIR` or `~/.cache/gatecore/d-cascade`, never inside the checkout. Entries are signed with a key derived from `OPENROUTER_API_KEY`, so a rewritten entry is ignored.
 
 ## Keys
 
-- `OPENROUTER_API_KEY` for Jev: required.
-- For the cascade, a shipped version calls the Anthropic Messages API (`claude-haiku-5-5`) with `ANTHROPIC_API_KEY` for each file in the band. In this study those calls go through `--llm-dir` and are answered by fresh-context subagents. Without either, the model's threshold decides every file.
+`OPENROUTER_API_KEY` for Jev. Nothing else.
 
 ## Cost
 
-About 2 Jev requests per file: raw and masked, plus a few hunk requests for a failing file and two extra readings on a close call. On dev this measured about $0.0006 per change (`next/eval/results/`). The cascade's Haiku calls are estimated at about $0.0005 per band file from token counts (an estimate, list price $0.10 / $0.50 per million tokens).
+On dev, a pull request cost about $0.0008 in Jev requests at the mean (`next/eval/results/`). That covers:
+- two requests per file;
+- per-function requests for a failing file;
+- extra readings for a close call.
 
 ## Training
 
-`collect_dev.py` asks Jev the masked questions for every scored dev file (cached). `train.py` reads:
+`collect_dev.py` asks Jev the masked questions for every scored dev file (cached).
 
-- those answers;
-- the raw-view answers from qualm 0.1.1's own dev run, since its request is the raw view;
-- the detector features from b-offline's feature cache.
+`train.py` reads those answers and the raw-view answers from qualm 0.1.1's own dev run (its request is the raw view). It fits the model on the raw and masked answers and picks the threshold. Version 2 chose that feature set by out-of-fold PR-AUC on the natural stratum; version 3 refits it without choosing again (`--set raw+masked`).
 
-It compares feature sets on out-of-fold PR-AUC, refits the best on all of dev with a Platt step, and picks the threshold and band. Nothing from the held-out split is used.
+Nothing from the held-out split is used.
+
+## The LLM band
+
+`--llm-dir` with `band.json` sends files whose probability falls inside an abstain band to an LLM reviewer (`review.py`, Claude Haiku 5.5). The band was fitted by Learn-then-Test on out-of-fold dev probabilities. On dev, no upper edge kept fail precision at 0.75 with 95% confidence, so the band became [0.26, 1.01): the LLM would decide every file above 0.26. Its answers flip between runs (6.4% of files on dev).
+
+So the band is not part of the measured gate. The code path stays for study. An answer without a yes/no verdict, or with a probability outside [0, 1], exits 2.
 
 ## Known weaknesses
 
-- It inherits Jev's view of one file at a time. A copy of code in another file is caught only by the copy detector, which reports but does not fail the file on its own: on dev, no detector alone had the precision to fail a file.
-- Jev's answers move a little between identical requests. The median of three steadies close calls but does not remove the noise.
-- On natural reviewer labels the gain over qualm is real but modest. Reviewer comments are themselves noisy: a fresh LLM and the label regex agree at kappa 0.45.
+- **Copies of code in another file.** It reads Jev's view of one file at a time, so such a copy is found only by the copy detector. That finding is advice and does not fail the file: on dev no copy rule had the precision to fail a file alone. The red-team copy attacks (`cross_file_copy`, `fifth_copy`, `cross_dir_copy`, `py_cross_module_copy`) pass with an advice line.
+- **Jev noise.** Its answers move a little between identical requests. More readings on close calls steady the verdict but do not remove the noise.
+- **Natural reviewer labels.** The gain over qualm there is real but modest. Reviewer comments are themselves noisy: a fresh LLM and the label regex agree at kappa 0.45.

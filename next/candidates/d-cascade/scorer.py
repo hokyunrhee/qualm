@@ -2,9 +2,9 @@
 
 For each judged file: Jev reads the raw diff (qualm's ten questions) and the masked diff (comments
 removed, prose strings replaced; eight of qualm's questions and four reviewer verbs). A logistic
-model trained on dev combines the answers with the detectors' findings into a calibrated
-probability. A file whose probability lands near the threshold is asked twice more and the median
-probability decides, so a close call reads the same on every run.
+model trained on dev combines the answers into a calibrated probability. A file whose probability
+lands near the threshold is read again (3, then 7, then at most 11 readings, stopping once the
+median is clearly on one side) and the median decides, so a close call reads the same more often.
 
 A failing file is localized one function at a time: every function the change wrote and every
 existing function it changed is asked about on its own (with the lines it removed shown), and
@@ -29,6 +29,9 @@ import review
 VERSION = '0.1.0'
 HERE = os.path.dirname(os.path.realpath(__file__))
 CLOSE = 0.05          # a probability this near the threshold is a close call
+# a close call is read again until its median is clearly on one side: after 3 readings stop unless
+# the median is within 0.02 of the threshold, after 7 unless within 0.01; at most 11 readings
+READINGS = ((3, 0.02), (7, 0.01), (11, None))
 MAX_PLACES = 10       # functions (or runs of added code) asked about when localizing a failing file
 PLACE_BYTES = 60000   # and at most this much text across them
 PLACE_LINES = 150     # a longer function is shown from 10 lines before its first change to 10 after its last
@@ -258,10 +261,13 @@ class Scorer:
         p, raw, masked, x, masked_d, places = self.ask_file(ctx, f, feats, use_cache=use_cache)
         ps = [p]
         if abs(p - self.threshold) <= CLOSE:
-            # two more readings, and the median decides; each reading has its own cache entry,
-            # so a second run with the cache on reaches the same verdict
-            for k in (1, 2):
-                ps.append(self.ask_file(ctx, f, feats, use_cache=use_cache, reading=k, places=places)[0])
+            # more readings, and the median decides; each reading has its own cache entry, so a
+            # second run with the cache on reaches the same verdict
+            for target, margin in READINGS:
+                while len(ps) < target:
+                    ps.append(self.ask_file(ctx, f, feats, use_cache=use_cache, reading=len(ps), places=places)[0])
+                if margin is None or abs(statistics.median(ps) - self.threshold) > margin:
+                    break
             p = statistics.median(ps)
         return {'p': p, 'readings': ps, 'raw': raw, 'masked': masked, 'x': x, 'masked_diff': masked_d, 'places': places}
 
