@@ -1,11 +1,11 @@
 {
  "lo": 0.25,
- "hi": 0.7,
+ "hi": 0.69,
  "model": "claude-haiku-5-5",
  "rule": "Learn-then-Test on out-of-fold dev probabilities, fixed-sequence on each edge: outside the band, fail precision >= 0.75 and positives among passes <= 0.10, jointly at 95% confidence",
  "dev_out_of_fold": {
-  "auto_fail": 228,
-  "auto_pass": 3384,
-  "in_band": 1527
+  "auto_fail": 243,
+  "auto_pass": 3387,
+  "in_band": 1509
  }
 }
