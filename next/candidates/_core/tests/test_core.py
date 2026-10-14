@@ -179,6 +179,14 @@ class LexerUnitTests(unittest.TestCase):
         got = [(u.name, u.start, u.end) for u in units.find_units(BAD_GO, 'Go')]
         self.assertIn(('TagStatement', 81, 111), got)
 
+    def test_braces_in_a_signature_do_not_end_the_unit(self):
+        src = 'package a\n\nfunc F(v interface{}) error {\n\t_ = v\n\treturn nil\n}\n'
+        self.assertEqual([(u.name, u.start, u.end) for u in units.find_units(src, 'Go')], [('F', 3, 6)])
+
+    def test_a_docstring_does_not_end_a_python_function(self):
+        src = 'def f():\n    """doc\n    more"""\n    return 1\n\ndef g():\n    pass\n'
+        self.assertEqual([(u.name, u.start, u.end) for u in units.find_units(src, 'Python')], [('f', 1, 4), ('g', 6, 7)])
+
     def test_diff_marks_added_lines(self):
         d = units.FileDiff('a\nb\nc\n', 'a\nx\nb\nc\n')
         self.assertEqual(d.added, {2})
