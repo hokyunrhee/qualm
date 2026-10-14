@@ -106,7 +106,8 @@ FINDINGS = {
     'split': {
         'message': "At {span} the change leaves {unit} long or doing several separate jobs.",
         'fix': "Move the new block of work in {unit} into a function of its own whose name says what it does, and call it from "
-               "{unit}. Done when {unit} does one job and is no longer than it was before the change.",
+               "{unit}. Done when {unit} does one job and is no longer than it was before the change (a new function: under "
+               "about 35 lines).",
     },
     'push_back': {
         'message': "At {span} a reviewer would likely ask for the change to be simplified, though no single kind of "
