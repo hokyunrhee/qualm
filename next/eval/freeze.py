@@ -3,16 +3,18 @@ under its directory and the shared core at that commit, read from git (not the w
 
     python3 -I freeze.py --out results/freeze.json NAME=COMMIT [NAME=COMMIT ...]
 """
-import argparse, hashlib, json, subprocess
+import argparse, hashlib, json, os, subprocess
+
+TOP = subprocess.run(['git', 'rev-parse', '--show-toplevel'], cwd=os.path.dirname(os.path.abspath(__file__)), capture_output=True, text=True, check=True).stdout.strip()
 
 
 def files_at(commit, path):
-    out = subprocess.run(['git', 'ls-tree', '-r', '--name-only', commit, '--', path], capture_output=True, text=True, check=True).stdout
+    out = subprocess.run(['git', 'ls-tree', '-r', '--name-only', commit, '--', path], capture_output=True, text=True, check=True, cwd=TOP).stdout
     return [p for p in out.splitlines() if p and '/tests/' not in p and not p.endswith(('.md', '.pyc'))]
 
 
 def sha(commit, path):
-    data = subprocess.run(['git', 'show', '%s:%s' % (commit, path)], capture_output=True, check=True).stdout
+    data = subprocess.run(['git', 'show', '%s:%s' % (commit, path)], capture_output=True, check=True, cwd=TOP).stdout
     return hashlib.sha256(data).hexdigest()
 
 
@@ -24,7 +26,7 @@ def main():
     rec = {}
     for pair in a.pairs:
         name, commit = pair.split('=', 1)
-        full = subprocess.run(['git', 'rev-parse', commit], capture_output=True, text=True, check=True).stdout.strip()
+        full = subprocess.run(['git', 'rev-parse', commit + '^{commit}'], capture_output=True, text=True, check=True, cwd=TOP).stdout.strip()
         paths = files_at(full, 'next/candidates/' + name) + files_at(full, 'next/candidates/_core/gatecore')
         rec[name] = {'commit': full, 'files': {p: sha(full, p) for p in sorted(paths)}}
         print(name, full[:10], len(paths), 'files')

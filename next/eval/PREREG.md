@@ -5,7 +5,7 @@ Written before the held-out split is opened. Nothing below changes after the spl
 ## What is frozen
 
 The freeze record `eval/results/freeze.json` holds:
-- the git tag `freeze-v3`;
+- the git tag `freeze-v3`, which is commit `6d15221`;
 - the commit each candidate is run from;
 - the SHA-256 of every file that decides a verdict: models, bands, settings, the shared core and the candidates' code.
 
@@ -13,10 +13,10 @@ Every held-out run is made from a worktree of the commit its row names. Nothing 
 
 | Candidate | Configuration measured | Commit |
 |---|---|---|
-| `a-baseline` | qualm 0.1.1 unmodified; fails at `push_back >= 0.6` | `freeze-v3` |
-| `a-recal` | the baseline's run, scores mapped through one Platt step (`platt.json`); same verdicts | `freeze-v3` |
-| `d-cascade` | **v3, model only**: raw and masked Jev views; logistic model; threshold 0.506; median of three readings on a close call. No LLM band. | `freeze-v3` |
-| `c-llm` | one Claude Haiku 5.5 reading per judged file (answered here by a fresh subagent per request); threshold 0.35 | `freeze-v3` |
+| `a-baseline` | qualm 0.1.1 unmodified (built from `5915e3d`); fails at `push_back >= 0.6` | `freeze-v3` (`6d15221`) |
+| `a-recal` | the baseline's run, scores mapped through one Platt step (`platt.json`); same verdicts | `6d15221` |
+| `d-cascade` | **v3, model only**: raw and masked Jev views; logistic model; threshold 0.506; close calls read 3, 7, then at most 11 times, median decides. Localization by function, verb by log-odds gap. No LLM band. | `6d15221` |
+| `c-llm` | one Claude Haiku 5.5 reading per judged file (answered here by a fresh subagent per request); threshold 0.35 | `6d15221` |
 | `e-spot` | as trained, on the core it was trained with | `59b23cd` |
 | `b-offline` | as trained, on the core it was trained with | `59b23cd` |
 | `n0-size` | size-only yardstick, as trained | `59b23cd` |
@@ -100,10 +100,17 @@ For `d-cascade` and `a-baseline`:
 
 For `c-llm`, a smaller set is run: 3 runs over 30 held-out cases, each with fresh subagents. With 30 cases the bound is wide, and this is stated.
 
+## Versions measured on dev
+
+These dev measurements were made just before the freeze, on commits whose verdicts match `6d15221`:
+- **d-cascade determinism** (dev det100): `d3feba7`. Every later change before the freeze touches findings only, not verdicts: the verb rule, Ruby comment rules, and dropping import blocks as places.
+- **d-cascade dev fix loop:** `1528ae9`, which differs from the freeze only by import blocks no longer being places.
+- **a-baseline dev fix loop:** run with the harness at `fd6aca0`; the harness did not change after that.
+
 ## Cost and latency
 
 Taken from the accuracy runs: Jev cost, per-request token counts and wall time.
-- Reported per pull request: the mean and p95 of cost and of wall time.
+- Reported per pull request: the mean, median and p95 of cost and of wall time. "Typical" in the definition of done is read as the median, with the mean and p95 next to it.
 - For `c-llm`, cost is estimated from token counts at Haiku 5.5 list price ($0.10 / $0.50 per million input / output tokens).
 - Wall time for `c-llm` excludes answer time, because the answers come from subagents. The shipped latency is not measured.
 
