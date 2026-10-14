@@ -4,7 +4,7 @@ One question per item: would an experienced reviewer ask for this file's change 
 
 ## Splits
 
-Split by repository: no repository has items in both splits (`manifest.json`: `repo_overlap: []`). The held-out split was sealed (tar SHA-256 `6cd58e78…4993`, recorded in `heldout.v1.sha256.json` at 2026-10-14T00:47:52Z) before any candidate was built, and stays encrypted until the final evaluation.
+Split by repository: no repository has items in both splits (`manifest.json`: `repo_overlap: []`). The held-out split was sealed (tar SHA-256 `6cd58e78…4993`, recorded in `heldout.v1.sha256.json` at 2026-10-14T00:47:52Z) before any candidate was built. The seal proves the split never changed; it did not keep it out of reach. The measurement audit (Phase 4) found plaintext working copies in the shared scratchpad (the assembled files, the adjudication key map, the held-out fix-loop items) and the passphrase committed next to the archive. They were encrypted under a new key, outside the repository, and removed before any held-out run; the passphrase left the tree. A scan of every subagent's tool calls (`eval/leakscan.py`, `eval/results/leakscan.json`, 1,976 agents) found held-out paths only in the 34 agents that built the held-out fix-loop items and in the audit's own inventory. The scan reads tool-call inputs, so a broad command that happened to read those files without naming them would not show; isolation was procedural, since every agent shares one filesystem.
 
 | | dev | held-out (scored) |
 |---|---|---|

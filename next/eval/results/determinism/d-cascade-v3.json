@@ -1,0 +1,53 @@
+{
+ "runs": 5,
+ "cases": 100,
+ "per_file": {
+  "files": 421,
+  "flipped": 2,
+  "rate": 0.004750593824228029,
+  "upper95": 0.01488
+ },
+ "per_pull_request": {
+  "cases": 100,
+  "flipped": 1,
+  "rate": 0.01,
+  "upper95": 0.04656
+ },
+ "pairwise_per_file": {
+  "pairs": 4210,
+  "differ": 8,
+  "rate": 0.0019002375296912114
+ },
+ "scored_items": {
+  "items": 193,
+  "flipped": 1,
+  "rate": 0.0051813471502590676,
+  "upper95": 0.02434,
+  "max_score_spread": 0.07219999999999999,
+  "mean_score_spread": 0.014877720207253886
+ },
+ "flipped_files": [
+  [
+   "gerrit-chromium-review-8354766-ps10",
+   "go/src/infra/cros/satlab/common/services/dut_wizard_service/readiness_check.go",
+   [
+    false,
+    false,
+    true,
+    false,
+    false
+   ]
+  ],
+  [
+   "gerrit-review-970822-ps5",
+   "openstackclient/common/availability_zone.py",
+   [
+    true,
+    true,
+    true,
+    false,
+    true
+   ]
+  ]
+ ]
+}
