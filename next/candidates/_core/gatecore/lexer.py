@@ -202,7 +202,7 @@ def identifiers(code, language):
     return [t for t in re.findall(r'[A-Za-z_$][A-Za-z0-9_$]*', code) if t not in kw]
 
 
-CODE_LIKE = re.compile(r'''(^\s*(if|for|while|return|def|func|function|var|let|const|import|from|class|else|elif|end|puts|print|fmt\.|console\.)\b)|[;{}]\s*$|\w+\(.*\)\s*;?\s*$|^\s*\w+(\.\w+)*\s*(=|:=|\+=)\s*\S''')
+CODE_LIKE = re.compile(r'''(^\s*(if|for|while|return|def|func|function|var|let|const|import|from|class|else|elif|end|puts|print|fmt\.|console\.|next\s+(if|unless)|unless|until|rescue|ensure|raise|yield)\b)|[;{}]\s*$|\w+\(.*\)\s*;?\s*$|^\s*\w+(\.\w+)*\s*(=|:=|\+=)\s*\S|\bdo\s*(\|[^|]*\|)?\s*$|^\s*[\w.\[\]:]+\s*\|\|=\s*\S''')
 PROSE_HINT = re.compile(r'\b(the|a|an|is|are|this|that|we|when|because|should|will|if you|note)\b', re.I)
 
 

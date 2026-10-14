@@ -152,8 +152,10 @@ def is_doc_example(f, n):
     hi = n
     while hi < len(f.code) and in_block(hi + 1):
         hi += 1
+    # prose reads as a sentence: several words, and a common English word or a sentence's end
     prose = [k for k in range(lo, hi + 1) if f.comments[k - 1] and not lexer.looks_like_code(f.comments[k - 1])
-             and len(re.findall(r'[A-Za-z]{2,}', f.comments[k - 1])) >= 3]
+             and len(re.findall(r'[A-Za-z]{2,}', f.comments[k - 1])) >= 3
+             and (lexer.PROSE_HINT.search(f.comments[k - 1]) or f.comments[k - 1].rstrip().endswith(('.', ':')))]
     if not prose:
         return False
     if any(EXAMPLE_INTRO.search(f.comments[k - 1]) for k in prose if k < n):
