@@ -31,6 +31,7 @@ def main():
     ap.add_argument('out')
     ap.add_argument('--per-split', type=int, default=40)
     ap.add_argument('--seed', type=int, default=11)
+    ap.add_argument('--languages', default='Go,Python,TypeScript,Ruby')
     a = ap.parse_args()
     rng = random.Random(a.seed)
     cfg = {}
@@ -46,26 +47,30 @@ def main():
         good = [c for c in r.get('commits', []) if c.get('tests_pass')]
         for c in good:
             pools[split].append((key, r, c))
+    quota = {'Go': 12, 'Python': 12, 'TypeScript': 8, 'Ruby': 8}
+    langs = [l for l in a.languages.split(',') if l]
     items = []
     for split, pool in pools.items():
-        rng.shuffle(pool)
-        # spread across repositories: round-robin by repository
-        by_repo = {}
-        for k, r, c in pool:
-            by_repo.setdefault(k, []).append((k, r, c))
-        order = []
-        while any(by_repo.values()):
-            for k in sorted(by_repo):
-                if by_repo[k]:
-                    order.append(by_repo[k].pop())
-        for i, (k, r, c) in enumerate(order[:a.per_split]):
-            target = biggest(k, c)
-            items.append({'fix_id': 'fx-%s-%s-%s' % (split[:4], k, c['sha'][:8]), 'split': split, 'repo_key': k,
-                          'repo': k.replace('_', '/', 1), 'language': r['language'], 'sha': c['sha'], 'file': target,
-                          'all_files': c['files'], 'smell': SMELLS[i % len(SMELLS)], 'setup': r['setup'], 'test': r['test']})
+        for lang in langs:
+            lp = sorted((x for x in pool if x[1]['language'] == lang), key=lambda x: (x[0], x[2]['sha']))
+            rng = random.Random('%d-%s-%s' % (a.seed, split, lang))
+            rng.shuffle(lp)
+            by_repo = {}
+            for k, r, c in lp:
+                by_repo.setdefault(k, []).append((k, r, c))
+            order = []
+            while any(by_repo.values()):
+                for k in sorted(by_repo):
+                    if by_repo[k]:
+                        order.append(by_repo[k].pop())
+            for i, (k, r, c) in enumerate(order[:quota[lang]]):
+                items.append({'fix_id': 'fx-%s-%s-%s' % (split[:4], k, c['sha'][:8]), 'split': split, 'repo_key': k,
+                              'repo': k.replace('_', '/', 1), 'language': r['language'], 'sha': c['sha'], 'file': biggest(k, c),
+                              'all_files': c['files'], 'smell': SMELLS[i % len(SMELLS)], 'setup': r['setup'], 'test': r['test']})
     json.dump({'items': items}, open(a.out, 'w'), indent=1)
     for split in pools:
-        print(split, sum(1 for it in items if it['split'] == split), 'items from', len({it['repo_key'] for it in items if it['split'] == split}), 'repositories')
+        print(split, sum(1 for it in items if it['split'] == split), 'items from', len({it['repo_key'] for it in items if it['split'] == split}), 'repositories',
+              dict(__import__('collections').Counter(it['smell'] for it in items if it['split'] == split)))
 
 
 if __name__ == '__main__':
