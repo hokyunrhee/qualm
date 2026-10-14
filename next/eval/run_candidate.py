@@ -22,7 +22,7 @@ sys.path.insert(0, HERE)
 from materialize import materialize  # noqa: E402
 
 BUDGET_USD = 20.0
-LEDGER = os.path.join(HERE, 'results', 'spend.jsonl')
+LEDGER = os.environ.get('STUDY_LEDGER', os.path.join(HERE, 'results', 'spend.jsonl'))  # one ledger for the study, even from a worktree
 WORK = os.environ.get('BENCH_WORK', '/tmp/claude-0/-home-user-qualm/2ede26c6-6287-5d82-9ba2-8868fcdef917/scratchpad/bench')
 
 
