@@ -135,7 +135,7 @@ class RoundTrip(unittest.TestCase):
         f = next(x for x in rep['files'] if x['path'] == 'ledger.go')
         self.assertTrue(f['failed'])
         self.assertAlmostEqual(f['score'], 0.85)
-        self.assertEqual(f['threshold'], 0.5)
+        self.assertEqual(f['threshold'], json.load(open(os.path.join(CAND, 'settings.json')))['threshold'])
         self.assertEqual([d['id'] for d in f['findings']], ['llm_merge'])
         self.assertEqual(f['findings'][0]['lines'], [self.week, self.week + 24])
         self.assertTrue(f['signals']['llm.blocking'])

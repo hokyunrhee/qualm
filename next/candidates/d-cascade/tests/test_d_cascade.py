@@ -269,3 +269,13 @@ class NoJudgedFilesTests(unittest.TestCase):
         s = scorer.Scorer(args, perimeter.Policy())
         ctx = types.SimpleNamespace(files=[])
         self.assertEqual(s.score(ctx, {}, {}), {})
+
+
+class ImportLinesTests(unittest.TestCase):
+    def test_an_import_block_is_not_a_place(self):
+        base = 'package a\n\nfunc A() {\n}\n'
+        head = 'package a\n\nimport (\n\t"fmt"\n\t"os"\n)\n\nfunc A() {\n\tfmt.Fprintln(os.Stderr, "x")\n\tfmt.Println("y")\n}\n'
+        places, _ = scorer.pieces(analyze.FileCtx('a.go', 'Go', head, base))
+        self.assertEqual([p[2] for p in places], ['A'])
+        rb = scorer.pieces(analyze.FileCtx('a.rb', 'Ruby', "require 'json'\nrequire 'find'\n\nmodule A\nend\n", 'module A\nend\n'))[0]
+        self.assertEqual(rb, [])

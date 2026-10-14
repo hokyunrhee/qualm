@@ -16,7 +16,7 @@ settled by an LLM reviewer instead (the cascade); without it, the model's thresh
 measured gate is the model alone: on dev the band could not keep its fail precision without the
 LLM deciding every file above 0.26, and the LLM's answers flip between runs.
 """
-import json, math, os, statistics
+import json, math, os, re, statistics
 from concurrent.futures import ThreadPoolExecutor
 
 from gatecore import cli, gitio, jev, llmdir, perimeter
@@ -115,6 +115,10 @@ def feature_vector(raw, masked, feats, pieces_answers=None, pieces_sizes=None):
     return x
 
 
+IMPORT_LINE = re.compile(r'^\s*(import\b|from\s+\S+\s+import\b|package\b|require(_relative)?\b|use\s|using\s|#include|export\s+\*\s+from|'
+                         r'(const|let|var)\s+\w+\s*=\s*require\(|\)$|"[^"]*"$|\w+\s+"[^"]*"$)')
+
+
 def pieces(f, limit=MAX_PLACES):
     """The places a reviewer would comment on, one function each: every function the change wrote
     (small helpers included), then every existing function it changed, then runs of added code
@@ -142,7 +146,8 @@ def pieces(f, limit=MAX_PLACES):
             changed.append((u, rows))
     out = [(u.start, u.end, u.name, [n for n in range(u.start, u.end + 1) if n in added_code]) for u in new]
     out += [(u.start, u.end, u.name, rows) for u, rows in sorted(changed, key=lambda r: (-len(r[1]), r[0].start))]
-    loose = sorted(n for n in added_code if n not in inside)
+    # added code outside any function, leaving out import lines: an import block is not a place to simplify
+    loose = sorted(n for n in added_code if n not in inside and not IMPORT_LINE.match(masked[n - 1]))
     for lo, hi in units_ranges(loose, gap=2):
         rows = [n for n in loose if lo <= n <= hi]
         for k in range(0, len(rows), LOOSE_LINES):

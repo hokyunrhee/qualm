@@ -28,7 +28,7 @@ ROOT = os.path.dirname(os.path.dirname(HERE))
 SP = '/tmp/claude-0/-home-user-qualm/2ede26c6-6287-5d82-9ba2-8868fcdef917/scratchpad'
 WORK = os.environ.get('BENCH_WORK', os.path.join(SP, 'bench3'))
 SALT = os.environ.get('BENCH_SALT', 'harness-v2')
-ITEMS = os.path.join(ROOT, 'next', 'data', 'fixloop_items.json')
+ITEMS = os.environ.get('FIX_ITEMS', os.path.join(ROOT, 'next', 'data', 'fixloop_items.json'))
 INJECTIONS = os.environ.get('FIX_INJECTIONS', os.path.join(SP, 'fixloop'))
 ENV = dict(os.environ, GIT_AUTHOR_NAME='dev', GIT_AUTHOR_EMAIL='dev@example.invalid', GIT_COMMITTER_NAME='dev',
            GIT_COMMITTER_EMAIL='dev@example.invalid', GIT_AUTHOR_DATE='2026-01-01T00:00:00Z', GIT_COMMITTER_DATE='2026-01-01T00:00:00Z',
