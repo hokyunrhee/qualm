@@ -19,24 +19,30 @@ def main():
     ap.add_argument('--tool', default='oof')
     a = ap.parse_args()
     oof = json.load(open(a.oof))
-    n = 0
-    with open(a.out, 'w') as out, gzip.open(a.dev, 'rt') as fh:
+    # a case id can appear on more than one line (history-mined commits, one line per flagged file):
+    # gather every line's scored items under one report, as a real run's report covers every file
+    by_case = {}
+    with gzip.open(a.dev, 'rt') as fh:
         for line in fh:
             c = json.loads(line)
-            files = []
+            files = by_case.setdefault(c['case_id'], {})
             for it in c['items']:
-                if it.get('label') is None:
+                if it.get('label') is None or it['path'] in files:
                     continue
                 if it['item_id'] not in oof:
-                    files.append({'path': it['path'], 'status': 'error', 'reason': 'no out-of-fold score'})
+                    files[it['path']] = {'path': it['path'], 'status': 'error', 'reason': 'no out-of-fold score'}
                     continue
                 p = oof[it['item_id']]
-                files.append({'path': it['path'], 'status': 'judged', 'score': p, 'threshold': a.threshold, 'failed': p >= a.threshold, 'findings': []})
+                files[it['path']] = {'path': it['path'], 'status': 'judged', 'score': p, 'threshold': a.threshold, 'failed': p >= a.threshold, 'findings': []}
+    n = 0
+    with open(a.out, 'w') as out:
+        for case_id, files in by_case.items():
+            files = list(files.values())
             if not files:
                 continue
             errors = any(f['status'] == 'error' for f in files)
             failed = any(f.get('failed') for f in files)
-            out.write(json.dumps({'case_id': c['case_id'], 'exit': 2 if errors else (1 if failed else 0), 'seconds': 0,
+            out.write(json.dumps({'case_id': case_id, 'exit': 2 if errors else (1 if failed else 0), 'seconds': 0,
                                   'report': {'tool': a.tool, 'out_of_fold': True, 'passed': not errors and not failed, 'files': files}}) + '\n')
             n += 1
     print(n, 'cases written')
