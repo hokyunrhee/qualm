@@ -297,6 +297,8 @@ def mask_line(raw, scanned, language):
         text = code  # strings stay blanked when the line cannot be lined up with them
     text = text.rstrip()
     indent = raw[:len(raw) - len(raw.lstrip())]
+    if text.strip() and len(text) - len(text.lstrip()) < len(indent):
+        text = indent + text.lstrip()  # a line closing a multi-line string keeps its indentation
     if comment:
         mark = comment_marker(language) + ' ' + COMMENT_PLACEHOLDER
         text = text + '  ' + mark if text.strip() else indent + mark
@@ -325,8 +327,9 @@ def render(lines, scanned, rows, marks, mark_char, language):
         if prev is not None and n > prev + 1:
             out.append('    …')
             prev_text = None
-        elif prev is not None and is_placeholder_only(text, language) and prev_text is not None and text.strip() == prev_text.strip():
-            prev = n
+        elif prev is not None and prev_text is not None and is_placeholder_only(text, language) and (
+                text.strip() == prev_text.strip() or (not text.strip() and is_placeholder_only(prev_text, language))):
+            prev = n  # a repeat of the placeholder above, or a blank line after one
             continue
         out.append(('%5d %s %s' % (n, mark_char if n in marks else ' ', text)).rstrip())
         prev, prev_text = n, text
