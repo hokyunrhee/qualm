@@ -87,10 +87,14 @@ class Client:
             pass
 
     # -- calls ---------------------------------------------------------------------------
-    def ask(self, state, questions, use_cache=True):
-        """Probabilities in 0..1 for each question id. Raises JevError when no answer can be had."""
+    def ask(self, state, questions, use_cache=True, reading=0):
+        """Probabilities in 0..1 for each question id. Raises JevError when no answer can be had.
+
+        `reading` > 0 asks the same request again as a separate reading (Jev's answers move a
+        little between identical requests); each reading is cached under its own key, so two runs
+        with the cache on read the same answers."""
         req = self.request(state, questions)
-        key = self.key_of(req)
+        key = self.key_of(req) if not reading else self.key_of({'reading': reading, 'request': req})
         if use_cache:
             hit = self.cache_get(key)
             if hit is not None and all(q in hit.get('answers', {}) for q in questions):

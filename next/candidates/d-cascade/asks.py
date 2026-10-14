@@ -174,11 +174,11 @@ def state(diff, lang, fmt=DIFF_FORMAT):
     return s
 
 
-def ask_pieces(client, diff, lang, questions, fmt, use_cache=True):
+def ask_pieces(client, diff, lang, questions, fmt, use_cache=True, reading=0):
     """Ask about every piece; for each question the strongest piece speaks for the file."""
     best = {}
     for piece in split(diff):
-        ans = client.ask(state(piece, lang, fmt), questions, use_cache=use_cache)
+        ans = client.ask(state(piece, lang, fmt), questions, use_cache=use_cache, reading=reading)
         for q, v in ans.items():
             best[q] = max(best.get(q, 0.0), v)
     return best

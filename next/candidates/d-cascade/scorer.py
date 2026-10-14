@@ -113,21 +113,23 @@ class Scorer:
         masked = asks.masked_diff(f.path, f.base, f.head, f.language, f.old_path)
         return raw, masked
 
-    def ask_file(self, ctx, f, feats, use_cache=True):
+    def ask_file(self, ctx, f, feats, use_cache=True, reading=0):
         raw_d, masked_d = self.views(ctx, f)
         lang = asks.language(f.path)
-        raw = asks.ask_pieces(self.client, raw_d, lang, asks.QUALM, asks.DIFF_FORMAT, use_cache) if raw_d.strip() else None
-        masked = asks.ask_pieces(self.client, masked_d, lang, asks.MASKED_QUESTIONS, asks.MASKED_FORMAT, use_cache) if masked_d.strip() else None
+        raw = asks.ask_pieces(self.client, raw_d, lang, asks.QUALM, asks.DIFF_FORMAT, use_cache, reading) if raw_d.strip() else None
+        masked = asks.ask_pieces(self.client, masked_d, lang, asks.MASKED_QUESTIONS, asks.MASKED_FORMAT, use_cache, reading) if masked_d.strip() else None
         x = feature_vector(raw, masked, feats)
         return self.model.predict(x), raw, masked, x, masked_d
 
     def judge(self, ctx, f, feats):
-        p, raw, masked, x, masked_d = self.ask_file(ctx, f, feats, use_cache=not self.args.no_cache)
+        use_cache = not self.args.no_cache
+        p, raw, masked, x, masked_d = self.ask_file(ctx, f, feats, use_cache=use_cache)
         ps = [p]
         if abs(p - self.threshold) <= CLOSE:
-            # two more readings, uncached, and the median decides
-            for _ in range(2):
-                ps.append(self.ask_file(ctx, f, feats, use_cache=False)[0])
+            # two more readings, and the median decides; each reading has its own cache entry,
+            # so a second run with the cache on reaches the same verdict
+            for k in (1, 2):
+                ps.append(self.ask_file(ctx, f, feats, use_cache=use_cache, reading=k)[0])
             p = statistics.median(ps)
         return {'p': p, 'readings': ps, 'raw': raw, 'masked': masked, 'x': x, 'masked_diff': masked_d}
 
