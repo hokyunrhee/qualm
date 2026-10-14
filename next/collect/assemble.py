@@ -102,7 +102,7 @@ def sha(text):
 
 
 def load_raw(raw):
-    pats = ['gerrit/*/*.jsonl', 'gitlab/*.jsonl', 'github/github.jsonl', 'history/*.jsonl']
+    pats = ['gerrit/*/*.jsonl', 'gitlab/*.jsonl', 'github/github.jsonl', 'github/agent_approved.jsonl', 'history/*.jsonl']
     for p in pats:
         for f in sorted(glob.glob(os.path.join(raw, p))):
             if '/test' in f:
@@ -155,7 +155,8 @@ def clean_case(c, seen):
         if key in seen:
             continue
         seen.add(key)
-        it = dict(it, item_id='%s::%s' % (c['case_id'], it['path']), language=f['language'], added=f['added'], removed=f['removed'])
+        it = dict(it, item_id='%s::%s' % (c['case_id'], it['path']), language=f['language'], added=f['added'], removed=f['removed'],
+                  agent_written=bool(c.get('agent_written')))
         t = tier(it)
         if t:
             it['tier'] = t
@@ -170,7 +171,7 @@ def inject_cases(cases, split, rng, per_lang):
     hosts = collections.defaultdict(list)
     for c in cases:
         for it in c['items']:
-            if it['label'] == 0 and it['label_source'] in ('approved_clean', 'approved_uncommented', 'survived_90d') and it['added'] >= 8:
+            if it['label'] == 0 and it['label_source'] in ('approved_clean', 'approved_uncommented', 'survived_90d', 'approved_agent') and it['added'] >= 8:
                 hosts[it['language']].append((c, it))
     out = []
     for lang, hs in sorted(hosts.items()):
@@ -272,8 +273,7 @@ def cap(cases, rng, n_target, pos_rate):
     strata = collections.defaultdict(list)
     for it in pos:
         strata[(it['language'], it['label_source'])].append(it)
-    keep = set()
-    order = []
+    keep = {it['item_id'] for it in pos if it.get('agent_written')}  # the agent-written subset is small: keep all of it
     for k in sorted(strata):
         strata[k].sort(key=lambda it: it['item_id'])
         rng.shuffle(strata[k])
@@ -289,7 +289,7 @@ def cap(cases, rng, n_target, pos_rate):
                         break
     by_id = {it['item_id']: it for it in items}
     must = {by_id[it['paired_with']]['item_id'] for it in pos if it['item_id'] in keep and it.get('paired_with') in by_id}
-    must |= {it['item_id'] for it in neg if it['label_source'] in ('hard_negative',)}
+    must |= {it['item_id'] for it in neg if it['label_source'] in ('hard_negative',) or it.get('agent_written')}
     want_neg = n_target - len(keep)
     rest = sorted((it for it in neg if it['item_id'] not in must), key=lambda it: it['item_id'])
     rng.shuffle(rest)

@@ -83,6 +83,7 @@ def load(gha_dir):
                     p['sig'].append(r)
             elif r['k'] == 'r' and r['state'] == 'approved':
                 p['approved'] = True
+                p.setdefault('approvals', []).append((r.get('u'), r.get('cid')))
             elif r['k'] == 'p':
                 if r['action'] == 'opened':
                     p['author'] = r.get('actor')
@@ -172,6 +173,46 @@ def do_pr(path, repo, n, p):
     return cases
 
 
+def do_agent_approved(args):
+    """An agent-written pull request that a person approved, with no simplification comment in our
+    window: every judged file at the approved commit is a negative ("approved_agent")."""
+    repo, n, p, workdir = args
+    path = os.path.join(workdir, repo.replace('/', '__') + '-%d.git' % n)
+    out = []
+    try:
+        os.makedirs(path, exist_ok=True)
+        git(path, 'init', '-q', '--bare')
+        git(path, 'remote', 'add', 'origin', 'https://github.com/%s.git' % repo)
+        git(path, 'config', 'remote.origin.promisor', 'true')
+        git(path, 'config', 'remote.origin.partialclonefilter', 'blob:none')
+        approver, cid = next(((u, c) for u, c in p.get('approvals', []) if c and u and u != p.get('author')), (None, None))
+        if not cid or git(path, 'fetch', '-q', '--filter=blob:none', '--depth=200', 'origin', cid, p['bs'], timeout=600) is None:
+            return out
+        mb = (git(path, 'merge-base', p['bs'], cid) or '').strip()
+        if not mb:
+            return out
+        names = git(path, 'diff', '--no-renames', '--name-status', mb, cid) or ''
+        files = []
+        for row in names.splitlines():
+            parts = row.split('\t')
+            if len(parts) != 2 or parts[0] not in ('A', 'M') or not judged_file(parts[1]):
+                continue
+            head = show(path, cid, parts[1])
+            base = None if parts[0] == 'A' else show(path, mb, parts[1])
+            if head is None or (parts[0] == 'M' and base is None) or head == base:
+                continue
+            files.append({'path': parts[1], 'language': language(parts[1]), 'base': base, 'head': head})
+        if files and len(files) <= 20:
+            out.append({'case_id': 'github-%s-%d-%s' % (repo.replace('/', '__'), n, cid[:8]), 'source': 'github', 'repo': repo,
+                        'url': 'https://github.com/%s/pull/%d' % (repo, n), 'subject': '', 'agent_written': True, 'head_ref': p['href'][:80],
+                        'files': files, 'items': [{'path': f['path'], 'label': 0, 'label_source': 'approved_agent'} for f in files]})
+    except Exception as e:  # logged and left out
+        print('  skip %s#%d: %s' % (repo, n, type(e).__name__), file=sys.stderr, flush=True)
+    finally:
+        shutil.rmtree(path, ignore_errors=True)
+    return out
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument('gha_dir')
@@ -180,8 +221,28 @@ def main():
     ap.add_argument('--per-repo', type=int, default=4)
     ap.add_argument('--workers', type=int, default=4)
     ap.add_argument('--limit-repos', type=int, default=0)
+    ap.add_argument('--agent-approved', type=int, default=0, help='collect this many approved agent-written PRs instead')
     a = ap.parse_args()
     prs = load(a.gha_dir)
+    if a.agent_approved:
+        import random as _r
+        cands = [(repo, n, p) for (repo, n), p in prs.items() if p['href'].lower().startswith(AGENT_PREFIX) and p.get('approvals')
+                 and not p['sig'] and not p['touched'] and p['bs']]
+        _r.Random(5).shuffle(cands)
+        per_repo, jobs = collections.Counter(), []
+        for repo, n, p in cands:
+            if per_repo[repo] < 2:
+                per_repo[repo] += 1
+                jobs.append((repo, n, p, a.workdir))
+        jobs = jobs[:a.agent_approved]
+        print('%d approved agent-written PRs to fetch' % len(jobs), flush=True)
+        import multiprocessing
+        with open(a.out, 'w') as fh, multiprocessing.Pool(a.workers) as pool:
+            for cases in pool.imap_unordered(do_agent_approved, jobs):
+                for c in cases:
+                    fh.write(json.dumps(c) + '\n')
+                fh.flush()
+        return
     byrepo = collections.defaultdict(list)
     for (repo, n), p in prs.items():
         if p['sig']:

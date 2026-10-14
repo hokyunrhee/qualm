@@ -16,7 +16,7 @@ import argparse, collections, gzip, json, random, sys
 
 
 NATURAL_POS = {'reviewer_comment', 'followup_cleanup'}
-NATURAL_NEG = {'approved_uncommented', 'approved_clean', 'post_fix', 'survived_90d'}
+NATURAL_NEG = {'approved_uncommented', 'approved_clean', 'post_fix', 'survived_90d', 'approved_agent'}
 
 
 def load_labels(path, subset=None):

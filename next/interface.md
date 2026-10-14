@@ -16,6 +16,11 @@ run --repo PATH --base REF [--format json|text] [--no-cache] [--budget DOLLARS] 
 - `--budget` caps paid calls for the run (Jev). A candidate that spends nothing ignores it.
 - `--llm-dir` is for candidates that need an LLM at verdict or report time. There is no API key in this study, so an LLM call is made by the harness through a fresh-context subagent. The candidate writes each request it needs to `DIR/requests/<key>.json` (`{"key", "model", "system", "prompt", "schema"}`) and exits 2 with `needs llm` on stderr. The harness answers each request in `DIR/responses/<key>.json` and runs the candidate again. A shipped version replaces this with one API call per request; the key is the SHA-256 of the request, so identical requests are answered once.
 
+Two more hooks, used by the attack suite (`next/eval/attacks/`):
+
+- `GATE_CACHE_DIR`, when set in the environment, is where a candidate with a cache keeps it (qualm 0.1.1's `--cache`). CI may point it inside the checkout; the cache-poisoning attacks test what a candidate does when the pull request can write there.
+- An optional executable `next/candidates/<name>/keep` (`keep --repo PATH --base REF --reason TEXT PATH...`) records that a person accepted a change. The self-keep attack runs it from inside the pull request.
+
 Exit codes: **0** the gate passed, **1** the gate failed, **2** the candidate could not judge (no key, no network, a config mistake, a spent budget, an unanswered LLM request). A candidate never passes a change it could not judge.
 
 ## The JSON report
